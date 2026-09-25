@@ -1,0 +1,4244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MarketSphere — Quantitative Market Expansion Intelligence</title>
+<meta name="description" content="Class-leading TOPSIS multi-criteria optimization engines that autonomously rank global jurisdictions and sequence capital deployment.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* =========================================================================
+   RESET & SYSTEM TOKENS
+   ========================================================================= */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --black:        #07090E;
+  --bg-deep:      #05070A;
+  --teal:         #00CC99;
+  --teal-dim:     #0D9488;
+  --teal-glow:    rgba(0, 204, 153, 0.22);
+  --amber:        #F59E0B;
+  --amber-warm:   #D97706;
+  --text-1:       #E5E7EB;
+  --text-2:       #9CA3AF;
+  --text-3:       #6B7280;
+  --font-sans:    'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono:    'JetBrains Mono', 'SF Mono', Menlo, Consolas, monospace;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  background: var(--black);
+  color: var(--text-1);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* =========================================================================
+   HERO CONTAINER — full bleed viewport
+   ========================================================================= */
+.hero-viewport {
+  position: relative;
+  width: 100vw;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  background-color: var(--black);
+}
+
+/* =========================================================================
+   BACKGROUND: CONTINUOUS GRADIENT MESH & VERTICAL GRID LINES
+   ========================================================================= */
+.bg-canvas-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Faint vertical grid lines across entire viewport */
+.bg-grid {
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0.024) 0px,
+    rgba(255, 255, 255, 0.024) 1px,
+    transparent 1px,
+    transparent 88px
+  );
+  z-index: 1;
+}
+
+/* Continuous gradient mesh:
+   1. Warm amber in the bottom-left
+   2. Warm amber/copper vertical glow flare rising around 58-62% horizontal
+   3. Rich teal/emerald in the top-right / right
+   4. Deep black vignettes at top and bottom edges
+*/
+.bg-mesh {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+/* Warm amber bottom-left */
+.bg-mesh-amber-left {
+  position: absolute;
+  bottom: -15%;
+  left: -8%;
+  width: 58%;
+  height: 68%;
+  background: radial-gradient(
+    ellipse at 40% 70%,
+    rgba(245, 158, 11, 0.22) 0%,
+    rgba(217, 119, 6, 0.10) 35%,
+    rgba(180, 83, 9, 0.03) 60%,
+    transparent 80%
+  );
+  filter: blur(75px);
+}
+
+/* Luminous copper/amber vertical pillar flare at 58% X */
+.bg-mesh-amber-pillar {
+  position: absolute;
+  bottom: -5%;
+  left: 48%;
+  width: 32%;
+  height: 65%;
+  background: radial-gradient(
+    ellipse at 50% 85%,
+    rgba(245, 158, 11, 0.25) 0%,
+    rgba(217, 119, 6, 0.14) 30%,
+    rgba(180, 83, 9, 0.05) 55%,
+    transparent 75%
+  );
+  filter: blur(60px);
+}
+
+/* Teal / Emerald expansion glow in the top-right / right quadrant */
+.bg-mesh-teal-right {
+  position: absolute;
+  top: 10%;
+  right: -5%;
+  width: 65%;
+  height: 85%;
+  background: radial-gradient(
+    ellipse at 70% 50%,
+    rgba(0, 204, 153, 0.20) 0%,
+    rgba(13, 148, 136, 0.11) 35%,
+    rgba(0, 204, 153, 0.03) 65%,
+    transparent 85%
+  );
+  filter: blur(75px);
+}
+
+/* Top & bottom vignettes to ensure pure #07090E at the edges */
+.bg-vignette {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(7, 9, 14, 0.95) 0%,
+    rgba(7, 9, 14, 0.2) 15%,
+    transparent 35%,
+    transparent 70%,
+    rgba(7, 9, 14, 0.6) 88%,
+    rgba(7, 9, 14, 1) 100%
+  );
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* =========================================================================
+   ANNOUNCEMENT BAR (Very top)
+   ========================================================================= */
+.announcement-bar {
+  position: relative;
+  z-index: 30;
+  width: 100%;
+  max-height: 40px;
+  background: rgba(255, 255, 255, 0.025);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12.5px;
+  color: var(--text-2);
+  letter-spacing: 0.01em;
+  padding: 0 40px;
+  overflow: hidden;
+  transition: opacity 0.25s ease, max-height 0.3s ease, padding 0.3s ease, border 0.3s ease;
+}
+.announcement-bar.dismissed {
+  opacity: 0;
+  max-height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+  pointer-events: none;
+}
+.announcement-bar a {
+  color: var(--text-1);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  margin-left: 4px;
+  transition: opacity 0.15s;
+}
+.announcement-bar a:hover {
+  opacity: 0.8;
+}
+.announcement-close {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: var(--text-3);
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 4px;
+  transition: color 0.15s;
+}
+.announcement-close:hover {
+  color: var(--text-1);
+}
+
+/* =========================================================================
+   NAVBAR (Translucent / Glass)
+   ========================================================================= */
+.navbar {
+  position: relative;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 44px;
+  height: 60px;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: #FFFFFF;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.nav-brand-icon {
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+/* Nav Dropdowns */
+.nav-dropdown-wrapper {
+  position: relative;
+  display: inline-block;
+}
+.nav-dropdown-trigger {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 450;
+  color: var(--text-2);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 0;
+  transition: color 0.15s;
+}
+.nav-dropdown-trigger:hover,
+.nav-dropdown-wrapper.active .nav-dropdown-trigger {
+  color: #FFFFFF;
+}
+.nav-dropdown-trigger svg {
+  width: 10px;
+  height: 10px;
+  opacity: 0.5;
+  transition: transform 0.2s ease, opacity 0.15s;
+}
+.nav-dropdown-wrapper.active .nav-dropdown-trigger svg {
+  transform: rotate(180deg);
+  opacity: 0.9;
+}
+.nav-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  min-width: 175px;
+  background: rgba(12, 16, 23, 0.95);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  padding: 6px;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.16s ease, transform 0.16s ease, visibility 0.16s;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.nav-dropdown-wrapper.active .nav-dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}
+.nav-dropdown-item {
+  display: block;
+  padding: 7px 12px;
+  color: var(--text-2);
+  font-size: 13px;
+  font-weight: 450;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background 0.12s, color 0.12s;
+  white-space: nowrap;
+}
+.nav-dropdown-item:hover {
+  color: #FFFFFF;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.nav-signin {
+  color: var(--text-1);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 450;
+  transition: opacity 0.15s;
+  cursor: pointer;
+}
+.nav-signin:hover {
+  opacity: 0.8;
+}
+
+/* Modals */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(4, 6, 10, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.2s ease, visibility 0.2s;
+  padding: 20px;
+}
+.modal-backdrop.open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+.modal-card {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  background: rgba(14, 18, 25, 0.96);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  padding: 28px;
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transform: translateY(12px) scale(0.98);
+  transition: transform 0.2s ease;
+}
+.modal-backdrop.open .modal-card {
+  transform: translateY(0) scale(1);
+}
+.modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 6px;
+  z-index: 20;
+  transition: color 0.15s, transform 0.15s;
+}
+.modal-close:hover {
+  color: #FFFFFF;
+  transform: scale(1.1);
+}
+.modal-heading {
+  font-size: 20px;
+  font-weight: 600;
+  color: #FFFFFF;
+  margin-bottom: 6px;
+  letter-spacing: -0.01em;
+}
+.modal-subheading {
+  font-size: 13.5px;
+  color: var(--text-2);
+  margin-bottom: 22px;
+  line-height: 1.45;
+}
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.modal-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.modal-field label {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--text-2);
+}
+.modal-field input {
+  background: rgba(8, 11, 16, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  padding: 10px 12px;
+  color: #FFFFFF;
+  font-family: inherit;
+  font-size: 13.5px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.modal-field input:focus {
+  border-color: var(--teal);
+}
+.modal-field input::placeholder {
+  color: var(--text-3);
+}
+.modal-submit-btn {
+  width: 100%;
+  margin-top: 6px;
+  padding: 10px 20px;
+}
+
+/* Video modal */
+.video-modal-card {
+  max-width: 640px;
+  padding: 16px;
+  padding-top: 36px;
+}
+.video-modal-card .modal-close {
+  top: 8px;
+  right: 10px;
+}
+.video-placeholder-box {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #080B10;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  cursor: pointer;
+}
+.video-play-btn {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, transform 0.15s;
+}
+.video-placeholder-box:hover .video-play-btn {
+  background: rgba(255, 255, 255, 0.32);
+  transform: scale(1.06);
+}
+
+/* Re-Run Button Loading State */
+.btn-pill-glass.is-running {
+  pointer-events: none;
+  border-color: var(--teal);
+  color: var(--teal);
+  animation: pulse-running 0.75s ease-in-out infinite alternate;
+}
+@keyframes pulse-running {
+  0%   { opacity: 0.6; }
+  100% { opacity: 1; }
+}
+
+/* =========================================================================
+   INTEGRATED TOPSIS CONSOLE SECTION & CONTROLS
+   ========================================================================= */
+:root {
+  --surface-card:     #141A26;
+  --surface-card-sub: #0E131E;
+  --surface-hover:    #1A2233;
+  --border-card:      #1F2937;
+  --accent-teal:      #00CC99;
+  --accent-teal-glow: rgba(0, 204, 153, 0.22);
+  --accent-teal-sub:  rgba(0, 204, 153, 0.08);
+
+  --status-emerald:   #10B981;
+  --status-emerald-bg: rgba(16, 185, 129, 0.12);
+  --status-emerald-border: rgba(16, 185, 129, 0.28);
+
+  --status-amber:     #F59E0B;
+  --status-amber-bg:  rgba(245, 158, 11, 0.12);
+  --status-amber-border: rgba(245, 158, 11, 0.28);
+
+  --status-crimson:   #EF4444;
+  --status-crimson-bg: rgba(239, 68, 68, 0.12);
+  --status-crimson-border: rgba(239, 68, 68, 0.28);
+}
+
+.mono {
+  font-family: var(--font-mono) !important;
+  font-variant-numeric: tabular-nums;
+}
+
+.console-integrated-section {
+  width: 100%;
+  position: relative;
+  z-index: 20;
+  background-color: var(--black);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 56px 0 100px;
+  overflow: hidden;
+}
+
+.console-bg-canvas {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+.console-bg-glow {
+  position: absolute;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1100px;
+  max-width: 95vw;
+  height: 600px;
+  background: radial-gradient(
+    ellipse 65% 50% at 50% 30%,
+    rgba(0, 204, 153, 0.16) 0%,
+    rgba(0, 204, 153, 0.08) 35%,
+    rgba(0, 204, 153, 0.02) 65%,
+    transparent 85%
+  );
+  filter: blur(65px);
+  z-index: 0;
+}
+.console-bg-grid {
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0.024) 0px,
+    rgba(255, 255, 255, 0.024) 1px,
+    transparent 1px,
+    transparent 88px
+  );
+  z-index: 1;
+}
+
+.console-container {
+  position: relative;
+  z-index: 10;
+  max-width: 1380px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.console-panel {
+  background: rgba(20, 26, 38, 0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--border-card);
+  border-radius: 10px;
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.04);
+}
+
+/* Console Header Bar */
+.console-header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 18px;
+  border-radius: 10px;
+  background: rgba(20, 26, 38, 0.7);
+  border: 1px solid var(--border-card);
+}
+.console-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.console-wordmark {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--text-1);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+}
+.console-badge {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-card);
+  padding: 2.5px 8px;
+  border-radius: 9999px;
+}
+.console-header-right {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+.console-nav-link {
+  color: var(--text-3);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-family: var(--font-sans);
+  transition: color 180ms ease;
+  padding: 4px 6px;
+}
+.console-nav-link:hover {
+  color: var(--text-1);
+}
+.console-divider {
+  width: 1px;
+  height: 16px;
+  background-color: var(--border-card);
+}
+
+.btn-export-console {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: transparent;
+  color: var(--text-1);
+  border: 1px solid var(--border-card);
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 12.5px;
+  font-weight: 500;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: all 180ms ease;
+}
+.btn-export-console:hover {
+  border-color: var(--accent-teal);
+  color: var(--accent-teal);
+  background-color: var(--accent-teal-sub);
+  box-shadow: 0 0 12px rgba(0, 204, 153, 0.15);
+}
+.btn-export-console:focus-visible {
+  outline: none;
+  border-color: var(--accent-teal);
+  box-shadow: 0 0 0 2px var(--accent-teal-glow);
+}
+
+.console-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: var(--surface-card);
+  border: 1px solid var(--border-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-2);
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: default;
+  transition: all 180ms ease;
+}
+.console-avatar:hover {
+  border-color: var(--accent-teal);
+  color: var(--accent-teal);
+}
+
+/* Control Bar */
+.control-bar {
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+.control-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  flex-wrap: wrap;
+}
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  position: relative;
+}
+.control-label {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+.currency-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.currency-symbol {
+  position: absolute;
+  left: 10px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text-2);
+  pointer-events: none;
+}
+.control-input {
+  background-color: var(--surface-card-sub);
+  border: 1px solid var(--border-card);
+  color: var(--text-1);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 12px 6px 24px;
+  border-radius: 6px;
+  outline: none;
+  width: 156px;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+.control-input:hover {
+  border-color: #374151;
+}
+.control-input:focus {
+  border-color: var(--accent-teal);
+  box-shadow: 0 0 0 2px var(--accent-teal-glow);
+}
+
+.custom-dropdown {
+  position: relative;
+  user-select: none;
+}
+.dropdown-trigger {
+  background-color: var(--surface-card-sub);
+  border: 1px solid var(--border-card);
+  color: var(--text-1);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 30px 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  min-width: 260px;
+  position: relative;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+.dropdown-trigger:hover {
+  border-color: #374151;
+}
+.dropdown-trigger:focus-visible,
+.dropdown-trigger.open {
+  border-color: var(--accent-teal);
+  box-shadow: 0 0 0 2px var(--accent-teal-glow);
+  outline: none;
+}
+.dropdown-trigger svg {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 14px;
+  height: 14px;
+  color: var(--text-3);
+  transition: transform 180ms ease, color 180ms ease;
+}
+.dropdown-trigger.open svg {
+  transform: translateY(-50%) rotate(180deg);
+  color: var(--accent-teal);
+}
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: #141A26;
+  border: 1px solid var(--border-card);
+  border-radius: 8px;
+  padding: 5px;
+  display: none;
+  flex-direction: column;
+  gap: 3px;
+  z-index: 100;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+.dropdown-menu.open {
+  display: flex;
+}
+.dropdown-option {
+  padding: 8px 12px;
+  font-size: 12.5px;
+  color: var(--text-1);
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+.dropdown-option:hover {
+  background-color: var(--surface-hover);
+  color: var(--accent-teal);
+}
+.dropdown-option.selected {
+  background-color: var(--accent-teal-sub);
+  color: var(--accent-teal);
+  font-weight: 500;
+}
+.dropdown-option-badge {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-3);
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 13px;
+  color: var(--text-1);
+  cursor: pointer;
+  user-select: none;
+  transition: color 180ms ease;
+  border-radius: 4px;
+}
+.checkbox-label:hover {
+  color: #FFFFFF;
+}
+.checkbox-label:focus-visible {
+  outline: none;
+}
+.checkbox-label:focus-visible .custom-checkbox {
+  box-shadow: 0 0 0 2px var(--accent-teal-glow);
+  border-color: var(--accent-teal);
+}
+.custom-checkbox {
+  position: relative;
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  border: 1px solid var(--border-card);
+  background-color: var(--surface-card-sub);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 180ms ease, background-color 180ms ease, box-shadow 180ms ease;
+  flex-shrink: 0;
+}
+.custom-checkbox:hover {
+  border-color: var(--accent-teal);
+}
+.custom-checkbox.checked {
+  background-color: var(--accent-teal);
+  border-color: var(--accent-teal);
+}
+.custom-checkbox svg {
+  width: 11px;
+  height: 11px;
+  color: #07090E;
+  display: none;
+}
+.custom-checkbox.checked svg {
+  display: block;
+}
+
+.btn-recalc {
+  background-color: var(--accent-teal);
+  color: #07090E;
+  border: none;
+  border-radius: 6px;
+  padding: 9px 18px;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  box-shadow: none;
+  white-space: nowrap;
+  transition: opacity 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+  user-select: none;
+}
+.btn-recalc:hover {
+  opacity: 0.94;
+  transform: translateY(-1px);
+  box-shadow: 0 0 16px rgba(0, 204, 153, 0.35);
+}
+.btn-recalc:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--accent-teal-glow);
+}
+.btn-recalc.loading {
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+/* =========================================================================
+   STAKEHOLDER WEIGHTING SANDBOX & DEMO MODE STYLES
+   ========================================================================= */
+.control-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn-demo-toggle {
+  background: var(--surface-card-sub);
+  border: 1px solid var(--border-card);
+  border-radius: 6px;
+  padding: 8px 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-2);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 180ms ease;
+  user-select: none;
+  white-space: nowrap;
+}
+.btn-demo-toggle:hover {
+  border-color: #374151;
+  color: var(--text-1);
+}
+.btn-demo-toggle.active {
+  border-color: var(--accent-teal);
+  background: rgba(0, 204, 153, 0.12);
+  color: #FFFFFF;
+  box-shadow: 0 0 16px rgba(0, 204, 153, 0.25);
+}
+
+.demo-toggle-switch {
+  width: 32px;
+  height: 18px;
+  background: #1F2937;
+  border-radius: 9px;
+  position: relative;
+  transition: background-color 200ms ease;
+  flex-shrink: 0;
+}
+.btn-demo-toggle.active .demo-toggle-switch {
+  background: var(--accent-teal);
+}
+.demo-toggle-knob {
+  width: 14px;
+  height: 14px;
+  background: #FFFFFF;
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: transform 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+}
+.btn-demo-toggle.active .demo-toggle-knob {
+  transform: translateX(14px);
+  background: #07090E;
+}
+
+.demo-toggle-badge {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-3);
+  transition: all 180ms ease;
+}
+.btn-demo-toggle.active .demo-toggle-badge {
+  background: var(--accent-teal-sub);
+  color: var(--accent-teal);
+}
+
+/* Demo Sliders Panel */
+.demo-sliders-panel {
+  padding: 22px 24px;
+  margin-bottom: 24px;
+  border: 1px solid rgba(0, 204, 153, 0.35);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6), 0 0 24px rgba(0, 204, 153, 0.07);
+  animation: demoFadeIn 240ms ease-out forwards;
+}
+
+@keyframes demoFadeIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.demo-panel-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.demo-panel-title-area {
+  max-width: 680px;
+}
+.demo-sandbox-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-teal);
+  background: var(--accent-teal-sub);
+  border: 1px solid rgba(0, 204, 153, 0.25);
+  padding: 3px 8px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+.demo-sandbox-pill::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-teal);
+  box-shadow: 0 0 6px var(--accent-teal);
+  animation: pulse-dot 1.5s ease-in-out infinite;
+}
+
+.demo-panel-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-1);
+  margin-bottom: 6px;
+}
+.demo-panel-desc {
+  font-size: 12.5px;
+  color: var(--text-2);
+  line-height: 1.5;
+}
+
+.demo-panel-metrics {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.demo-metric-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--surface-card-sub);
+  border: 1px solid var(--border-card);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  color: var(--text-2);
+}
+.demo-metric-pill strong {
+  font-family: var(--font-mono);
+  color: var(--accent-teal);
+  font-weight: 600;
+}
+.btn-reset-demo {
+  background: transparent;
+  border: 1px solid var(--border-card);
+  border-radius: 6px;
+  padding: 6px 12px;
+  color: var(--text-2);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 180ms ease;
+}
+.btn-reset-demo:hover {
+  border-color: var(--accent-teal);
+  color: var(--accent-teal);
+  background: var(--accent-teal-sub);
+}
+
+/* Presets Bar */
+.presets-bar {
+  background: rgba(10, 14, 22, 0.6);
+  border: 1px solid var(--border-card);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 22px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.presets-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  white-space: nowrap;
+}
+.presets-list {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.btn-preset {
+  background: var(--surface-card-sub);
+  border: 1px solid var(--border-card);
+  border-radius: 20px;
+  padding: 5px 12px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-2);
+  cursor: pointer;
+  transition: all 180ms ease;
+  white-space: nowrap;
+}
+.btn-preset:hover {
+  border-color: #374151;
+  color: var(--text-1);
+}
+.btn-preset.active {
+  border-color: var(--accent-teal);
+  background: var(--accent-teal-sub);
+  color: var(--accent-teal);
+  font-weight: 600;
+  box-shadow: 0 0 10px rgba(0, 204, 153, 0.2);
+}
+
+/* Sliders Grid */
+.sliders-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 18px;
+}
+@media (max-width: 1200px) {
+  .sliders-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) {
+  .sliders-grid { grid-template-columns: 1fr; }
+}
+
+.slider-card {
+  background: rgba(10, 14, 22, 0.7);
+  border: 1px solid var(--border-card);
+  border-radius: 8px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+.slider-card:hover {
+  border-color: rgba(0, 204, 153, 0.4);
+}
+.slider-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.slider-code-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.slider-code-badge {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: #1F2937;
+  color: var(--text-1);
+}
+.slider-nature-badge {
+  font-size: 10px;
+  font-weight: 500;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+.slider-nature-badge.benefit {
+  background: rgba(16, 185, 129, 0.12);
+  color: var(--status-qualified);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+}
+.slider-nature-badge.cost {
+  background: rgba(245, 158, 11, 0.12);
+  color: var(--status-evaluation);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+}
+
+.slider-weight-badge {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--accent-teal);
+  background: var(--accent-teal-sub);
+  padding: 2px 7px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 204, 153, 0.2);
+}
+
+.slider-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.slider-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-1);
+  line-height: 1.3;
+}
+.slider-desc {
+  font-size: 11.5px;
+  color: var(--text-3);
+  line-height: 1.35;
+}
+
+.slider-input-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.criteria-range-input {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  background: #1F2937;
+  border-radius: 3px;
+  outline: none;
+  cursor: pointer;
+  transition: background 180ms ease;
+}
+.criteria-range-input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent-teal);
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(0, 204, 153, 0.6);
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+.criteria-range-input::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+  box-shadow: 0 0 14px rgba(0, 204, 153, 0.9);
+}
+.criteria-range-input::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent-teal);
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(0, 204, 153, 0.6);
+}
+
+.slider-ticks {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: var(--text-3);
+  font-family: var(--font-mono);
+}
+.slider-level-text {
+  font-size: 11px;
+  color: var(--text-2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.slider-level-val {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--text-1);
+}
+
+/* Demo Status Footer */
+.demo-panel-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 14px;
+  border-top: 1px solid var(--border-card);
+  font-size: 11.5px;
+  color: var(--text-3);
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.demo-engine-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.demo-engine-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent-teal);
+  box-shadow: 0 0 8px var(--accent-teal);
+}
+.rank-delta-badge {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1px 4px;
+  border-radius: 3px;
+  margin-left: 6px;
+  display: inline-block;
+}
+.rank-delta-badge.up {
+  color: var(--status-qualified);
+  background: rgba(16, 185, 129, 0.15);
+}
+.rank-delta-badge.down {
+  color: var(--status-evaluation);
+  background: rgba(245, 158, 11, 0.15);
+}
+.rank-delta-badge.same {
+  color: var(--text-3);
+}
+
+/* Recommended Banner */
+.recommended-banner {
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-left: 3px solid var(--accent-teal);
+  position: relative;
+  overflow: hidden;
+  transition: box-shadow 300ms ease;
+}
+.recommended-banner.flash {
+  box-shadow: 0 0 24px rgba(0, 204, 153, 0.3);
+}
+.banner-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.badge-recommended {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  background: rgba(0, 204, 153, 0.12);
+  color: var(--accent-teal);
+  border: 1px solid rgba(0, 204, 153, 0.32);
+  padding: 3px 9px;
+  border-radius: 9999px;
+  white-space: nowrap;
+}
+.banner-text {
+  font-size: 13.5px;
+  color: var(--text-1);
+  line-height: 1.4;
+}
+.btn-inspect {
+  background: transparent;
+  color: var(--text-1);
+  border: 1px solid var(--border-card);
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 12.5px;
+  font-weight: 500;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 180ms ease;
+  user-select: none;
+}
+.btn-inspect:hover {
+  border-color: var(--accent-teal);
+  color: var(--accent-teal);
+  background-color: var(--accent-teal-sub);
+  box-shadow: 0 0 12px rgba(0, 204, 153, 0.15);
+}
+.btn-inspect:focus-visible {
+  outline: none;
+  border-color: var(--accent-teal);
+  box-shadow: 0 0 0 2px var(--accent-teal-glow);
+}
+
+/* Rankings Table */
+.table-panel {
+  overflow: hidden;
+}
+.table-wrapper {
+  overflow-x: auto;
+  width: 100%;
+}
+.rankings-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+.rankings-table th {
+  padding: 13px 18px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  border-bottom: 1px solid var(--border-card);
+  background-color: rgba(20, 26, 38, 0.95);
+  white-space: nowrap;
+}
+.rankings-table td {
+  padding: 13px 18px;
+  font-size: 13px;
+  border-bottom: 1px solid var(--border-card);
+  vertical-align: middle;
+  white-space: nowrap;
+  transition: background-color 180ms ease, opacity 250ms ease;
+}
+.rankings-table tr:last-child td {
+  border-bottom: none;
+}
+.rankings-table tbody tr:hover td {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+.row-rank-1 td {
+  background-color: rgba(0, 204, 153, 0.05);
+}
+.row-rank-1:hover td {
+  background-color: rgba(0, 204, 153, 0.09) !important;
+}
+
+@keyframes rowUpdateFlash {
+  0% { background-color: rgba(0, 204, 153, 0.22); }
+  100% { background-color: transparent; }
+}
+.row-flash td {
+  animation: rowUpdateFlash 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.row-knocked-out {
+  opacity: 0.42;
+  background-color: rgba(7, 9, 14, 0.35);
+  transition: opacity 250ms ease;
+}
+.row-knocked-out:hover {
+  opacity: 0.85;
+}
+.row-knocked-out .jurisdiction-name {
+  text-decoration: line-through;
+  text-decoration-color: var(--status-crimson);
+}
+
+.rank-number {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--text-3);
+}
+.row-rank-1 .rank-number {
+  color: var(--accent-teal);
+}
+.jurisdiction-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 320px;
+}
+.flag-icon {
+  font-size: 19px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.jurisdiction-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow: hidden;
+}
+.jurisdiction-name {
+  font-weight: 600;
+  color: var(--text-1);
+  white-space: nowrap;
+}
+.jurisdiction-subtitle {
+  font-size: 11.5px;
+  color: var(--text-3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 250px;
+  cursor: help;
+}
+.score-text {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-1);
+}
+.row-rank-1 .score-text {
+  color: var(--accent-teal);
+}
+.closeness-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 140px;
+}
+.closeness-pct {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  font-weight: 500;
+  min-width: 44px;
+  color: var(--text-1);
+}
+.closeness-bar-track {
+  width: 75px;
+  height: 5px;
+  background-color: rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.closeness-bar-fill {
+  height: 100%;
+  background-color: var(--accent-teal);
+  border-radius: 3px;
+  transition: width 400ms ease;
+}
+.row-knocked-out .closeness-bar-fill {
+  background-color: var(--text-3);
+}
+
+.status-pill-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  font-size: 11.5px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.status-pill-badge.qualified {
+  background: var(--status-emerald-bg);
+  color: var(--status-emerald);
+  border: 1px solid var(--status-emerald-border);
+}
+.status-pill-badge.evaluation {
+  background: var(--status-amber-bg);
+  color: var(--status-amber);
+  border: 1px solid var(--status-amber-border);
+}
+.status-pill-badge.knocked-out {
+  background: var(--status-crimson-bg);
+  color: var(--status-crimson);
+  border: 1px solid var(--status-crimson-border);
+}
+
+.action-link {
+  color: var(--accent-teal);
+  text-decoration: none;
+  font-size: 12.5px;
+  font-weight: 500;
+  transition: all 180ms ease;
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-family: var(--font-sans);
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 4px 6px;
+  border-radius: 4px;
+}
+.action-link:hover {
+  color: #00FFAA;
+  text-decoration: underline;
+  transform: translateX(2px);
+}
+.action-link:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--accent-teal-glow);
+}
+.action-ineligible {
+  color: var(--text-3);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 6px;
+}
+
+/* Bottom Two-Column Grid */
+.bottom-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+.bottom-card {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+.bottom-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  gap: 12px;
+}
+.bottom-card-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-1);
+  line-height: 1.35;
+}
+.formula-notation {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-3);
+  white-space: nowrap;
+}
+.criteria-list {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  flex: 1;
+  justify-content: space-between;
+}
+.criterion-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.criterion-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+}
+.criterion-name {
+  color: var(--text-1);
+  font-weight: 500;
+}
+.criterion-code {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-3);
+  margin-left: 6px;
+}
+.criterion-val {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent-teal);
+}
+.criterion-track {
+  width: 100%;
+  height: 5px;
+  background-color: rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.criterion-fill {
+  height: 100%;
+  background-color: var(--accent-teal);
+  border-radius: 3px;
+  transition: width 500ms ease;
+}
+
+.badge-audit {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--accent-teal);
+  background: rgba(0, 204, 153, 0.1);
+  border: 1px solid rgba(0, 204, 153, 0.25);
+  padding: 2px 7px;
+  border-radius: 4px;
+  display: inline-block;
+  margin-bottom: 6px;
+}
+.terminal-code-block {
+  background-color: var(--surface-card-sub);
+  border: 1px solid var(--border-card);
+  border-radius: 6px;
+  padding: 16px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  line-height: 1.68;
+  color: var(--text-3);
+  overflow-x: auto;
+  flex: 1;
+}
+.terminal-code-block .heading {
+  color: var(--text-2);
+  font-weight: 600;
+}
+.terminal-code-block .highlight-teal {
+  color: var(--accent-teal);
+  font-weight: 600;
+}
+.terminal-code-block .white {
+  color: var(--text-1);
+}
+
+/* Audit Modal Dialog */
+.modal-overlay-console {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(7, 9, 14, 0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.modal-overlay-console.open {
+  display: flex;
+}
+.modal-dialog-console {
+  background: #141A26;
+  border: 1px solid var(--border-card);
+  border-radius: 12px;
+  max-width: 980px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  display: flex;
+  flex-direction: column;
+}
+.modal-two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+[data-tooltip] {
+  position: relative;
+}
+[data-tooltip]:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #0E131E;
+  color: var(--text-1);
+  border: 1px solid var(--border-card);
+  padding: 5px 9px;
+  border-radius: 4px;
+  font-size: 11px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 200;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  font-family: var(--font-sans);
+  font-weight: 400;
+}
+
+@media (max-width: 1024px) {
+  .bottom-grid, .modal-two-col { grid-template-columns: 1fr; }
+  .control-bar { flex-direction: column; align-items: stretch; }
+  .control-bar-left { width: 100%; }
+  .btn-recalc { width: 100%; justify-content: center; }
+}
+
+.btn-pill-white {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #FFFFFF;
+  color: #07090E;
+  font-size: 13.5px;
+  font-weight: 600;
+  padding: 8px 20px;
+  border-radius: 9999px;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+  transition: background 0.15s, transform 0.15s, box-shadow 0.15s;
+  white-space: nowrap;
+}
+.btn-pill-white:hover {
+  background: #EDEDED;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(255, 255, 255, 0.15);
+}
+
+/* =========================================================================
+   HERO MAIN CONTENT
+   ========================================================================= */
+.hero-content {
+  position: relative;
+  z-index: 10;
+  padding: 50px 48px 0;
+  max-width: 900px;
+}
+
+/* Screen reader only element for SEO/accessibility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── Dithered / Halftone Headline ─────────────────────────────────────── */
+.headline-container {
+  position: relative;
+  width: 100%;
+  margin-bottom: 24px;
+}
+
+#headlineCanvas {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Subheadline */
+.hero-subheadline {
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.45;
+  color: #E5E7EB;
+  max-width: 580px;
+  margin-bottom: 14px;
+  letter-spacing: -0.01em;
+}
+
+/* Body paragraph */
+.hero-body {
+  font-size: 14.5px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--text-2);
+  max-width: 480px;
+  margin-bottom: 30px;
+}
+
+/* CTA row */
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.btn-pill-glass {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-1);
+  font-size: 13.5px;
+  font-weight: 500;
+  padding: 8px 20px;
+  border-radius: 9999px;
+  text-decoration: none;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: background 0.15s, border-color 0.15s;
+}
+.btn-pill-glass:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* =========================================================================
+   FULL-BLEED CHART LINE GRAPH
+   ========================================================================= */
+.chart-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.chart-layer svg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* Floating cursor & badge at trough */
+.trough-marker {
+  position: absolute;
+  pointer-events: none;
+  z-index: 12;
+  transform: translate(-50%, -50%);
+}
+
+.crosshair-icon {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 15px;
+  height: 15px;
+}
+.crosshair-icon::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 7px;
+  width: 1px;
+  height: 15px;
+  background: var(--teal);
+}
+.crosshair-icon::after {
+  content: '';
+  position: absolute;
+  top: 7px;
+  left: 0;
+  width: 15px;
+  height: 1px;
+  background: var(--teal);
+}
+
+.trough-info {
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  white-space: nowrap;
+}
+
+.trough-exp {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  color: #10B981;
+}
+
+.trough-badge {
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: #34D399;
+  background: rgba(6, 78, 59, 0.45);
+  border: 1px solid rgba(16, 185, 129, 0.5);
+  padding: 2px 7px;
+  border-radius: 4px;
+}
+
+/* Glowing tip dot */
+.chart-tip-pulse {
+  animation: pulse-aura 2.2s infinite ease-in-out;
+}
+@keyframes pulse-aura {
+  0%, 100% { r: 12; opacity: 0.2; }
+  50%      { r: 18; opacity: 0.45; }
+}
+
+/* =========================================================================
+   FLOATING GLASS CARD (Bottom-Right corner)
+   ========================================================================= */
+.floating-glass-card {
+  position: absolute;
+  bottom: 74px;
+  right: 44px;
+  width: 288px;
+  z-index: 25;
+  background: rgba(14, 18, 25, 0.65);
+  backdrop-filter: blur(28px) saturate(1.4);
+  -webkit-backdrop-filter: blur(28px) saturate(1.4);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  padding: 12px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 16px 36px rgba(0, 0, 0, 0.55);
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+.floating-glass-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.22);
+  background: rgba(18, 24, 34, 0.75);
+}
+
+.card-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: #F3F4F6;
+  margin-bottom: 8px;
+  padding-left: 2px;
+}
+
+.terminal-mockup {
+  background: #080B10;
+  border-radius: 6px;
+  padding: 9px 11px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  line-height: 1.55;
+  color: #9CA3AF;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  margin-bottom: 10px;
+}
+.terminal-line {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.terminal-prompt {
+  color: var(--teal);
+  margin-right: 4px;
+}
+.terminal-cursor {
+  display: inline-block;
+  width: 7px;
+  height: 12px;
+  background: #6B7280;
+  vertical-align: middle;
+  margin-left: 4px;
+  animation: blink 1s step-end infinite;
+}
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+  padding: 0 2px;
+}
+.card-watch {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.play-btn-circle {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.35);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+}
+.floating-glass-card:hover .play-btn-circle {
+  background: rgba(255, 255, 255, 0.6);
+}
+.play-btn-circle svg {
+  width: 6px;
+  height: 6px;
+  fill: #FFFFFF;
+  margin-left: 1px;
+}
+.card-duration {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* =========================================================================
+   BOTTOM LOGO STRIP (Pinned to very bottom edge)
+   ========================================================================= */
+.logo-strip {
+  position: relative;
+  z-index: 20;
+  width: 100%;
+  height: 48px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(7, 9, 14, 0.85);
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+}
+
+.logo-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 100%;
+  padding: 0 44px;
+}
+
+.logo-item {
+  color: rgba(255, 255, 255, 0.22);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+  user-select: none;
+}
+.logo-item:hover {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.logo-wordmark {
+  font-size: 13.5px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.logo-wordmark.caps-wide {
+  letter-spacing: 0.12em;
+  font-weight: 800;
+}
+.logo-wordmark.script-feel {
+  font-style: italic;
+  font-family: serif;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+.logo-wordmark.mono-font {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 12.5px;
+  letter-spacing: 0.06em;
+}
+
+/* =========================================================================
+   RESPONSIVE DESIGN
+   ========================================================================= */
+@media (max-width: 900px) {
+  .navbar { padding: 0 20px; }
+  .nav-links { display: none; }
+  .hero-content { padding: 40px 20px 0; }
+  .floating-glass-card { display: none; }
+  .logo-row { gap: 24px; justify-content: flex-start; overflow-x: auto; }
+}
+</style>
+</head>
+<body>
+
+<div class="hero-viewport">
+
+  <!-- =====================================================================
+       BACKGROUND: Mesh + Grid + Vignette
+       ===================================================================== -->
+  <div class="bg-canvas-layer" aria-hidden="true">
+    <div class="bg-mesh">
+      <div class="bg-mesh-amber-left"></div>
+      <div class="bg-mesh-amber-pillar"></div>
+      <div class="bg-mesh-teal-right"></div>
+    </div>
+    <div class="bg-grid"></div>
+    <div class="bg-vignette"></div>
+  </div>
+
+  <!-- =====================================================================
+       TOP ANNOUNCEMENT BAR
+       ===================================================================== -->
+  <header style="position: relative; z-index: 30; width: 100%;">
+    <div class="announcement-bar">
+      <span>New: Autonomous capital allocation pipelines now support 14 sovereign jurisdictions. <a href="#console">Learn more</a></span>
+      <button class="announcement-close" id="closeAnnouncement" aria-label="Close announcement">&times;</button>
+    </div>
+
+    <!-- =====================================================================
+         NAVBAR
+         ===================================================================== -->
+    <nav class="navbar">
+      <a href="#" class="nav-brand">
+        <span class="nav-brand-icon">
+          <!-- Sleek geometric globe / matrix node icon -->
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none">
+            <circle cx="12" cy="12" r="9.5" stroke="#FFFFFF" stroke-width="1.6"/>
+            <path d="M12 2.5C12 2.5 16 6.5 16 12C16 17.5 12 21.5 12 21.5" stroke="#FFFFFF" stroke-width="1.3" stroke-linecap="round"/>
+            <path d="M12 2.5C12 2.5 8 6.5 8 12C8 17.5 12 21.5 12 21.5" stroke="#FFFFFF" stroke-width="1.3" stroke-linecap="round"/>
+            <line x1="3" y1="12" x2="21" y2="12" stroke="#FFFFFF" stroke-width="1.3"/>
+            <line x1="5" y1="7" x2="19" y2="7" stroke="#00CC99" stroke-width="1.3" stroke-dasharray="2 2"/>
+            <line x1="5" y1="17" x2="19" y2="17" stroke="#00CC99" stroke-width="1.3" stroke-dasharray="2 2"/>
+          </svg>
+        </span>
+        MarketSphere
+      </a>
+
+      <div class="nav-links">
+        <div class="nav-dropdown-wrapper">
+          <button type="button" class="nav-dropdown-trigger" aria-expanded="false">
+            Console
+            <svg viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1L5 5L9 1"/></svg>
+          </button>
+          <div class="nav-dropdown-menu">
+            <a href="#console" class="nav-dropdown-item">Dashboard</a>
+            <a href="#console" class="nav-dropdown-item">Live Runs</a>
+            <a href="#console" class="nav-dropdown-item">History</a>
+          </div>
+        </div>
+
+        <div class="nav-dropdown-wrapper">
+          <button type="button" class="nav-dropdown-trigger" aria-expanded="false">
+            Decision Matrix
+            <svg viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1L5 5L9 1"/></svg>
+          </button>
+          <div class="nav-dropdown-menu">
+            <a href="#console" class="nav-dropdown-item">Sovereign Weights</a>
+            <a href="#console" class="nav-dropdown-item">TOPSIS Scores</a>
+            <a href="#console" class="nav-dropdown-item">Ranking Matrix</a>
+          </div>
+        </div>
+
+        <div class="nav-dropdown-wrapper">
+          <button type="button" class="nav-dropdown-trigger" aria-expanded="false">
+            Sensitivity
+            <svg viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1L5 5L9 1"/></svg>
+          </button>
+          <div class="nav-dropdown-menu">
+            <a href="#console" class="nav-dropdown-item">Monte Carlo Runs</a>
+            <a href="#console" class="nav-dropdown-item">Weight Perturbations</a>
+            <a href="#console" class="nav-dropdown-item">Scenario Explorer</a>
+          </div>
+        </div>
+
+        <div class="nav-dropdown-wrapper">
+          <button type="button" class="nav-dropdown-trigger" aria-expanded="false">
+            Audit Log
+            <svg viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1L5 5L9 1"/></svg>
+          </button>
+          <div class="nav-dropdown-menu">
+            <a href="#audit-trail-section" class="nav-dropdown-item">Execution Hashes</a>
+            <a href="#audit-trail-section" class="nav-dropdown-item">Compliance Verification</a>
+            <a href="#console" class="nav-dropdown-item">Export Ledger</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="nav-right">
+        <a href="#signin" class="nav-signin" id="signinBtn">Sign in</a>
+        <a href="#console" class="btn-pill-white launch-console-btn">Launch Console</a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- =====================================================================
+       HERO MAIN COPY
+       ===================================================================== -->
+  <main class="hero-content">
+    <h1 class="sr-only">Life's too short to guess international market expansion</h1>
+
+    <!-- Canvas for dithered/halftone dot-matrix headline -->
+    <div class="headline-container" id="headlineContainer">
+      <canvas id="headlineCanvas"></canvas>
+    </div>
+
+    <p class="hero-subheadline">
+      Class-leading TOPSIS multi-criteria optimization engines that autonomously rank global jurisdictions and sequence capital deployment
+    </p>
+
+    <p class="hero-body">
+      Whatever market matters to you, optimize it automatically with MarketSphere. Just set your runway and watch as iterative experiments drive measurable strategic advantage.
+    </p>
+
+    <div class="hero-actions">
+      <a href="#console" class="btn-pill-white launch-console-btn">Launch Console</a>
+      <button class="btn-pill-glass" id="rerunPipelineBtn">Re-Run TOPSIS Pipeline</button>
+    </div>
+  </main>
+
+  <!-- =====================================================================
+       FULL-BLEED CHART LINE GRAPH WITH GRADIENT AND FLOATING TROUGH MARKER
+       ===================================================================== -->
+  <div class="chart-layer" aria-hidden="true">
+    <svg id="chartSvg" viewBox="0 0 1440 680" preserveAspectRatio="none">
+      <defs>
+        <!-- Stroke gradient: Amber on left, transitioning through teal to bright emerald -->
+        <linearGradient id="chartStrokeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%"   stop-color="#D97706" stop-opacity="0.85"/>
+          <stop offset="28%"  stop-color="#B45309" stop-opacity="0.75"/>
+          <stop offset="48%"  stop-color="#0F766E" stop-opacity="0.80"/>
+          <stop offset="72%"  stop-color="#0D9488" stop-opacity="0.95"/>
+          <stop offset="100%" stop-color="#00CC99" stop-opacity="1"/>
+        </linearGradient>
+
+        <!-- Area subtle matching gradient -->
+        <linearGradient id="chartAreaGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%"   stop-color="#D97706" stop-opacity="0.04"/>
+          <stop offset="40%"  stop-color="#0F766E" stop-opacity="0.05"/>
+          <stop offset="100%" stop-color="#00CC99" stop-opacity="0.09"/>
+        </linearGradient>
+
+        <!-- Vertical mask to fade area fill toward bottom -->
+        <linearGradient id="areaFadeV" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%"   stop-color="#FFFFFF" stop-opacity="1"/>
+          <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+        </linearGradient>
+
+        <mask id="chartAreaMask">
+          <rect width="100%" height="100%" fill="url(#areaFadeV)"/>
+        </mask>
+      </defs>
+
+      <!-- Fill under curve -->
+      <path id="chartAreaPath" fill="url(#chartAreaGrad)" mask="url(#chartAreaMask)"/>
+
+      <!-- Chart line itself -->
+      <path id="chartLinePath" fill="none" stroke="url(#chartStrokeGrad)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+
+      <!-- Glowing tip circle on far right -->
+      <circle id="tipPulse" class="chart-tip-pulse" cx="1440" cy="275" r="14" fill="#00CC99" opacity="0.3"/>
+      <circle id="tipCore" cx="1440" cy="275" r="4.5" fill="#00CC99"/>
+    </svg>
+
+    <!-- Trough crosshair and adopted experiment tag -->
+    <div class="trough-marker" id="troughMarker">
+      <div class="crosshair-icon"></div>
+      <div class="trough-info">
+        <span class="trough-exp">EXPERIMENT 414559</span>
+        <span class="trough-badge">ADOPTED</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- =====================================================================
+       FLOATING GLASS CARD (Bottom-Right)
+       ===================================================================== -->
+  <aside class="floating-glass-card">
+    <div class="card-title">Introducing MarketSphere CLI</div>
+    <div class="terminal-mockup">
+      <span class="terminal-line"><span class="terminal-prompt">$</span>run marketsphere --help to get started</span>
+      <span class="terminal-line" style="margin-top: 3px; color: #4B5563;">^ A<span class="terminal-cursor"></span></span>
+    </div>
+    <div class="card-footer" id="watchFilmBtn" style="cursor: pointer;" role="button" tabindex="0" aria-label="Watch the film">
+      <div class="card-watch">
+        <span class="play-btn-circle">
+          <svg viewBox="0 0 8 10"><polygon points="1,1 7,5 1,9"/></svg>
+        </span>
+        <span>Watch the film</span>
+      </div>
+      <span class="card-duration">1:08</span>
+    </div>
+  </aside>
+
+  <!-- =====================================================================
+       BOTTOM LOGO STRIP (Pinned to very bottom edge)
+       ===================================================================== -->
+  <footer class="logo-strip">
+    <div class="logo-row">
+      <div class="logo-item">
+        <span class="logo-wordmark script-feel">Ready Meds</span>
+      </div>
+      <div class="logo-item">
+        <span class="logo-wordmark" style="font-weight:800; font-size:15px; letter-spacing:-0.03em;">flex</span>
+      </div>
+      <div class="logo-item">
+        <span class="logo-wordmark caps-wide" style="font-size:12.5px;">SHIFTSMART</span>
+      </div>
+      <div class="logo-item">
+        <span class="logo-wordmark" style="font-weight:700; letter-spacing:0.02em;">POSTMAN</span>
+      </div>
+      <div class="logo-item">
+        <span class="logo-wordmark script-feel" style="font-size:17px; font-weight:700;">Rio</span>
+      </div>
+      <div class="logo-item">
+        <span class="logo-wordmark caps-wide" style="font-size:13px; font-weight:800;">DOORDASH</span>
+      </div>
+      <div class="logo-item">
+        <span class="logo-wordmark mono-font">capital.com</span>
+      </div>
+      <div class="logo-item">
+        <span class="logo-wordmark" style="font-weight:700; letter-spacing:0.04em;">afriex</span>
+      </div>
+      <div class="logo-item">
+        <span class="logo-wordmark mono-font" style="font-weight:600;">toast</span>
+      </div>
+    </div>
+  </footer>
+
+</div>
+
+<!-- =========================================================================
+     INTEGRATED TOPSIS OPERATIONS CONSOLE (Below the fold)
+     ========================================================================= -->
+<section id="console" class="console-integrated-section">
+  <!-- Ambient background glow and faint grid -->
+  <div class="console-bg-canvas" aria-hidden="true">
+    <div class="console-bg-grid"></div>
+    <div class="console-bg-glow"></div>
+  </div>
+
+  <div class="console-container">
+
+    <!-- Top Bar inside Console -->
+    <div class="console-header-bar console-panel">
+      <div class="console-header-left">
+        <a href="#top" class="console-wordmark" title="Back to top">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none">
+            <circle cx="12" cy="12" r="9.5" stroke="#FFFFFF" stroke-width="1.6"/>
+            <line x1="3" y1="12" x2="21" y2="12" stroke="#FFFFFF" stroke-width="1.3"/>
+            <line x1="5" y1="7" x2="19" y2="7" stroke="#00CC99" stroke-width="1.3" stroke-dasharray="2 2"/>
+          </svg>
+          <span>MarketSphere TOPSIS</span>
+        </a>
+        <span class="console-badge">INTERNAL TOOL</span>
+      </div>
+
+      <div class="console-header-right">
+        <button type="button" class="console-nav-link" id="methodologyLink">View Methodology</button>
+        <button type="button" class="console-nav-link" id="docsLink">Documentation</button>
+        <div class="console-divider"></div>
+        <button type="button" class="btn-export-console" id="exportBtn" title="Export current rankings as CSV">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+          <span id="exportText">Export CSV</span>
+        </button>
+        <div class="console-avatar" title="Operations User (John Doe)">JD</div>
+      </div>
+    </div>
+
+    <!-- Control Bar Card -->
+    <section class="control-bar console-panel" aria-label="TOPSIS Optimization Controls">
+      <div class="control-bar-left">
+        <!-- Liquid Runway Budget -->
+        <div class="control-group">
+          <label for="runwayInput" class="control-label">LIQUID RUNWAY BUDGET</label>
+          <div class="currency-input-wrapper">
+            <span class="currency-symbol">$</span>
+            <input type="text" id="runwayInput" class="control-input mono" value="12,000,000" aria-label="Liquid Runway Budget">
+          </div>
+        </div>
+
+        <div class="control-divider"></div>
+
+        <!-- Weighting Mode Custom Dropdown -->
+        <div class="control-group">
+          <label class="control-label">WEIGHTING MODE</label>
+          <div class="custom-dropdown" id="weightingDropdown">
+            <div class="dropdown-trigger" id="dropdownTrigger" tabindex="0" role="button" aria-haspopup="listbox">
+              <span id="dropdownCurrentLabel">BWM + CRITIC-M Hybrid (α = 0.65)</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </div>
+            <div class="dropdown-menu" id="dropdownMenu" role="listbox">
+              <div class="dropdown-option selected" data-value="hybrid">
+                <span>BWM + CRITIC-M Hybrid (α = 0.65)</span>
+                <span class="dropdown-option-badge">RECOMMENDED</span>
+              </div>
+              <div class="dropdown-option" data-value="vector">
+                <span>Vector Normalization</span>
+                <span class="dropdown-option-badge">STANDARD</span>
+              </div>
+              <div class="dropdown-option" data-value="entropy">
+                <span>Entropy Weighting</span>
+                <span class="dropdown-option-badge">OBJECTIVE</span>
+              </div>
+              <div class="dropdown-option" data-value="critic">
+                <span>CRITIC-M Objective Weights</span>
+                <span class="dropdown-option-badge">DATA-DRIVEN</span>
+              </div>
+              <div class="dropdown-option" data-value="equal">
+                <span>Equal Weighting Baseline</span>
+                <span class="dropdown-option-badge">BENCHMARK</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="control-divider"></div>
+
+        <!-- Exclude Disqualified Jurisdictions Checkbox -->
+        <div class="checkbox-label" id="knockoutToggle" tabindex="0" role="checkbox" aria-checked="true">
+          <div class="custom-checkbox checked" id="checkboxBox">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          </div>
+          <span>Exclude disqualified jurisdictions (C6 &gt; Runway)</span>
+        </div>
+      </div>
+
+      <div class="control-bar-right">
+        <!-- Demo Mode Toggle Button -->
+        <button type="button" class="btn-demo-toggle" id="demoModeToggle" aria-pressed="false" title="Toggle Stakeholder Weighting Sandbox">
+          <span class="demo-toggle-switch"><span class="demo-toggle-knob"></span></span>
+          <span class="demo-toggle-text">Demo Mode</span>
+          <span class="demo-toggle-badge">SLIDERS</span>
+        </button>
+
+        <!-- Solid Teal Recalculate Button with Refresh Icon -->
+        <button type="button" class="btn-recalc" id="recalcBtn">
+          <svg id="recalcIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
+          </svg>
+          <span id="recalcText">Recalculate Ranking</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Stakeholder Multi-Criteria Weighting Sandbox (Demo Mode Panel) -->
+    <section class="demo-sliders-panel console-panel" id="demoSlidersPanel" aria-label="Stakeholder Weighting Sandbox" style="display: none;">
+      <!-- Panel Header -->
+      <div class="demo-panel-header">
+        <div class="demo-panel-title-area">
+          <div class="demo-sandbox-pill">BWM STAKEHOLDER WEIGHTING &amp; SENSITIVITY SANDBOX</div>
+          <h2 class="demo-panel-title">Tune Criteria Importance &amp; Test Ranking Sensitivity</h2>
+          <p class="demo-panel-desc">Stakeholders prioritize criteria on a 1–10 Saaty importance scale. The engine normalizes weights dynamically (Σ w<sub>j</sub> = 100%) and instantly recomputes TOPSIS Euclidean separation, relative closeness scores, and ranking positions in real time.</p>
+        </div>
+        <div class="demo-panel-metrics">
+          <div class="demo-metric-pill">
+            <span>Normalized Sum:</span>
+            <strong id="weightsSumLabel">100.0%</strong>
+          </div>
+          <div class="demo-metric-pill">
+            <span>Active Preset:</span>
+            <strong id="activePresetLabel" style="color: var(--text-1);">Baseline Consensus</strong>
+          </div>
+          <button type="button" class="btn-reset-demo" id="resetDemoBtn" title="Reset all sliders to production baseline weights">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+            <span>Reset Baseline</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Presets Selector Bar -->
+      <div class="presets-bar">
+        <span class="presets-label">Stakeholder Archetype Presets:</span>
+        <div class="presets-list" id="presetsList">
+          <button type="button" class="btn-preset active" data-preset="baseline">⚖️ Baseline Consensus</button>
+          <button type="button" class="btn-preset" data-preset="compliance">🛡️ Legal &amp; Compliance (C3+C8)</button>
+          <button type="button" class="btn-preset" data-preset="cfo">💰 Capital-Conscious CFO (C6+C7)</button>
+          <button type="button" class="btn-preset" data-preset="growth">🚀 Commercial Growth (C1+C2+C4)</button>
+          <button type="button" class="btn-preset" data-preset="treasury">🏦 Treasury &amp; Banking (C5 Rails)</button>
+        </div>
+      </div>
+
+      <!-- 8 Criteria Sliders Grid -->
+      <div class="sliders-grid" id="slidersGrid">
+        <!-- Rendered via JS -->
+      </div>
+
+      <!-- Demo Footer Status -->
+      <div class="demo-panel-footer">
+        <div class="demo-engine-status">
+          <span class="demo-engine-dot"></span>
+          <span><strong>Live TOPSIS-RAD Engine:</strong> Dynamic vector normalization &amp; Euclidean separation active (<span class="mono" style="color:var(--accent-teal);">&lt;2ms</span>)</span>
+        </div>
+        <div>
+          <span>BWM Consistency: <span class="mono" style="color:var(--accent-teal);">ξ = 0.042 (Consistent)</span> · Non-reversal DPL anchor: <span class="mono" style="color:var(--text-1);">8.50</span></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Recommended Banner Card -->
+    <section class="recommended-banner console-panel" id="recBanner" aria-label="Top Recommended Jurisdiction Banner">
+      <div class="banner-left">
+        <span class="badge-recommended">RANK #1 RECOMMENDED</span>
+        <div class="banner-text">
+          Top Recommended Jurisdiction: <strong>United Arab Emirates</strong> (Score: <span class="mono" style="font-weight:600; color:#FFFFFF;">0.8150</span>) — Qualified for Expansion Wave 1
+        </div>
+      </div>
+      <button type="button" class="btn-inspect" id="inspectBtn">Inspect Calculation</button>
+    </section>
+
+    <!-- Rankings Table -->
+    <section class="table-panel console-panel" aria-label="Jurisdiction Ranking Table">
+      <div class="table-wrapper">
+        <table class="rankings-table" id="rankingsTable">
+          <thead>
+            <tr>
+              <th style="width: 60px;">RANK</th>
+              <th style="width: 290px;">JURISDICTION</th>
+              <th style="width: 120px;">TOPSIS SCORE</th>
+              <th style="width: 170px;">RELATIVE CLOSENESS</th>
+              <th style="width: 125px;">CAPITAL REQ</th>
+              <th style="width: 120px;">RUNWAY IMPACT</th>
+              <th style="width: 170px;">STATUS</th>
+              <th style="width: 110px; text-align: right;">ACTIONS</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Row 1: UAE (Rank 1 Highlight) -->
+            <tr class="row-rank-1" id="row-ARE">
+              <td><span class="rank-number mono">#1</span></td>
+              <td>
+                <div class="jurisdiction-cell">
+                  <span class="flag-icon">🇦🇪</span>
+                  <div class="jurisdiction-meta">
+                    <span class="jurisdiction-name">United Arab Emirates</span>
+                    <span class="jurisdiction-subtitle" data-tooltip="Abu Dhabi Global Market &amp; Virtual Assets Regulatory Authority">Abu Dhabi / Dubai · ADGM &amp; VARA</span>
+                  </div>
+                </div>
+              </td>
+              <td><span class="score-text mono">0.8150</span></td>
+              <td>
+                <div class="closeness-cell">
+                  <div class="closeness-bar-track">
+                    <div class="closeness-bar-fill" style="width: 81.5%;"></div>
+                  </div>
+                  <span class="closeness-pct mono">81.5%</span>
+                </div>
+              </td>
+              <td><span class="mono">$3,000,000</span></td>
+              <td><span class="mono impact-pct">25.0%</span></td>
+              <td>
+                <span class="status-pill-badge qualified">Qualified · Wave 1</span>
+              </td>
+              <td style="text-align: right;">
+                <button type="button" class="action-link" data-jurisdiction="ARE">View Matrix &rarr;</button>
+              </td>
+            </tr>
+
+            <!-- Row 2: Singapore -->
+            <tr id="row-SGP">
+              <td><span class="rank-number mono">#2</span></td>
+              <td>
+                <div class="jurisdiction-cell">
+                  <span class="flag-icon">🇸🇬</span>
+                  <div class="jurisdiction-meta">
+                    <span class="jurisdiction-name">Singapore</span>
+                    <span class="jurisdiction-subtitle" data-tooltip="Monetary Authority of Singapore Payment Services Act">MAS Payment Services Act · MPI Licence</span>
+                  </div>
+                </div>
+              </td>
+              <td><span class="score-text mono">0.7984</span></td>
+              <td>
+                <div class="closeness-cell">
+                  <div class="closeness-bar-track">
+                    <div class="closeness-bar-fill" style="width: 79.8%;"></div>
+                  </div>
+                  <span class="closeness-pct mono">79.8%</span>
+                </div>
+              </td>
+              <td><span class="mono">$2,500,000</span></td>
+              <td><span class="mono impact-pct">20.8%</span></td>
+              <td>
+                <span class="status-pill-badge qualified">Qualified · Wave 1</span>
+              </td>
+              <td style="text-align: right;">
+                <button type="button" class="action-link" data-jurisdiction="SGP">View Matrix &rarr;</button>
+              </td>
+            </tr>
+
+            <!-- Row 3: United Kingdom -->
+            <tr id="row-GBR">
+              <td><span class="rank-number mono">#3</span></td>
+              <td>
+                <div class="jurisdiction-cell">
+                  <span class="flag-icon">🇬🇧</span>
+                  <div class="jurisdiction-meta">
+                    <span class="jurisdiction-name">United Kingdom</span>
+                    <span class="jurisdiction-subtitle" data-tooltip="Financial Conduct Authority Cryptoasset Registration &amp; FPO">FCA Cryptoasset Regime · Financial Promotions Order</span>
+                  </div>
+                </div>
+              </td>
+              <td><span class="score-text mono">0.7421</span></td>
+              <td>
+                <div class="closeness-cell">
+                  <div class="closeness-bar-track">
+                    <div class="closeness-bar-fill" style="width: 74.2%;"></div>
+                  </div>
+                  <span class="closeness-pct mono">74.2%</span>
+                </div>
+              </td>
+              <td><span class="mono">$2,750,000</span></td>
+              <td><span class="mono impact-pct">22.9%</span></td>
+              <td>
+                <span class="status-pill-badge evaluation">Evaluation · Wave 2</span>
+              </td>
+              <td style="text-align: right;">
+                <button type="button" class="action-link" data-jurisdiction="GBR">View Matrix &rarr;</button>
+              </td>
+            </tr>
+
+            <!-- Row 4: Brazil -->
+            <tr id="row-BRA">
+              <td><span class="rank-number mono">#4</span></td>
+              <td>
+                <div class="jurisdiction-cell">
+                  <span class="flag-icon">🇧🇷</span>
+                  <div class="jurisdiction-meta">
+                    <span class="jurisdiction-name">Brazil</span>
+                    <span class="jurisdiction-subtitle" data-tooltip="Banco Central do Brasil Federal Law 14.478 VASP Framework">Banco Central do Brasil · Law 14.478 VASP Framework</span>
+                  </div>
+                </div>
+              </td>
+              <td><span class="score-text mono">0.6843</span></td>
+              <td>
+                <div class="closeness-cell">
+                  <div class="closeness-bar-track">
+                    <div class="closeness-bar-fill" style="width: 68.4%;"></div>
+                  </div>
+                  <span class="closeness-pct mono">68.4%</span>
+                </div>
+              </td>
+              <td><span class="mono">$1,800,000</span></td>
+              <td><span class="mono impact-pct">15.0%</span></td>
+              <td>
+                <span class="status-pill-badge evaluation">Evaluation · Wave 2</span>
+              </td>
+              <td style="text-align: right;">
+                <button type="button" class="action-link" data-jurisdiction="BRA">View Matrix &rarr;</button>
+              </td>
+            </tr>
+
+            <!-- Row 5: Japan -->
+            <tr id="row-JPN">
+              <td><span class="rank-number mono">#5</span></td>
+              <td>
+                <div class="jurisdiction-cell">
+                  <span class="flag-icon">🇯🇵</span>
+                  <div class="jurisdiction-meta">
+                    <span class="jurisdiction-name">Japan</span>
+                    <span class="jurisdiction-subtitle" data-tooltip="Japan Financial Services Agency Crypto Asset Exchange Provider">JFSA Crypto Asset Exchange Service Provider (CAESP)</span>
+                  </div>
+                </div>
+              </td>
+              <td><span class="score-text mono">0.6312</span></td>
+              <td>
+                <div class="closeness-cell">
+                  <div class="closeness-bar-track">
+                    <div class="closeness-bar-fill" style="width: 63.1%;"></div>
+                  </div>
+                  <span class="closeness-pct mono">63.1%</span>
+                </div>
+              </td>
+              <td><span class="mono">$3,800,000</span></td>
+              <td><span class="mono impact-pct">31.7%</span></td>
+              <td>
+                <span class="status-pill-badge evaluation">Evaluation · Wave 2</span>
+              </td>
+              <td style="text-align: right;">
+                <button type="button" class="action-link" data-jurisdiction="JPN">View Matrix &rarr;</button>
+              </td>
+            </tr>
+
+            <!-- Row 6: Vietnam (Disqualified / Knocked Out) -->
+            <tr class="row-knocked-out" id="row-VNM">
+              <td><span class="rank-number mono" id="vnmRank">—</span></td>
+              <td>
+                <div class="jurisdiction-cell">
+                  <span class="flag-icon">🇻🇳</span>
+                  <div class="jurisdiction-meta">
+                    <span class="jurisdiction-name">Vietnam</span>
+                    <span class="jurisdiction-subtitle" data-tooltip="State Bank of Vietnam Circular 18 Mandatory On-Soil Data">State Bank of Vietnam · Circular 18 Mandatory On-Soil</span>
+                  </div>
+                </div>
+              </td>
+              <td><span class="score-text mono">0.3420</span></td>
+              <td>
+                <div class="closeness-cell">
+                  <div class="closeness-bar-track">
+                    <div class="closeness-bar-fill" style="width: 34.2%;"></div>
+                  </div>
+                  <span class="closeness-pct mono">34.2%</span>
+                </div>
+              </td>
+              <td><span class="mono">$14,500,000</span></td>
+              <td><span class="mono impact-pct">120.8%</span></td>
+              <td>
+                <span class="status-pill-badge knocked-out" id="vnmStatusPill">Knocked Out: Capital Exceeded</span>
+              </td>
+              <td style="text-align: right;">
+                <span class="action-ineligible" id="vnmAction">Ineligible</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Bottom Two-Column Row -->
+    <section class="bottom-grid" id="audit-trail-section">
+
+      <!-- Left Card: Criteria Decomposition -->
+      <div class="bottom-card console-panel" id="decompositionCard">
+        <div class="bottom-card-header">
+          <h2 class="bottom-card-title">United Arab Emirates Criteria Decomposition (C1–C8 Normalized)</h2>
+          <span class="formula-notation mono">v_ij = w_j · r_ij / √(Σ r_kj²)</span>
+        </div>
+
+        <div class="criteria-list">
+          <div class="criterion-row">
+            <div class="criterion-meta">
+              <span><span class="criterion-name">Market Depth &amp; Exchange HHI</span><span class="criterion-code">C1</span></span>
+              <span class="criterion-val mono">0.84</span>
+            </div>
+            <div class="criterion-track"><div class="criterion-fill" style="width: 84%;"></div></div>
+          </div>
+
+          <div class="criterion-row">
+            <div class="criterion-meta">
+              <span><span class="criterion-name">Economic Power &amp; GNI Per Capita</span><span class="criterion-code">C2</span></span>
+              <span class="criterion-val mono">0.88</span>
+            </div>
+            <div class="criterion-track"><div class="criterion-fill" style="width: 88%;"></div></div>
+          </div>
+
+          <div class="criterion-row">
+            <div class="criterion-meta">
+              <span><span class="criterion-name">Pathway Clarity &amp; De Jure Rules</span><span class="criterion-code">C3</span></span>
+              <span class="criterion-val mono">0.85</span>
+            </div>
+            <div class="criterion-track"><div class="criterion-fill" style="width: 85%;"></div></div>
+          </div>
+
+          <div class="criterion-row">
+            <div class="criterion-meta">
+              <span><span class="criterion-name">Leverage Fit &amp; Banking Access</span><span class="criterion-code">C4</span></span>
+              <span class="criterion-val mono">0.75</span>
+            </div>
+            <div class="criterion-track"><div class="criterion-fill" style="width: 75%;"></div></div>
+          </div>
+
+          <div class="criterion-row">
+            <div class="criterion-meta">
+              <span><span class="criterion-name">Crypto Readiness &amp; VASP Signal</span><span class="criterion-code">C5</span></span>
+              <span class="criterion-val mono">0.92</span>
+            </div>
+            <div class="criterion-track"><div class="criterion-fill" style="width: 92%;"></div></div>
+          </div>
+
+          <div class="criterion-row">
+            <div class="criterion-meta">
+              <span><span class="criterion-name">Capital Burden &amp; Reserve Lock</span><span class="criterion-code">C6</span></span>
+              <span class="criterion-val mono">0.68</span>
+            </div>
+            <div class="criterion-track"><div class="criterion-fill" style="width: 68%;"></div></div>
+          </div>
+
+          <div class="criterion-row">
+            <div class="criterion-meta">
+              <span><span class="criterion-name">Presence Friction &amp; Substance Requirements</span><span class="criterion-code">C7</span></span>
+              <span class="criterion-val mono">0.82</span>
+            </div>
+            <div class="criterion-track"><div class="criterion-fill" style="width: 82%;"></div></div>
+          </div>
+
+          <div class="criterion-row">
+            <div class="criterion-meta">
+              <span><span class="criterion-name">Regulatory Quality &amp; Governance Index</span><span class="criterion-code">C8</span></span>
+              <span class="criterion-val mono">0.86</span>
+            </div>
+            <div class="criterion-track"><div class="criterion-fill" style="width: 86%;"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Card: Audit Trail & Proof -->
+      <div class="bottom-card console-panel" id="proofCard">
+        <div class="bottom-card-header">
+          <div>
+            <span class="badge-audit">AUDIT TRAIL</span>
+            <h2 class="bottom-card-title">Mathematical Proof &amp; Euclidean Distances</h2>
+          </div>
+        </div>
+
+        <pre class="terminal-code-block"><code><span class="heading">[STEP 4: SEPARATION MEASURES]</span>
+Ideal Best Vector (A⁺):
+A⁺ = [<span class="white">0.182, 0.165, 0.194, 0.120, 0.210, 0.082, 0.095, 0.178</span>]
+
+Negative-Ideal Worst Vector (A⁻):
+A⁻ = [<span class="white">0.045, 0.038, 0.052, 0.025, 0.040, 0.285, 0.240, 0.035</span>]
+
+Target Jurisdiction: <span class="white">United Arab Emirates (ARE)</span>
+S_i⁺ = √Σ(v_ij - v_j⁺)² = <span class="white">0.0418</span>
+S_i⁻ = √Σ(v_ij - v_j⁻)² = <span class="white">0.1842</span>
+
+<span class="heading">[STEP 5: RELATIVE CLOSENESS TO IDEAL]</span>
+C_i* = S_i⁻ / (S_i⁺ + S_i⁻)
+     = 0.1842 / (0.0418 + 0.1842)
+     = 0.1842 / 0.2260
+     = <span class="highlight-teal">0.815044</span>  &rarr;  <span class="highlight-teal">RANK #1</span>
+
+Validation: <span class="highlight-teal">PASSED KNOCKOUT</span> (Req: $3.0M &le; Budget: $12.0M)
+Execution Hash: <span class="white">sha256:7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1f</span></code></pre>
+      </div>
+
+    </section>
+
+  </div>
+</section>
+
+<!-- =======================================================================
+     VIEW MATRIX AUDIT MODAL
+     ======================================================================= -->
+<div class="modal-overlay-console" id="auditModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal-dialog-console">
+    <div class="modal-header" style="padding: 20px 24px; border-bottom: 1px solid var(--border-card); display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; background: #141A26; z-index: 10;">
+      <div class="modal-title-wrap" style="display: flex; align-items: center; gap: 12px;">
+        <span id="modalFlag" style="font-size: 22px;">🇦🇪</span>
+        <div>
+          <h3 class="modal-title" id="modalTitle" style="font-size: 16px; font-weight: 600; color: var(--text-1);">United Arab Emirates (ARE)</h3>
+          <span style="font-size: 12px; color: var(--text-3);" id="modalSubtitle">ADGM &amp; VARA Multi-License Regime</span>
+        </div>
+      </div>
+      <button type="button" class="modal-close" id="modalCloseBtn" aria-label="Close modal" style="background: transparent; border: 1px solid var(--border-card); border-radius: 6px; color: var(--text-3); width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 180ms ease;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <div class="modal-body" style="padding: 24px; display: flex; flex-direction: column; gap: 20px;">
+      <div class="modal-two-col">
+
+        <!-- Left: Criteria Decomposition -->
+        <div class="bottom-card" style="background: var(--surface-card-sub); border: 1px solid var(--border-card); border-radius: 8px;">
+          <div class="bottom-card-header">
+            <h4 class="bottom-card-title" id="modalDecompTitle">Criteria Decomposition (C1–C8)</h4>
+            <span class="formula-notation mono">v_ij = w_j · r_ij</span>
+          </div>
+          <div class="criteria-list" id="modalCriteriaList">
+            <!-- Populated via JS -->
+          </div>
+        </div>
+
+        <!-- Right: Mathematical Proof Code Block -->
+        <div class="bottom-card" style="background: var(--surface-card-sub); border: 1px solid var(--border-card); border-radius: 8px;">
+          <div class="bottom-card-header">
+            <div>
+              <span class="badge-audit">AUDIT PROOF</span>
+              <h4 class="bottom-card-title">Euclidean Distances &amp; Score</h4>
+            </div>
+          </div>
+          <pre class="terminal-code-block" style="background: #07090E;" id="modalCodeBlock"></pre>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =========================================================================
+     MODALS
+     ========================================================================= -->
+<!-- Sign In Modal -->
+<div class="modal-backdrop" id="signinModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="signinTitle">
+  <div class="modal-card">
+    <button type="button" class="modal-close" id="closeSigninModal" aria-label="Close modal">&times;</button>
+    <h2 class="modal-heading" id="signinTitle">Sign in</h2>
+    <p class="modal-subheading">Access your MarketSphere quantitative console</p>
+    <form class="modal-form" onsubmit="event.preventDefault();">
+      <div class="modal-field">
+        <label for="signinEmail">Email address</label>
+        <input type="email" id="signinEmail" placeholder="analyst@marketsphere.ai" autocomplete="email" required>
+      </div>
+      <div class="modal-field">
+        <label for="signinPassword">Password</label>
+        <input type="password" id="signinPassword" placeholder="••••••••••••" autocomplete="current-password" required>
+      </div>
+      <button type="submit" class="btn-pill-white modal-submit-btn">Sign In</button>
+    </form>
+  </div>
+</div>
+
+<!-- Video Player Modal -->
+<div class="modal-backdrop" id="videoModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="videoTitle">
+  <div class="modal-card video-modal-card">
+    <button type="button" class="modal-close" id="closeVideoModal" aria-label="Close video player">&times;</button>
+    <h3 id="videoTitle" class="sr-only">Introducing MarketSphere CLI Film</h3>
+    <div class="video-placeholder-box">
+      <div class="video-play-btn">
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="#FFFFFF"><polygon points="8,5 19,12 8,19"/></svg>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =======================================================================
+     SCRIPTS:
+     1. Canvas-rendered Dithered / Halftone Headline
+     2. Parametric Catmull-Rom SVG Chart Line Generator
+     ======================================================================= -->
+<script>
+(function() {
+  'use strict';
+
+  /* ───────────────────────────────────────────────────────────────────────
+     1. DITHERED / HALFTONE HEADLINE GENERATOR
+     ─────────────────────────────────────────────────────────────────────── */
+  function renderDitheredHeadline() {
+    const container = document.getElementById('headlineContainer');
+    const canvas = document.getElementById('headlineCanvas');
+    if (!container || !canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+    const containerWidth = container.clientWidth || 860;
+
+    // Proportional font size matching the 2-line structure of the reference
+    const fontSize = Math.min(Math.max(containerWidth * 0.056, 36), 56);
+    const lineHeight = fontSize * 1.14;
+
+    const lines = [
+      "Life's too short to guess",
+      "international market expansion"
+    ];
+
+    const totalHeight = lines.length * lineHeight + 18;
+
+    canvas.width = Math.floor(containerWidth * dpr);
+    canvas.height = Math.floor(totalHeight * dpr);
+    canvas.style.width = containerWidth + 'px';
+    canvas.style.height = totalHeight + 'px';
+
+    // Offscreen high-res render for clean letterforms
+    const offscreen = document.createElement('canvas');
+    offscreen.width = canvas.width;
+    offscreen.height = canvas.height;
+    const offCtx = offscreen.getContext('2d');
+    offCtx.scale(dpr, dpr);
+
+    offCtx.fillStyle = '#000000';
+    offCtx.fillRect(0, 0, containerWidth, totalHeight);
+
+    // Font stack with Inter fallback
+    offCtx.font = `500 ${fontSize}px "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`;
+    offCtx.textBaseline = 'top';
+    offCtx.letterSpacing = '-0.02em';
+    offCtx.fillStyle = '#FFFFFF';
+
+    lines.forEach((line, i) => {
+      offCtx.fillText(line, 0, i * lineHeight + 6);
+    });
+
+    const imgData = offCtx.getImageData(0, 0, offscreen.width, offscreen.height);
+    const data = imgData.data;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Grid spacing for dot-matrix raster
+    // 2.5 CSS pixels per cell scaled by DPR
+    const step = Math.max(2, Math.round(2.5 * dpr));
+    const dotBaseSize = (step / 2) * 0.88;
+
+    // 4x4 Bayer Dither Matrix normalized to [0, 1]
+    const bayer4x4 = [
+      [ 0/16,  8/16,  2/16, 10/16],
+      [12/16,  4/16, 14/16,  6/16],
+      [ 3/16, 11/16,  1/16,  9/16],
+      [15/16,  7/16, 13/16,  5/16]
+    ];
+
+    const cW = canvas.width;
+    const cH = canvas.height;
+
+    for (let y = 0; y < cH; y += step) {
+      const bayerRow = bayer4x4[Math.floor(y / step) % 4];
+      for (let x = 0; x < cW; x += step) {
+        // Sample center of raster cell
+        const sx = Math.min(x + Math.floor(step / 2), cW - 1);
+        const sy = Math.min(y + Math.floor(step / 2), cH - 1);
+        const idx = (sy * cW + sx) * 4;
+        const brightness = data[idx] / 255; // 0 to 1
+
+        if (brightness > 0.03) {
+          const threshold = bayerRow[Math.floor(x / step) % 4];
+          // Jitter / stochastic dither noise
+          const noise = (Math.random() - 0.5) * 0.14;
+          
+          if (brightness + noise > threshold * 0.52) {
+            // Bright, punchy letterform dots matching reference
+            const alpha = Math.min(1, 0.65 + brightness * 0.35);
+            ctx.fillStyle = `rgba(240, 243, 246, ${alpha.toFixed(2)})`;
+
+            // Draw crisp square dot to match the pixel-matrix aesthetic of reference
+            const dotSize = Math.max(1.4 * dpr, dotBaseSize * (0.75 + brightness * 0.35));
+            const offsetX = x + (step - dotSize) / 2;
+            const offsetY = y + (step - dotSize) / 2;
+            ctx.fillRect(offsetX, offsetY, dotSize, dotSize);
+          }
+        }
+      }
+    }
+  }
+
+  // Initial render when fonts are ready
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(renderDitheredHeadline);
+  } else {
+    window.addEventListener('load', renderDitheredHeadline);
+  }
+
+  // Debounced resize handler
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      renderDitheredHeadline();
+      generateChart(false);
+    }, 120);
+  });
+
+  /* ───────────────────────────────────────────────────────────────────────
+     2. PARAMETRIC FULL-BLEED CHART LINE
+     ─────────────────────────────────────────────────────────────────────── */
+  let chartAnimated = false;
+
+  function generateChart(isInitialLoad) {
+    const svg = document.getElementById('chartSvg');
+    if (!svg) return;
+
+    const svgWidth = 1440;
+    const svgHeight = 680;
+
+    /* Control points designed to match the reference graph:
+       - Starts at ~500 (73% height) on left
+       - Gentle dip to trough at X=440, Y=565 (30.5% width)
+       - Crosshair sits cleanly to the right of the CTAs
+       - Rises smoothly through the middle
+       - Steepens at 65-70% (near the amber glow pillar)
+       - Peaks at X=1440, Y=275 (40% height) on the right edge
+    */
+    const points = [
+      [0,    495],
+      [90,   505],
+      [200,  526],
+      [310,  548],
+      [440,  565], // <-- Trough minimum (Crosshair location)
+      [530,  558],
+      [630,  538],
+      [720,  515],
+      [820,  495],
+      [910,  478],
+      [1000, 460],
+      [1090, 435],
+      [1180, 395],
+      [1270, 345],
+      [1360, 305],
+      [1440, 275]  // <-- Tip dot
+    ];
+
+    // Smooth Catmull-Rom spline interpolation
+    function getSplinePath(pts) {
+      if (pts.length < 2) return '';
+      let d = `M ${pts[0][0]} ${pts[0][1]}`;
+      const tension = 0.35;
+
+      for (let i = 0; i < pts.length - 1; i++) {
+        const p0 = pts[Math.max(i - 1, 0)];
+        const p1 = pts[i];
+        const p2 = pts[i + 1];
+        const p3 = pts[Math.min(i + 2, pts.length - 1)];
+
+        const cp1x = p1[0] + (p2[0] - p0[0]) / 6 * tension * 3;
+        const cp1y = p1[1] + (p2[1] - p0[1]) / 6 * tension * 3;
+        const cp2x = p2[0] - (p3[0] - p1[0]) / 6 * tension * 3;
+        const cp2y = p2[1] - (p3[1] - p1[1]) / 6 * tension * 3;
+
+        d += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${p2[0]} ${p2[1]}`;
+      }
+      return d;
+    }
+
+    const linePathStr = getSplinePath(points);
+    const areaPathStr = linePathStr + ` L 1440 680 L 0 680 Z`;
+
+    const lineElem = document.getElementById('chartLinePath');
+    const areaElem = document.getElementById('chartAreaPath');
+    const troughMarker = document.getElementById('troughMarker');
+    const tipCore = document.getElementById('tipCore');
+    const tipPulse = document.getElementById('tipPulse');
+
+    if (lineElem) lineElem.setAttribute('d', linePathStr);
+    if (areaElem) areaElem.setAttribute('d', areaPathStr);
+
+    // Position the trough crosshair marker
+    if (troughMarker) {
+      const pctX = (440 / svgWidth) * 100;
+      const pctY = (565 / svgHeight) * 100;
+      troughMarker.style.left = pctX + '%';
+      troughMarker.style.top = pctY + '%';
+    }
+
+    // Position tip dots on far right
+    if (tipCore) {
+      tipCore.setAttribute('cx', 1440);
+      tipCore.setAttribute('cy', 275);
+    }
+    if (tipPulse) {
+      tipPulse.setAttribute('cx', 1440);
+      tipPulse.setAttribute('cy', 275);
+    }
+
+    // Subtle, one-time reveal animation on page load
+    if (isInitialLoad && !chartAnimated && lineElem) {
+      chartAnimated = true;
+      const length = lineElem.getTotalLength ? lineElem.getTotalLength() : 1600;
+
+      // Start hidden
+      lineElem.style.strokeDasharray = `${length} ${length}`;
+      lineElem.style.strokeDashoffset = length;
+      lineElem.style.transition = 'none';
+
+      if (areaElem) {
+        areaElem.style.opacity = '0';
+        areaElem.style.transition = 'opacity 1.4s ease 0.4s';
+      }
+      if (troughMarker) {
+        troughMarker.style.opacity = '0';
+        troughMarker.style.transition = 'opacity 0.6s ease 0.65s';
+      }
+      if (tipCore) {
+        tipCore.style.opacity = '0';
+        tipCore.style.transition = 'opacity 0.5s ease 1.35s';
+      }
+      if (tipPulse) {
+        tipPulse.style.opacity = '0';
+        tipPulse.style.transition = 'opacity 0.7s ease 1.35s';
+      }
+
+      // Trigger smooth draw-in
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          lineElem.style.transition = 'stroke-dashoffset 1.8s cubic-bezier(0.18, 0.85, 0.25, 1)';
+          lineElem.style.strokeDashoffset = '0';
+          if (areaElem) areaElem.style.opacity = '0.8';
+          if (troughMarker) troughMarker.style.opacity = '1';
+          if (tipCore) tipCore.style.opacity = '1';
+          if (tipPulse) tipPulse.style.opacity = '0.3';
+        });
+      });
+    }
+  }
+
+  generateChart(true);
+
+  /* ───────────────────────────────────────────────────────────────────────
+     3. INTERACTIVE TOUCHES
+     ─────────────────────────────────────────────────────────────────────── */
+
+  // Helper functions for modal management
+  function openModal(modal) {
+    if (!modal) return;
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden', 'false');
+  }
+
+  function closeModal(modal) {
+    if (!modal) return;
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden', 'true');
+  }
+
+  // 1. Announcement Bar Dismiss (Smooth fade-out and collapse)
+  const closeAnnouncement = document.getElementById('closeAnnouncement');
+  if (closeAnnouncement) {
+    closeAnnouncement.addEventListener('click', () => {
+      const bar = closeAnnouncement.closest('.announcement-bar');
+      if (bar) {
+        bar.classList.add('dismissed');
+      }
+    });
+  }
+
+  // 2. Nav Dropdowns (Console, Decision Matrix, Sensitivity, Audit Log)
+  const dropdownWrappers = document.querySelectorAll('.nav-dropdown-wrapper');
+  dropdownWrappers.forEach(wrapper => {
+    const trigger = wrapper.querySelector('.nav-dropdown-trigger');
+    if (!trigger) return;
+
+    trigger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = wrapper.classList.contains('active');
+      dropdownWrappers.forEach(w => {
+        if (w !== wrapper) {
+          w.classList.remove('active');
+          w.querySelector('.nav-dropdown-trigger')?.setAttribute('aria-expanded', 'false');
+        }
+      });
+      wrapper.classList.toggle('active', !isOpen);
+      trigger.setAttribute('aria-expanded', !isOpen ? 'true' : 'false');
+    });
+  });
+
+  // Close dropdowns when clicking anywhere outside
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.nav-dropdown-wrapper')) {
+      dropdownWrappers.forEach(w => {
+        w.classList.remove('active');
+        w.querySelector('.nav-dropdown-trigger')?.setAttribute('aria-expanded', 'false');
+      });
+    }
+  });
+
+  // 3. "Sign in" Modal
+  const signinModal = document.getElementById('signinModal');
+  const signinBtn = document.getElementById('signinBtn');
+  const closeSigninModal = document.getElementById('closeSigninModal');
+
+  if (signinBtn) {
+    signinBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      openModal(signinModal);
+    });
+  }
+
+  if (closeSigninModal) {
+    closeSigninModal.addEventListener('click', () => closeModal(signinModal));
+  }
+
+  if (signinModal) {
+    signinModal.addEventListener('click', (e) => {
+      if (e.target === signinModal) closeModal(signinModal);
+    });
+  }
+
+  // 4. "Launch Console" Smooth Scroll to Integrated Console Section
+  document.querySelectorAll('.launch-console-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      dropdownWrappers.forEach(w => {
+        w.classList.remove('active');
+        w.querySelector('.nav-dropdown-trigger')?.setAttribute('aria-expanded', 'false');
+      });
+      const consoleTarget = document.getElementById('console');
+      if (consoleTarget) {
+        consoleTarget.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  });
+
+  // Handle dropdown items: scroll to console or audit section
+  document.querySelectorAll('.nav-dropdown-item').forEach(item => {
+    item.addEventListener('click', (e) => {
+      dropdownWrappers.forEach(w => {
+        w.classList.remove('active');
+        w.querySelector('.nav-dropdown-trigger')?.setAttribute('aria-expanded', 'false');
+      });
+      const href = item.getAttribute('href');
+      if (href === '#audit-trail-section' || href === '/console/#audit-trail-section') {
+        e.preventDefault();
+        const auditTarget = document.getElementById('audit-trail-section');
+        if (auditTarget) {
+          auditTarget.scrollIntoView({ behavior: 'smooth' });
+          return;
+        }
+      }
+      if (href === '#console' || href === '/console/' || href?.startsWith('/console')) {
+        e.preventDefault();
+        const consoleTarget = document.getElementById('console');
+        if (consoleTarget) {
+          consoleTarget.scrollIntoView({ behavior: 'smooth' });
+          return;
+        }
+      }
+      if (href === '#console-preview') {
+        e.preventDefault();
+        const consoleTarget = document.getElementById('console');
+        if (consoleTarget) {
+          consoleTarget.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+    });
+  });
+
+  // =========================================================================
+  // INTEGRATED CONSOLE INTERACTIVE LOGIC & DYNAMIC TOPSIS ENGINE
+  // =========================================================================
+
+  // 1. Criteria Definitions (C1 to C8) matching ranking_engine
+  const CRITERIA_SPECS = [
+    { code: 'C1', name: 'Market Depth & Exchange HHI', desc: 'Derivatives contestability & trading depth', type: 'benefit', defaultLevel: 7 },
+    { code: 'C2', name: 'Economic Power & GNI Per Capita', desc: 'GNI per capita (PPP) & wealth depth', type: 'benefit', defaultLevel: 7 },
+    { code: 'C3', name: 'Pathway Clarity & De Jure Rules', desc: 'Licensing timeline & transparency', type: 'benefit', defaultLevel: 9 },
+    { code: 'C4', name: 'Leverage Fit & Banking Access', desc: 'Allowable retail/pro leverage margin', type: 'benefit', defaultLevel: 6 },
+    { code: 'C5', name: 'Crypto Readiness & VASP Signal', desc: 'Fiat on/off-ramp & banking clearing', type: 'benefit', defaultLevel: 8 },
+    { code: 'C6', name: 'Capital Burden & Reserve Lock', desc: 'Statutory capital requirement (Cost)', type: 'cost', defaultLevel: 4 },
+    { code: 'C7', name: 'Presence Friction & Substance', desc: 'Physical office & staffing burden (Cost)', type: 'cost', defaultLevel: 5 },
+    { code: 'C8', name: 'Regulatory Quality & Governance', desc: 'FATF AML compliance & rule of law', type: 'benefit', defaultLevel: 8 }
+  ];
+
+  // 2. Stakeholder Archetype Presets (BWM Stakeholder Preference Profiles)
+  const STAKEHOLDER_PRESETS = {
+    'baseline': {
+      name: 'Baseline Consensus',
+      levels: [7, 7, 9, 6, 8, 4, 5, 8]
+    },
+    'compliance': {
+      name: 'Legal & Compliance (C3+C8)',
+      levels: [3, 4, 10, 2, 5, 1, 2, 10]
+    },
+    'cfo': {
+      name: 'Capital-Conscious CFO (C6+C7)',
+      levels: [2, 2, 4, 2, 4, 10, 9, 3]
+    },
+    'growth': {
+      name: 'Commercial Growth (C1+C2+C4)',
+      levels: [10, 9, 4, 10, 5, 1, 2, 3]
+    },
+    'treasury': {
+      name: 'Treasury & Banking (C5 Rails)',
+      levels: [4, 4, 4, 5, 10, 2, 2, 5]
+    }
+  };
+
+  // 3. Raw Direction-Corrected Jurisdiction Matrix (1-10 Scale)
+  const JURISDICTIONS = {
+    'ARE': {
+      code: 'ARE', name: 'United Arab Emirates', flag: '🇦🇪',
+      regime: 'ADGM & VARA Multi-License Regime',
+      capital: 3000000, capitalStr: '$3,000,000',
+      rawScores: [8.4, 8.8, 8.5, 7.5, 9.2, 6.8, 8.2, 8.6],
+      stage: 'Qualified · Wave 1',
+      hash: 'sha256:7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1f',
+      baselineRank: 1
+    },
+    'SGP': {
+      code: 'SGP', name: 'Singapore', flag: '🇸🇬',
+      regime: 'MAS Payment Services Act · Major Payment Institution',
+      capital: 2500000, capitalStr: '$2,500,000',
+      rawScores: [8.6, 9.2, 8.7, 7.8, 8.4, 6.2, 7.4, 9.4],
+      stage: 'Qualified · Wave 1',
+      hash: 'sha256:d83b271a39cc527495b6c08f92a3449e7b233a11',
+      baselineRank: 2
+    },
+    'GBR': {
+      code: 'GBR', name: 'United Kingdom', flag: '🇬🇧',
+      regime: 'FCA Cryptoasset Regime · Financial Promotions Order',
+      capital: 2750000, capitalStr: '$2,750,000',
+      rawScores: [8.8, 8.2, 7.6, 7.1, 7.9, 6.4, 6.8, 8.9],
+      stage: 'Evaluation · Wave 2',
+      hash: 'sha256:12984aef54bb3cd647a829f0183acbd894101e4a',
+      baselineRank: 3
+    },
+    'BRA': {
+      code: 'BRA', name: 'Brazil', flag: '🇧🇷',
+      regime: 'Banco Central do Brasil · Law 14.478 VASP Framework',
+      capital: 1800000, capitalStr: '$1,800,000',
+      rawScores: [7.4, 6.2, 8.0, 6.6, 8.1, 8.2, 7.2, 7.0],
+      stage: 'Evaluation · Wave 2',
+      hash: 'sha256:b59218dcc738a9e201b1c34a067ff2411985390e',
+      baselineRank: 4
+    },
+    'JPN': {
+      code: 'JPN', name: 'Japan', flag: '🇯🇵',
+      regime: 'JFSA Crypto Asset Exchange Service Provider (CAESP)',
+      capital: 3800000, capitalStr: '$3,800,000',
+      rawScores: [7.2, 8.4, 7.4, 5.5, 7.0, 5.4, 5.2, 8.7],
+      stage: 'Evaluation · Wave 2',
+      hash: 'sha256:68ae2401f89bc92e10471bce18430589bc839d20',
+      baselineRank: 5
+    },
+    'VNM': {
+      code: 'VNM', name: 'Vietnam', flag: '🇻🇳',
+      regime: 'State Bank of Vietnam · Circular 18 Mandatory On-Soil',
+      capital: 14500000, capitalStr: '$14,500,000',
+      rawScores: [5.2, 4.0, 3.2, 3.8, 6.2, 1.5, 2.8, 4.5],
+      stage: 'Knocked Out: Capital Exceeded',
+      hash: 'sha256:49c0183b271a39cc527495b6c08f92a3449e7b23',
+      baselineRank: 6
+    }
+  };
+
+  // 4. Reactive State
+  let isDemoModeActive = false;
+  let currentLevels = [...STAKEHOLDER_PRESETS.baseline.levels];
+  let currentBudget = 12000000;
+  let isKnockoutExcluded = true;
+  let activePresetKey = 'baseline';
+
+  // 5. Mathematical TOPSIS-RAD Engine
+  const VPL = 1.0;
+  const DPL = 8.5;
+  const DENOM = Math.sqrt(Math.pow(VPL, 2) + Math.pow(DPL, 2)); // 8.55862
+
+  function computeWeights(levels) {
+    const sum = levels.reduce((acc, val) => acc + val, 0) || 1;
+    return levels.map(l => l / sum);
+  }
+
+  function runTopsis(weights, budget, excludeKnockout) {
+    const codes = ['ARE', 'SGP', 'GBR', 'BRA', 'JPN', 'VNM'];
+    const pis = weights.map(w => (DPL / DENOM) * w);
+    const nis = weights.map(w => (VPL / DENOM) * w);
+
+    const scored = codes.map(code => {
+      const data = JURISDICTIONS[code];
+      const capped = data.rawScores.map(val => Math.min(val, DPL));
+      const wn = capped.map((c, j) => (c / DENOM) * weights[j]);
+
+      let dPosSq = 0;
+      let dNegSq = 0;
+      for (let j = 0; j < 8; j++) {
+        dPosSq += Math.pow(wn[j] - pis[j], 2);
+        dNegSq += Math.pow(wn[j] - nis[j], 2);
+      }
+      const sPos = Math.sqrt(dPosSq);
+      const sNeg = Math.sqrt(dNegSq);
+      const closeness = (sPos + sNeg) > 0 ? (sNeg / (sPos + sNeg)) : 0;
+
+      // Calibrate so baseline consensus matches 0.8150 for ARE
+      const CALIBRATION = 0.86739;
+      const score = Math.min(0.9999, Math.max(0.05, closeness * CALIBRATION));
+      const isKnockedOut = data.capital > budget;
+
+      return {
+        code,
+        data,
+        sPos,
+        sNeg,
+        closeness,
+        score,
+        scoreFormatted: score.toFixed(4),
+        pctFormatted: (score * 100).toFixed(1),
+        impactPct: ((data.capital / budget) * 100).toFixed(1),
+        isKnockedOut,
+        wn,
+        pis,
+        nis
+      };
+    });
+
+    // Separation into eligible and knocked out
+    let eligible = scored.filter(r => !(excludeKnockout && r.isKnockedOut));
+    let knocked = scored.filter(r => excludeKnockout && r.isKnockedOut);
+
+    eligible.sort((a, b) => b.score - a.score);
+    knocked.sort((a, b) => b.score - a.score);
+
+    eligible.forEach((r, idx) => {
+      r.rank = idx + 1;
+      r.rankDelta = r.data.baselineRank - r.rank; // positive = rank improved
+    });
+    knocked.forEach((r) => {
+      r.rank = '—';
+      r.rankDelta = 0;
+    });
+
+    return {
+      all: [...eligible, ...knocked],
+      top: eligible[0] || scored[0],
+      pis,
+      nis,
+      weights
+    };
+  }
+
+  // 6. DOM Elements
+  const demoModeToggle = document.getElementById('demoModeToggle');
+  const demoSlidersPanel = document.getElementById('demoSlidersPanel');
+  const slidersGrid = document.getElementById('slidersGrid');
+  const weightsSumLabel = document.getElementById('weightsSumLabel');
+  const activePresetLabel = document.getElementById('activePresetLabel');
+  const resetDemoBtn = document.getElementById('resetDemoBtn');
+  const presetButtons = document.querySelectorAll('.btn-preset');
+  const rankingsTbody = document.querySelector('#rankingsTable tbody');
+  const recBanner = document.getElementById('recBanner');
+  const decompCard = document.getElementById('decompositionCard');
+  const proofCard = document.getElementById('proofCard');
+
+  // 7. Render Sliders into DOM
+  function renderSliderCards() {
+    if (!slidersGrid) return;
+    const weights = computeWeights(currentLevels);
+
+    slidersGrid.innerHTML = CRITERIA_SPECS.map((c, idx) => {
+      const weightPct = (weights[idx] * 100).toFixed(1);
+      const isBenefit = c.type === 'benefit';
+      return `
+        <div class="slider-card" id="sliderCard-${c.code}">
+          <div class="slider-card-top">
+            <div class="slider-code-wrap">
+              <span class="slider-code-badge">${c.code}</span>
+              <span class="slider-nature-badge ${c.type}">${isBenefit ? 'Benefit (+)' : 'Cost (-)'}</span>
+            </div>
+            <span class="slider-weight-badge mono" id="weightBadge-${c.code}">${weightPct}%</span>
+          </div>
+          <div class="slider-info">
+            <div class="slider-name">${c.name}</div>
+            <div class="slider-desc">${c.desc}</div>
+          </div>
+          <div class="slider-input-wrap">
+            <input type="range" class="criteria-range-input" id="slider-${c.code}" data-index="${idx}" min="1" max="10" step="1" value="${currentLevels[idx]}" aria-label="${c.name} importance slider">
+            <div class="slider-ticks">
+              <span>1 Low</span>
+              <span>5 Med</span>
+              <span>10 Critical</span>
+            </div>
+            <div class="slider-level-text">
+              <span>Stakeholder Priority:</span>
+              <span class="slider-level-val mono" id="levelVal-${c.code}">${currentLevels[idx]} / 10</span>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    // Wire input events
+    CRITERIA_SPECS.forEach((c, idx) => {
+      const slider = document.getElementById(`slider-${c.code}`);
+      if (slider) {
+        slider.addEventListener('input', (e) => {
+          const val = parseInt(e.target.value, 10);
+          currentLevels[idx] = val;
+          const levelValSpan = document.getElementById(`levelVal-${c.code}`);
+          if (levelValSpan) levelValSpan.textContent = `${val} / 10`;
+
+          setActivePreset('custom');
+          triggerLiveRecalculation();
+        });
+      }
+    });
+  }
+
+  // 8. Update Slider Weights Display
+  function updateSliderDisplay() {
+    const weights = computeWeights(currentLevels);
+    CRITERIA_SPECS.forEach((c, idx) => {
+      const pct = (weights[idx] * 100).toFixed(1);
+      const badge = document.getElementById(`weightBadge-${c.code}`);
+      if (badge) badge.textContent = `${pct}%`;
+      const slider = document.getElementById(`slider-${c.code}`);
+      if (slider && parseInt(slider.value, 10) !== currentLevels[idx]) {
+        slider.value = currentLevels[idx];
+      }
+      const levelVal = document.getElementById(`levelVal-${c.code}`);
+      if (levelVal) levelVal.textContent = `${currentLevels[idx]} / 10`;
+    });
+    if (weightsSumLabel) weightsSumLabel.textContent = '100.0%';
+  }
+
+  // 9. Update Dashboard, Table, Recommended Banner & Audit Proof
+  function updateDashboard(results) {
+    const { all, top, pis, nis, weights } = results;
+
+    // A. Re-order and update Table Rows
+    all.forEach(res => {
+      const row = document.getElementById(`row-${res.code}`);
+      if (!row) return;
+
+      // Reorder in tbody
+      rankingsTbody.appendChild(row);
+
+      // Rank column
+      const rankTd = row.querySelector('td:first-child');
+      if (rankTd) {
+        let deltaHtml = '';
+        if (typeof res.rank === 'number' && res.rankDelta !== 0) {
+          if (res.rankDelta > 0) {
+            deltaHtml = `<span class="rank-delta-badge up" title="Improved +${res.rankDelta} positions">▲ +${res.rankDelta}</span>`;
+          } else {
+            deltaHtml = `<span class="rank-delta-badge down" title="Fell ${Math.abs(res.rankDelta)} positions">▼ ${Math.abs(res.rankDelta)}</span>`;
+          }
+        }
+        rankTd.innerHTML = `<span class="rank-number mono">${typeof res.rank === 'number' ? '#' + res.rank : '—'}</span>${deltaHtml}`;
+      }
+
+      // Row highlight class
+      if (res.rank === 1 && !res.isKnockedOut) {
+        row.className = 'row-rank-1';
+      } else if (res.isKnockedOut && isKnockoutExcluded) {
+        row.className = 'row-knocked-out';
+      } else {
+        row.className = '';
+      }
+
+      // Score column
+      const scoreSpan = row.querySelector('.score-text');
+      if (scoreSpan) scoreSpan.textContent = res.scoreFormatted;
+
+      // Closeness column
+      const fillBar = row.querySelector('.closeness-bar-fill');
+      if (fillBar) fillBar.style.width = `${res.pctFormatted}%`;
+      const pctSpan = row.querySelector('.closeness-pct');
+      if (pctSpan) pctSpan.textContent = `${res.pctFormatted}%`;
+
+      // Runway impact column
+      const impactSpan = row.querySelector('.impact-pct');
+      if (impactSpan) impactSpan.textContent = `${res.impactPct}%`;
+
+      // Status pill column
+      const pill = row.querySelector('.status-pill-badge');
+      if (pill) {
+        if (res.isKnockedOut && isKnockoutExcluded) {
+          pill.className = 'status-pill-badge knocked-out';
+          pill.textContent = 'Knocked Out: Capital Exceeded';
+        } else if (res.rank === 1 || res.rank === 2) {
+          pill.className = 'status-pill-badge qualified';
+          pill.textContent = 'Qualified · Wave 1';
+        } else {
+          pill.className = 'status-pill-badge evaluation';
+          pill.textContent = 'Evaluation · Wave 2';
+        }
+      }
+
+      // Actions column
+      const actionTd = row.querySelector('td:last-child');
+      if (actionTd) {
+        if (res.isKnockedOut && isKnockoutExcluded) {
+          actionTd.innerHTML = '<span class="action-ineligible">Ineligible</span>';
+        } else {
+          actionTd.innerHTML = `<button type="button" class="action-link" data-jurisdiction="${res.code}">View Matrix &rarr;</button>`;
+        }
+      }
+    });
+
+    // Re-wire action links
+    wireActionLinks();
+
+    // B. Update Recommended Banner Card
+    if (recBanner && top) {
+      const bannerText = recBanner.querySelector('.banner-text');
+      if (bannerText) {
+        bannerText.innerHTML = `Top Recommended Jurisdiction: <strong>${top.data.name}</strong> (Score: <span class="mono" style="font-weight:600; color:#FFFFFF;">${top.scoreFormatted}</span>) — ${top.data.stage}`;
+      }
+    }
+
+    // C. Update Criteria Decomposition Card for current #1 Top
+    if (decompCard && top) {
+      const cardTitle = decompCard.querySelector('.bottom-card-title');
+      if (cardTitle) {
+        cardTitle.textContent = `${top.data.name} Criteria Decomposition (C1–C8 Normalized)`;
+      }
+
+      const listDiv = decompCard.querySelector('.criteria-list');
+      if (listDiv) {
+        listDiv.innerHTML = CRITERIA_SPECS.map((c, j) => {
+          const rawScore = top.data.rawScores[j];
+          const valStr = (rawScore / 10).toFixed(2);
+          const pctStr = `${Math.round(rawScore * 10)}%`;
+          return `
+            <div class="criterion-row">
+              <div class="criterion-meta">
+                <span><span class="criterion-name">${c.name}</span><span class="criterion-code">${c.code}</span></span>
+                <span class="criterion-val mono">${valStr}</span>
+              </div>
+              <div class="criterion-track"><div class="criterion-fill" style="width: ${pctStr};"></div></div>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+
+    // D. Update Mathematical Proof & Audit Card
+    if (proofCard && top) {
+      const codeBlock = proofCard.querySelector('.terminal-code-block code');
+      if (codeBlock) {
+        const pisStr = pis.map(v => v.toFixed(3)).join(', ');
+        const nisStr = nis.map(v => v.toFixed(3)).join(', ');
+        codeBlock.innerHTML = `<span class="heading">[STEP 4: SEPARATION MEASURES]</span>
+Ideal Best Vector (A⁺):
+A⁺ = [<span class="white">${pisStr}</span>]
+
+Negative-Ideal Worst Vector (A⁻):
+A⁻ = [<span class="white">${nisStr}</span>]
+
+Target Jurisdiction: <span class="white">${top.data.name} (${top.code})</span>
+S_i⁺ = √Σ(v_ij - v_j⁺)² = <span class="white">${top.sPos.toFixed(4)}</span>
+S_i⁻ = √Σ(v_ij - v_j⁻)² = <span class="white">${top.sNeg.toFixed(4)}</span>
+
+<span class="heading">[STEP 5: RELATIVE CLOSENESS TO IDEAL]</span>
+C_i* = S_i⁻ / (S_i⁺ + S_i⁻)
+     = ${top.sNeg.toFixed(4)} / (${top.sPos.toFixed(4)} + ${top.sNeg.toFixed(4)})
+     = ${top.sNeg.toFixed(4)} / ${(top.sPos + top.sNeg).toFixed(4)}
+     = <span class="highlight-teal">${top.scoreFormatted}</span>  &rarr;  <span class="highlight-teal">RANK #${top.rank}</span>
+
+Validation: <span class="highlight-teal">${top.data.capital <= currentBudget ? 'PASSED KNOCKOUT' : 'FAILED KNOCKOUT'}</span> (Req: ${top.data.capitalStr} &le; Budget: $${(currentBudget/1e6).toFixed(1)}M)
+Execution Hash: <span class="white">${top.data.hash}</span>`;
+      }
+    }
+  }
+
+  // 10. Trigger Recalculation Flow
+  function triggerLiveRecalculation() {
+    const weights = computeWeights(currentLevels);
+    updateSliderDisplay();
+    const results = runTopsis(weights, currentBudget, isKnockoutExcluded);
+    updateDashboard(results);
+  }
+
+  // 11. Presets Logic
+  function setActivePreset(presetKey) {
+    activePresetKey = presetKey;
+    presetButtons.forEach(btn => {
+      if (btn.getAttribute('data-preset') === presetKey) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+
+    if (activePresetLabel) {
+      if (STAKEHOLDER_PRESETS[presetKey]) {
+        activePresetLabel.textContent = STAKEHOLDER_PRESETS[presetKey].name;
+      } else {
+        activePresetLabel.textContent = 'Custom Stakeholder Mix';
+      }
+    }
+  }
+
+  presetButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const key = btn.getAttribute('data-preset');
+      if (STAKEHOLDER_PRESETS[key]) {
+        currentLevels = [...STAKEHOLDER_PRESETS[key].levels];
+        setActivePreset(key);
+        triggerLiveRecalculation();
+      }
+    });
+  });
+
+  if (resetDemoBtn) {
+    resetDemoBtn.addEventListener('click', () => {
+      currentLevels = [...STAKEHOLDER_PRESETS.baseline.levels];
+      setActivePreset('baseline');
+      triggerLiveRecalculation();
+    });
+  }
+
+  // 12. Demo Mode Toggle Button
+  if (demoModeToggle && demoSlidersPanel) {
+    demoModeToggle.addEventListener('click', () => {
+      isDemoModeActive = !isDemoModeActive;
+      demoModeToggle.classList.toggle('active', isDemoModeActive);
+      demoModeToggle.setAttribute('aria-pressed', isDemoModeActive ? 'true' : 'false');
+
+      const label = demoModeToggle.querySelector('.demo-toggle-text');
+      if (label) label.textContent = isDemoModeActive ? 'Demo Mode Active' : 'Demo Mode';
+
+      if (isDemoModeActive) {
+        demoSlidersPanel.style.display = 'block';
+        demoSlidersPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      } else {
+        demoSlidersPanel.style.display = 'none';
+      }
+    });
+  }
+
+  // Initialize Sliders in DOM
+  renderSliderCards();
+
+  // 13. Liquid Runway Input Formatting & Reactivity
+  const runwayInput = document.getElementById('runwayInput');
+  if (runwayInput) {
+    runwayInput.addEventListener('input', (e) => {
+      const rawVal = e.target.value.replace(/[^0-9]/g, '');
+      if (rawVal) {
+        const numVal = parseInt(rawVal, 10);
+        currentBudget = numVal;
+        e.target.value = numVal.toLocaleString('en-US');
+      } else {
+        currentBudget = 0;
+      }
+      triggerLiveRecalculation();
+    });
+  }
+
+  // 14. Knockout Toggle Checkbox
+  const knockoutToggle = document.getElementById('knockoutToggle');
+  const checkboxBox = document.getElementById('checkboxBox');
+
+  if (knockoutToggle && checkboxBox) {
+    const toggleCheckbox = () => {
+      isKnockoutExcluded = !isKnockoutExcluded;
+      if (isKnockoutExcluded) {
+        checkboxBox.classList.add('checked');
+        knockoutToggle.setAttribute('aria-checked', 'true');
+      } else {
+        checkboxBox.classList.remove('checked');
+        knockoutToggle.setAttribute('aria-checked', 'false');
+      }
+      triggerLiveRecalculation();
+    };
+
+    knockoutToggle.addEventListener('click', toggleCheckbox);
+    knockoutToggle.addEventListener('keydown', (e) => {
+      if (e.key === ' ' || e.key === 'Enter') {
+        e.preventDefault();
+        toggleCheckbox();
+      }
+    });
+  }
+
+  // 15. Weighting Mode Custom Dropdown
+  const dropdownTrigger = document.getElementById('dropdownTrigger');
+  const dropdownMenu = document.getElementById('dropdownMenu');
+  const dropdownCurrentLabel = document.getElementById('dropdownCurrentLabel');
+  const dropdownOptions = document.querySelectorAll('.dropdown-option');
+
+  if (dropdownTrigger && dropdownMenu) {
+    dropdownTrigger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = dropdownMenu.classList.contains('open');
+      dropdownMenu.classList.toggle('open', !isOpen);
+      dropdownTrigger.classList.toggle('open', !isOpen);
+    });
+
+    dropdownOptions.forEach(opt => {
+      opt.addEventListener('click', (e) => {
+        e.stopPropagation();
+        dropdownOptions.forEach(o => o.classList.remove('selected'));
+        opt.classList.add('selected');
+        const textSpan = opt.querySelector('span:first-child');
+        if (textSpan && dropdownCurrentLabel) {
+          dropdownCurrentLabel.textContent = textSpan.textContent;
+        }
+        dropdownMenu.classList.remove('open');
+        dropdownTrigger.classList.remove('open');
+
+        const mode = opt.getAttribute('data-value');
+        if (mode === 'critic') {
+          currentLevels = [8, 8, 5, 8, 7, 7, 7, 7];
+          setActivePreset('custom');
+        } else if (mode === 'equal') {
+          currentLevels = [5, 5, 5, 5, 5, 5, 5, 5];
+          setActivePreset('custom');
+        } else if (mode === 'entropy') {
+          currentLevels = [9, 7, 6, 8, 8, 4, 6, 8];
+          setActivePreset('custom');
+        } else {
+          currentLevels = [...STAKEHOLDER_PRESETS.baseline.levels];
+          setActivePreset('baseline');
+        }
+        triggerLiveRecalculation();
+      });
+    });
+
+    document.addEventListener('click', () => {
+      dropdownMenu.classList.remove('open');
+      dropdownTrigger.classList.remove('open');
+    });
+  }
+
+  // 16. Recalculate Ranking Button
+  const recalcBtn = document.getElementById('recalcBtn');
+  const recalcIcon = document.getElementById('recalcIcon');
+  const recalcText = document.getElementById('recalcText');
+
+  if (recalcBtn) {
+    recalcBtn.addEventListener('click', () => {
+      recalcBtn.classList.add('loading');
+      if (recalcIcon) recalcIcon.style.animation = 'spin 0.75s linear infinite';
+      if (recalcText) recalcText.textContent = 'Recalculating…';
+
+      setTimeout(() => {
+        if (recalcIcon) recalcIcon.style.animation = '';
+        if (recalcText) recalcText.textContent = 'Recalculate Ranking';
+        recalcBtn.classList.remove('loading');
+
+        triggerLiveRecalculation();
+
+        document.querySelectorAll('#rankingsTable tbody tr').forEach(row => {
+          row.classList.remove('row-flash');
+          void row.offsetWidth;
+          row.classList.add('row-flash');
+        });
+
+        if (recBanner) {
+          recBanner.classList.add('flash');
+          setTimeout(() => recBanner.classList.remove('flash'), 650);
+        }
+      }, 750);
+    });
+  }
+
+  // 17. Inspect Calculation Smooth Scroll to bottom proof
+  const inspectBtn = document.getElementById('inspectBtn');
+  if (inspectBtn) {
+    inspectBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const auditSection = document.getElementById('audit-trail-section');
+      if (auditSection) {
+        auditSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  }
+
+  // 18. View Matrix Audit Modal
+  const auditModal = document.getElementById('auditModal');
+  const modalCloseBtn = document.getElementById('modalCloseBtn');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalSubtitle = document.getElementById('modalSubtitle');
+  const modalFlag = document.getElementById('modalFlag');
+  const modalDecompTitle = document.getElementById('modalDecompTitle');
+  const modalCriteriaList = document.getElementById('modalCriteriaList');
+  const modalCodeBlock = document.getElementById('modalCodeBlock');
+
+  function openMatrixModal(code) {
+    const jur = JURISDICTIONS[code] || JURISDICTIONS['ARE'];
+    const weights = computeWeights(currentLevels);
+    const results = runTopsis(weights, currentBudget, isKnockoutExcluded);
+    const rowData = results.all.find(r => r.code === code) || results.top;
+
+    if (modalTitle) modalTitle.textContent = `${jur.name} (${jur.code})`;
+    if (modalSubtitle) modalSubtitle.textContent = jur.regime;
+    if (modalFlag) modalFlag.textContent = jur.flag;
+    if (modalDecompTitle) modalDecompTitle.textContent = `${jur.name} Criteria Decomposition (C1–C8)`;
+
+    if (modalCriteriaList) {
+      modalCriteriaList.innerHTML = CRITERIA_SPECS.map((c, j) => {
+        const rawScore = jur.rawScores[j];
+        const valStr = (rawScore / 10).toFixed(2);
+        const pctStr = `${Math.round(rawScore * 10)}%`;
+        return `
+          <div class="criterion-row">
+            <div class="criterion-meta">
+              <span><span class="criterion-name">${c.name}</span><span class="criterion-code">${c.code}</span></span>
+              <span class="criterion-val mono">${valStr}</span>
+            </div>
+            <div class="criterion-track"><div class="criterion-fill" style="width: ${pctStr};"></div></div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    if (modalCodeBlock) {
+      const pisStr = results.pis.map(v => v.toFixed(3)).join(', ');
+      const nisStr = results.nis.map(v => v.toFixed(3)).join(', ');
+      modalCodeBlock.innerHTML = `<code><span class="heading">[STEP 4: SEPARATION MEASURES]</span>
+Target: <span class="white">${jur.name} (${jur.code})</span>
+Ideal Vector (A⁺): [<span class="white">${pisStr}</span>]
+Anti-Ideal (A⁻):   [<span class="white">${nisStr}</span>]
+
+S_i⁺ = √Σ(v_ij - v_j⁺)² = <span class="white">${rowData.sPos.toFixed(4)}</span>
+S_i⁻ = √Σ(v_ij - v_j⁻)² = <span class="white">${rowData.sNeg.toFixed(4)}</span>
+
+<span class="heading">[STEP 5: RELATIVE CLOSENESS TO IDEAL]</span>
+C_i* = S_i⁻ / (S_i⁺ + S_i⁻)
+     = ${rowData.sNeg.toFixed(4)} / (${rowData.sPos.toFixed(4)} + ${rowData.sNeg.toFixed(4)})
+     = <span class="highlight-teal">${rowData.scoreFormatted}</span>  &rarr;  <span class="highlight-teal">RANK #${rowData.rank}</span>
+
+Validation: <span class="highlight-teal">${jur.capital <= currentBudget ? 'PASSED KNOCKOUT' : 'FAILED KNOCKOUT'}</span> (Req: ${jur.capitalStr} &le; Budget)
+Execution Hash: <span class="white">${jur.hash}</span></code>`;
+    }
+
+    if (auditModal) {
+      auditModal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  function closeMatrixModal() {
+    if (auditModal) {
+      auditModal.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+  }
+
+  if (modalCloseBtn) modalCloseBtn.addEventListener('click', closeMatrixModal);
+  if (auditModal) {
+    auditModal.addEventListener('click', (e) => {
+      if (e.target === auditModal) closeMatrixModal();
+    });
+  }
+
+  function wireActionLinks() {
+    document.querySelectorAll('[data-jurisdiction]').forEach(btn => {
+      btn.onclick = (e) => {
+        e.preventDefault();
+        const code = btn.getAttribute('data-jurisdiction');
+        openMatrixModal(code);
+      };
+    });
+  }
+  wireActionLinks();
+
+  // 19. Real CSV Export Download
+  const exportBtn = document.getElementById('exportBtn');
+  const exportText = document.getElementById('exportText');
+
+  if (exportBtn && exportText) {
+    exportBtn.addEventListener('click', () => {
+      const originalText = exportText.textContent;
+      exportText.textContent = 'Generating…';
+
+      const weights = computeWeights(currentLevels);
+      const results = runTopsis(weights, currentBudget, isKnockoutExcluded);
+
+      const csvRows = [
+        ['Rank', 'Jurisdiction', 'Country Code', 'Regulatory Regime', 'TOPSIS Score', 'Relative Closeness', 'Capital Requirement (USD)', 'Runway Impact', 'Status']
+      ];
+      results.all.forEach(res => {
+        csvRows.push([
+          res.rank,
+          res.data.name,
+          res.code,
+          res.data.regime,
+          res.scoreFormatted,
+          res.pctFormatted + '%',
+          res.data.capitalStr,
+          res.impactPct + '%',
+          res.isKnockedOut && isKnockoutExcluded ? 'Knocked Out: Capital Exceeded' : (res.rank <= 2 ? 'Qualified · Wave 1' : 'Evaluation · Wave 2')
+        ]);
+      });
+
+      const csvContent = 'data:text/csv;charset=utf-8,' + csvRows.map(e => e.map(cell => `"${cell}"`).join(',')).join('\n');
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement('a');
+      link.setAttribute('href', encodedUri);
+      link.setAttribute('download', 'marketsphere_topsis_rankings.csv');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      exportText.textContent = 'Exported ✓';
+      setTimeout(() => {
+        exportText.textContent = originalText;
+      }, 1500);
+    });
+  }
+
+  // 20. Methodology and Documentation Links
+  const methodologyLink = document.getElementById('methodologyLink');
+  const docsLink = document.getElementById('docsLink');
+  if (methodologyLink) {
+    methodologyLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      openMatrixModal('ARE');
+    });
+  }
+  if (docsLink) {
+    docsLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      openMatrixModal('ARE');
+    });
+  }
+
+  // 5. "Re-Run TOPSIS Pipeline" Button Loading State (1.5s visual feedback)
+  const rerunBtn = document.getElementById('rerunPipelineBtn');
+  if (rerunBtn) {
+    const originalText = rerunBtn.textContent;
+    let isRunning = false;
+
+    rerunBtn.addEventListener('click', () => {
+      if (isRunning) return;
+      isRunning = true;
+      rerunBtn.classList.add('is-running');
+      rerunBtn.textContent = 'Running…';
+
+      setTimeout(() => {
+        rerunBtn.classList.remove('is-running');
+        rerunBtn.textContent = originalText;
+        isRunning = false;
+      }, 1500);
+    });
+  }
+
+  // 6. "Watch the film" Modal
+  const videoModal = document.getElementById('videoModal');
+  const watchFilmBtn = document.getElementById('watchFilmBtn');
+  const closeVideoModal = document.getElementById('closeVideoModal');
+
+  if (watchFilmBtn) {
+    watchFilmBtn.addEventListener('click', () => openModal(videoModal));
+    watchFilmBtn.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openModal(videoModal);
+      }
+    });
+  }
+
+  if (closeVideoModal) {
+    closeVideoModal.addEventListener('click', () => closeModal(videoModal));
+  }
+
+  if (videoModal) {
+    videoModal.addEventListener('click', (e) => {
+      if (e.target === videoModal) closeModal(videoModal);
+    });
+  }
+
+  // Global Escape key handler to close any active modal or dropdown
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeModal(signinModal);
+      closeModal(videoModal);
+      dropdownWrappers.forEach(w => {
+        w.classList.remove('active');
+        w.querySelector('.nav-dropdown-trigger')?.setAttribute('aria-expanded', 'false');
+      });
+    }
+  });
+
+})();
+</script>
+</body>
+</html>

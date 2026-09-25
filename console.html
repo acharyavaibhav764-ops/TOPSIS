@@ -1,0 +1,2198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MarketSphere TOPSIS — Internal Console</title>
+<meta name="description" content="Quantitative sovereign jurisdiction multi-criteria ranking console powered by TOPSIS and CRITIC-M optimization.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* =========================================================================
+   SYSTEM RESET & EXACT COLOR TOKENS (REUSED FROM HERO PAGE)
+   ========================================================================= */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg-page:          #07090E;
+  --surface-card:     #141A26;
+  --surface-card-sub: #0E131E;
+  --surface-hover:    #1A2233;
+  --border-card:      #1F2937;
+  --border-focus:     #00CC99;
+
+  --text-primary:     #E5E7EB;
+  --text-secondary:   #9CA3AF;
+  --text-muted:       #6B7280;
+
+  --accent-teal:      #00CC99;
+  --accent-teal-glow: rgba(0, 204, 153, 0.22);
+  --accent-teal-sub:  rgba(0, 204, 153, 0.08);
+
+  --status-emerald:   #10B981;
+  --status-emerald-bg: rgba(16, 185, 129, 0.12);
+  --status-emerald-border: rgba(16, 185, 129, 0.28);
+
+  --status-amber:     #F59E0B;
+  --status-amber-bg:  rgba(245, 158, 11, 0.12);
+  --status-amber-border: rgba(245, 158, 11, 0.28);
+
+  --status-crimson:   #EF4444;
+  --status-crimson-bg: rgba(239, 68, 68, 0.12);
+  --status-crimson-border: rgba(239, 68, 68, 0.28);
+
+  --font-sans:        'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono:        'JetBrains Mono', 'SF Mono', Menlo, Consolas, monospace;
+}
+
+html, body {
+  width: 100%;
+  min-height: 100%;
+  background-color: var(--bg-page);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Base utility for numbers, formulas and code */
+.mono {
+  font-family: var(--font-mono) !important;
+  font-variant-numeric: tabular-nums;
+}
+
+/* =========================================================================
+   ATMOSPHERE: HERO AMBIENT BACKGROUND GLOW & FAINT GRID
+   ========================================================================= */
+.bg-canvas-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  background-color: var(--bg-page);
+}
+
+/* Faint vertical grid lines exactly consistent with the hero page */
+.bg-grid {
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0.024) 0px,
+    rgba(255, 255, 255, 0.024) 1px,
+    transparent 1px,
+    transparent 88px
+  );
+  z-index: 1;
+}
+
+/* Large, low-opacity radial gradient glow behind main content - teal (#00CC99),
+   heavily blurred, positioned so it's most visible behind the recommended banner
+   and top of the table, fading out toward the bottom of the page. */
+.bg-ambient-glow {
+  position: absolute;
+  top: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1100px;
+  max-width: 95vw;
+  height: 600px;
+  background: radial-gradient(
+    ellipse 65% 50% at 50% 30%,
+    rgba(0, 204, 153, 0.16) 0%,
+    rgba(0, 204, 153, 0.08) 35%,
+    rgba(0, 204, 153, 0.02) 65%,
+    transparent 85%
+  );
+  filter: blur(65px);
+  z-index: 0;
+}
+
+/* =========================================================================
+   APP CONTAINER & TOP BAR
+   ========================================================================= */
+.app-container {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Top bar */
+.top-bar {
+  height: 56px;
+  background-color: rgba(7, 9, 14, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border-card);
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.top-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.wordmark {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  transition: opacity 180ms ease, color 180ms ease;
+}
+.wordmark:hover {
+  color: #FFFFFF;
+}
+
+.wordmark-badge {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-card);
+  padding: 2.5px 8px;
+  border-radius: 9999px;
+}
+
+.top-divider-subtle {
+  width: 1px;
+  height: 15px;
+  background-color: var(--border-card);
+  margin: 0 4px;
+}
+
+/* Back to site link */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 5px;
+  transition: color 180ms ease, background-color 180ms ease, box-shadow 180ms ease;
+}
+.back-link:hover {
+  color: var(--accent-teal);
+  background-color: rgba(0, 204, 153, 0.08);
+}
+.back-link:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--accent-teal-glow);
+}
+
+.top-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.nav-link {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  transition: color 180ms ease, background-color 180ms ease;
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-family: var(--font-sans);
+  padding: 4px 6px;
+  border-radius: 4px;
+}
+.nav-link:hover {
+  color: var(--text-primary);
+}
+.nav-link:focus-visible {
+  outline: none;
+  color: var(--accent-teal);
+}
+
+.top-divider {
+  width: 1px;
+  height: 18px;
+  background-color: var(--border-card);
+}
+
+.btn-export {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-card);
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 12.5px;
+  font-weight: 500;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  box-shadow: none;
+  transition: border-color 180ms ease, color 180ms ease, background-color 180ms ease, box-shadow 180ms ease;
+  user-select: none;
+}
+.btn-export:hover {
+  border-color: var(--accent-teal);
+  color: var(--accent-teal);
+  background-color: var(--accent-teal-sub);
+  box-shadow: 0 0 12px rgba(0, 204, 153, 0.15);
+}
+.btn-export:focus-visible {
+  outline: none;
+  border-color: var(--accent-teal);
+  box-shadow: 0 0 0 2px var(--accent-teal-glow);
+}
+.btn-export:active {
+  transform: translateY(1px);
+}
+.btn-export svg {
+  flex-shrink: 0;
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: var(--surface-card);
+  border: 1px solid var(--border-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: default;
+  transition: border-color 180ms ease, color 180ms ease, box-shadow 180ms ease;
+}
+.user-avatar:hover {
+  border-color: var(--accent-teal);
+  color: var(--accent-teal);
+  box-shadow: 0 0 10px rgba(0, 204, 153, 0.2);
+}
+
+/* =========================================================================
+   MAIN CONTENT & GLASS PANELS
+   ========================================================================= */
+.main-content {
+  flex: 1;
+  max-width: 1380px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 24px 32px 64px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.glass-panel {
+  background: rgba(20, 26, 38, 0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--border-card);
+  border-radius: 10px;
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.04);
+}
+
+/* =========================================================================
+   CONTROL BAR (CARD BELOW TOP BAR)
+   ========================================================================= */
+.control-bar {
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.control-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  flex-wrap: wrap;
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  position: relative;
+}
+
+.control-label {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* Currency input box */
+.currency-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.currency-symbol {
+  position: absolute;
+  left: 10px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text-secondary);
+  pointer-events: none;
+}
+.control-input {
+  background-color: var(--surface-card-sub);
+  border: 1px solid var(--border-card);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 12px 6px 24px;
+  border-radius: 6px;
+  outline: none;
+  width: 156px;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+.control-input:hover {
+  border-color: #374151;
+}
+.control-input:focus {
+  border-color: var(--accent-teal);
+  box-shadow: 0 0 0 2px var(--accent-teal-glow);
+}
+
+.control-divider {
+  width: 1px;
+  height: 32px;
+  background-color: var(--border-card);
+}
+
+/* Custom Weighting Mode Dropdown */
+.custom-dropdown {
+  position: relative;
+  user-select: none;
+}
+.dropdown-trigger {
+  background-color: var(--surface-card-sub);
+  border: 1px solid var(--border-card);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 30px 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  min-width: 260px;
+  position: relative;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+.dropdown-trigger:hover {
+  border-color: #374151;
+}
+.dropdown-trigger:focus-visible,
+.dropdown-trigger.open {
+  border-color: var(--accent-teal);
+  box-shadow: 0 0 0 2px var(--accent-teal-glow);
+  outline: none;
+}
+.dropdown-trigger svg {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 14px;
+  height: 14px;
+  color: var(--text-muted);
+  transition: transform 180ms ease, color 180ms ease;
+}
+.dropdown-trigger.open svg {
+  transform: translateY(-50%) rotate(180deg);
+  color: var(--accent-teal);
+}
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: #141A26;
+  border: 1px solid var(--border-card);
+  border-radius: 8px;
+  padding: 5px;
+  display: none;
+  flex-direction: column;
+  gap: 3px;
+  z-index: 100;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+.dropdown-menu.open {
+  display: flex;
+}
+.dropdown-option {
+  padding: 8px 12px;
+  font-size: 12.5px;
+  color: var(--text-primary);
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+.dropdown-option:hover {
+  background-color: var(--surface-hover);
+  color: var(--accent-teal);
+}
+.dropdown-option.selected {
+  background-color: var(--accent-teal-sub);
+  color: var(--accent-teal);
+  font-weight: 500;
+}
+.dropdown-option-badge {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+/* Checkbox toggle */
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 13px;
+  color: var(--text-primary);
+  cursor: pointer;
+  user-select: none;
+  transition: color 180ms ease;
+  border-radius: 4px;
+}
+.checkbox-label:hover {
+  color: #FFFFFF;
+}
+.checkbox-label:focus-visible {
+  outline: none;
+}
+.checkbox-label:focus-visible .custom-checkbox {
+  box-shadow: 0 0 0 2px var(--accent-teal-glow);
+  border-color: var(--accent-teal);
+}
+.custom-checkbox {
+  position: relative;
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  border: 1px solid var(--border-card);
+  background-color: var(--surface-card-sub);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 180ms ease, background-color 180ms ease, box-shadow 180ms ease;
+  flex-shrink: 0;
+}
+.custom-checkbox:hover {
+  border-color: var(--accent-teal);
+}
+.custom-checkbox.checked {
+  background-color: var(--accent-teal);
+  border-color: var(--accent-teal);
+}
+.custom-checkbox svg {
+  width: 11px;
+  height: 11px;
+  color: #07090E;
+  display: none;
+}
+.custom-checkbox.checked svg {
+  display: block;
+}
+
+/* Recalculate Ranking Button */
+.btn-recalc {
+  background-color: var(--accent-teal);
+  color: #07090E;
+  border: none;
+  border-radius: 6px;
+  padding: 9px 18px;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  box-shadow: none;
+  white-space: nowrap;
+  transition: opacity 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+  user-select: none;
+}
+.btn-recalc:hover {
+  opacity: 0.94;
+  transform: translateY(-1px);
+  box-shadow: 0 0 16px rgba(0, 204, 153, 0.35);
+}
+.btn-recalc:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--accent-teal-glow);
+}
+.btn-recalc:active {
+  transform: translateY(1px);
+}
+.btn-recalc.loading {
+  opacity: 0.8;
+  pointer-events: none;
+}
+.btn-recalc svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+/* =========================================================================
+   RECOMMENDED BANNER
+   ========================================================================= */
+.recommended-banner {
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-left: 3px solid var(--accent-teal);
+  position: relative;
+  overflow: hidden;
+  transition: box-shadow 300ms ease;
+}
+.recommended-banner.flash {
+  box-shadow: 0 0 24px rgba(0, 204, 153, 0.3);
+}
+
+.banner-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.badge-recommended {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  background: rgba(0, 204, 153, 0.12);
+  color: var(--accent-teal);
+  border: 1px solid rgba(0, 204, 153, 0.32);
+  padding: 3px 9px;
+  border-radius: 9999px;
+  white-space: nowrap;
+}
+
+.banner-text {
+  font-size: 13.5px;
+  color: var(--text-primary);
+  line-height: 1.4;
+}
+.banner-text strong {
+  color: #FFFFFF;
+}
+
+.btn-inspect {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-card);
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 12.5px;
+  font-weight: 500;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  box-shadow: none;
+  white-space: nowrap;
+  transition: border-color 180ms ease, color 180ms ease, background-color 180ms ease, box-shadow 180ms ease;
+  user-select: none;
+}
+.btn-inspect:hover {
+  border-color: var(--accent-teal);
+  color: var(--accent-teal);
+  background-color: var(--accent-teal-sub);
+  box-shadow: 0 0 12px rgba(0, 204, 153, 0.15);
+}
+.btn-inspect:focus-visible {
+  outline: none;
+  border-color: var(--accent-teal);
+  box-shadow: 0 0 0 2px var(--accent-teal-glow);
+}
+.btn-inspect:active {
+  transform: translateY(1px);
+}
+
+/* =========================================================================
+   RANKINGS TABLE
+   ========================================================================= */
+.table-panel {
+  overflow: hidden;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  width: 100%;
+}
+
+.rankings-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.rankings-table th {
+  padding: 13px 18px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border-card);
+  background-color: rgba(20, 26, 38, 0.95);
+  white-space: nowrap;
+}
+
+.rankings-table td {
+  padding: 13px 18px;
+  font-size: 13px;
+  border-bottom: 1px solid var(--border-card);
+  vertical-align: middle;
+  white-space: nowrap;
+  transition: background-color 180ms ease, opacity 250ms ease;
+}
+
+.rankings-table tr:last-child td {
+  border-bottom: none;
+}
+
+.rankings-table tbody tr {
+  transition: background-color 180ms ease;
+}
+.rankings-table tbody tr:hover td {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+/* Rank #1 Highlight */
+.row-rank-1 td {
+  background-color: rgba(0, 204, 153, 0.05);
+}
+.row-rank-1:hover td {
+  background-color: rgba(0, 204, 153, 0.09) !important;
+}
+
+/* Row Flash Animation on Recalculate */
+@keyframes rowUpdateFlash {
+  0% { background-color: rgba(0, 204, 153, 0.22); }
+  100% { background-color: transparent; }
+}
+.row-flash td {
+  animation: rowUpdateFlash 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Disqualified / Knocked Out Row */
+.row-knocked-out {
+  opacity: 0.42;
+  background-color: rgba(7, 9, 14, 0.35);
+  transition: opacity 250ms ease;
+}
+.row-knocked-out:hover {
+  opacity: 0.85;
+}
+.row-knocked-out .jurisdiction-name {
+  text-decoration: line-through;
+  text-decoration-color: var(--status-crimson);
+}
+
+.rank-number {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+.row-rank-1 .rank-number {
+  color: var(--accent-teal);
+}
+
+.jurisdiction-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 320px;
+}
+.flag-icon {
+  font-size: 19px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.jurisdiction-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow: hidden;
+}
+.jurisdiction-name {
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+.jurisdiction-subtitle {
+  font-size: 11.5px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 250px;
+  cursor: help;
+}
+
+.score-text {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.row-rank-1 .score-text {
+  color: var(--accent-teal);
+}
+
+.closeness-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 140px;
+}
+.closeness-pct {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  font-weight: 500;
+  min-width: 44px;
+  color: var(--text-primary);
+}
+.closeness-bar-track {
+  width: 75px;
+  height: 5px;
+  background-color: rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.closeness-bar-fill {
+  height: 100%;
+  background-color: var(--accent-teal);
+  border-radius: 3px;
+  transition: width 400ms ease;
+}
+.row-knocked-out .closeness-bar-fill {
+  background-color: var(--text-muted);
+}
+
+/* Status Pill Badges */
+.status-pill-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  font-size: 11.5px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.status-pill-badge.qualified {
+  background: var(--status-emerald-bg);
+  color: var(--status-emerald);
+  border: 1px solid var(--status-emerald-border);
+}
+.status-pill-badge.evaluation {
+  background: var(--status-amber-bg);
+  color: var(--status-amber);
+  border: 1px solid var(--status-amber-border);
+}
+.status-pill-badge.knocked-out {
+  background: var(--status-crimson-bg);
+  color: var(--status-crimson);
+  border: 1px solid var(--status-crimson-border);
+}
+
+.action-link {
+  color: var(--accent-teal);
+  text-decoration: none;
+  font-size: 12.5px;
+  font-weight: 500;
+  transition: opacity 180ms ease, color 180ms ease, transform 180ms ease;
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-family: var(--font-sans);
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 4px 6px;
+  border-radius: 4px;
+}
+.action-link:hover {
+  color: #00FFAA;
+  text-decoration: underline;
+  transform: translateX(2px);
+}
+.action-link:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--accent-teal-glow);
+}
+.action-ineligible {
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 6px;
+}
+
+/* =========================================================================
+   BOTTOM TWO-COLUMN ROW
+   ========================================================================= */
+.bottom-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.bottom-card {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.bottom-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  gap: 12px;
+}
+.bottom-card-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.35;
+}
+.formula-notation {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+/* Criteria Decomposition Rows */
+.criteria-list {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  flex: 1;
+  justify-content: space-between;
+}
+.criterion-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.criterion-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+}
+.criterion-name {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+.criterion-code {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-left: 6px;
+}
+.criterion-val {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent-teal);
+}
+
+.criterion-track {
+  width: 100%;
+  height: 5px;
+  background-color: rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.criterion-fill {
+  height: 100%;
+  background-color: var(--accent-teal);
+  border-radius: 3px;
+  transition: width 500ms ease;
+}
+
+/* Audit Trail & Monospace Terminal Code Block */
+.badge-audit {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--accent-teal);
+  background: rgba(0, 204, 153, 0.1);
+  border: 1px solid rgba(0, 204, 153, 0.25);
+  padding: 2px 7px;
+  border-radius: 4px;
+  display: inline-block;
+  margin-bottom: 6px;
+}
+
+.terminal-code-block {
+  background-color: var(--surface-card-sub);
+  border: 1px solid var(--border-card);
+  border-radius: 6px;
+  padding: 16px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  line-height: 1.68;
+  color: var(--text-muted);
+  overflow-x: auto;
+  flex: 1;
+}
+
+.terminal-code-block .heading {
+  color: #9CA3AF;
+  font-weight: 600;
+}
+.terminal-code-block .highlight-teal {
+  color: var(--accent-teal);
+  font-weight: 600;
+}
+.terminal-code-block .white {
+  color: var(--text-primary);
+}
+
+/* =========================================================================
+   MODAL / JURISDICTION MATRIX AUDIT DIALOG
+   ========================================================================= */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(7, 9, 14, 0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.modal-overlay.open {
+  display: flex;
+}
+
+.modal-dialog {
+  background: #141A26;
+  border: 1px solid var(--border-card);
+  border-radius: 12px;
+  max-width: 980px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border-card);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  background: #141A26;
+  z-index: 10;
+}
+.modal-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.modal-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.modal-close-btn {
+  background: transparent;
+  border: 1px solid var(--border-card);
+  border-radius: 6px;
+  color: var(--text-muted);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: border-color 180ms ease, color 180ms ease, box-shadow 180ms ease;
+}
+.modal-close-btn:hover {
+  color: var(--accent-teal);
+  border-color: var(--accent-teal);
+  box-shadow: 0 0 10px rgba(0, 204, 153, 0.2);
+}
+.modal-close-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--accent-teal-glow);
+}
+
+.modal-body {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Modal Inner Two-Column Grid */
+.modal-two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+/* =========================================================================
+   TOOLTIP STYLING
+   ========================================================================= */
+[data-tooltip] {
+  position: relative;
+}
+[data-tooltip]:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #0E131E;
+  color: var(--text-primary);
+  border: 1px solid var(--border-card);
+  padding: 5px 9px;
+  border-radius: 4px;
+  font-size: 11px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 200;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  font-family: var(--font-sans);
+  font-weight: 400;
+}
+
+/* =========================================================================
+   RESPONSIVE DESIGN (FIT WITHOUT HORIZONTAL SCROLL AT 1440PX+)
+   ========================================================================= */
+@media (max-width: 1024px) {
+  .bottom-grid, .modal-two-col {
+    grid-template-columns: 1fr;
+  }
+  .control-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .control-bar-left {
+    width: 100%;
+  }
+  .btn-recalc {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .top-bar {
+    padding: 0 16px;
+  }
+  .main-content {
+    padding: 16px 16px 48px;
+  }
+  .top-bar-right .nav-link {
+    display: none;
+  }
+  .recommended-banner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- ATMOSPHERE: FAINT GRID & SOFT TEAL RADIAL GLOW MESH -->
+<div class="bg-canvas-layer">
+  <div class="bg-grid"></div>
+  <div class="bg-ambient-glow"></div>
+</div>
+
+<div class="app-container">
+
+  <!-- =====================================================================
+       TOP BAR
+       ===================================================================== -->
+  <header class="top-bar">
+    <div class="top-bar-left">
+      <!-- 1. Wordmark links back to hero page (/) -->
+      <a href="/" class="wordmark" id="wordmarkHome" title="Return to MarketSphere hero page">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none">
+          <circle cx="12" cy="12" r="9.5" stroke="#FFFFFF" stroke-width="1.6"/>
+          <line x1="3" y1="12" x2="21" y2="12" stroke="#FFFFFF" stroke-width="1.3"/>
+          <line x1="5" y1="7" x2="19" y2="7" stroke="#00CC99" stroke-width="1.3" stroke-dasharray="2 2"/>
+        </svg>
+        <span>MarketSphere TOPSIS</span>
+      </a>
+      <span class="wordmark-badge">INTERNAL TOOL</span>
+      <span class="top-divider-subtle"></span>
+      <!-- 1. Small "← Back to site" text link linking back to hero page (/) -->
+      <a href="/" class="back-link" id="backToSiteLink" title="Return to MarketSphere hero page">
+        <span style="font-size: 13px;">&larr;</span>
+        <span>Back to site</span>
+      </a>
+    </div>
+
+    <div class="top-bar-right">
+      <button type="button" class="nav-link" id="methodologyLink">View Methodology</button>
+      <button type="button" class="nav-link" id="docsLink">Documentation</button>
+      <div class="top-divider"></div>
+      <button type="button" class="btn-export" id="exportBtn" title="Export current rankings as CSV">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+        <span id="exportText">Export CSV</span>
+      </button>
+      <div class="user-avatar" title="Operations User (John Doe)">JD</div>
+    </div>
+  </header>
+
+  <!-- =====================================================================
+       MAIN CONTENT
+       ===================================================================== -->
+  <main class="main-content">
+
+    <!-- CONTROL BAR -->
+    <section class="control-bar glass-panel" aria-label="TOPSIS Optimization Controls">
+      <div class="control-bar-left">
+        <!-- Liquid Runway Budget -->
+        <div class="control-group">
+          <label for="runwayInput" class="control-label">LIQUID RUNWAY BUDGET</label>
+          <div class="currency-input-wrapper">
+            <span class="currency-symbol">$</span>
+            <input type="text" id="runwayInput" class="control-input mono" value="12,000,000" aria-label="Liquid Runway Budget">
+          </div>
+        </div>
+
+        <div class="control-divider"></div>
+
+        <!-- Weighting Mode Custom Dropdown -->
+        <div class="control-group">
+          <label class="control-label">WEIGHTING MODE</label>
+          <div class="custom-dropdown" id="weightingDropdown">
+            <div class="dropdown-trigger" id="dropdownTrigger" tabindex="0" role="button" aria-haspopup="listbox">
+              <span id="dropdownCurrentLabel">BWM + CRITIC-M Hybrid (α = 0.65)</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </div>
+            <div class="dropdown-menu" id="dropdownMenu" role="listbox">
+              <div class="dropdown-option selected" data-value="hybrid">
+                <span>BWM + CRITIC-M Hybrid (α = 0.65)</span>
+                <span class="dropdown-option-badge">RECOMMENDED</span>
+              </div>
+              <div class="dropdown-option" data-value="vector">
+                <span>Vector Normalization</span>
+                <span class="dropdown-option-badge">STANDARD</span>
+              </div>
+              <div class="dropdown-option" data-value="entropy">
+                <span>Entropy Weighting</span>
+                <span class="dropdown-option-badge">OBJECTIVE</span>
+              </div>
+              <div class="dropdown-option" data-value="critic">
+                <span>CRITIC-M Objective Weights</span>
+                <span class="dropdown-option-badge">DATA-DRIVEN</span>
+              </div>
+              <div class="dropdown-option" data-value="equal">
+                <span>Equal Weighting Baseline</span>
+                <span class="dropdown-option-badge">BENCHMARK</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="control-divider"></div>
+
+        <!-- Exclude Disqualified Jurisdictions Checkbox -->
+        <div class="checkbox-label" id="knockoutToggle" tabindex="0" role="checkbox" aria-checked="true">
+          <div class="custom-checkbox checked" id="checkboxBox">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          </div>
+          <span>Exclude disqualified jurisdictions (C6 &gt; Runway)</span>
+        </div>
+      </div>
+
+      <!-- Solid Teal Recalculate Button with Refresh Icon -->
+      <button type="button" class="btn-recalc" id="recalcBtn">
+        <svg id="recalcIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
+        </svg>
+        <span id="recalcText">Recalculate Ranking</span>
+      </button>
+    </section>
+
+    <!-- RECOMMENDED BANNER -->
+    <section class="recommended-banner glass-panel" id="recBanner" aria-label="Top Recommended Jurisdiction Banner">
+      <div class="banner-left">
+        <span class="badge-recommended">RANK #1 RECOMMENDED</span>
+        <div class="banner-text">
+          Top Recommended Jurisdiction: <strong>United Arab Emirates</strong> (Score: <span class="mono" style="font-weight:600; color:#FFFFFF;">0.8150</span>) — Qualified for Expansion Wave 1
+        </div>
+      </div>
+      <!-- Inspect Calculation smoothly scrolls to bottom audit trail section -->
+      <button type="button" class="btn-inspect" id="inspectBtn">Inspect Calculation</button>
+    </section>
+
+    <!-- RANKINGS TABLE -->
+    <section class="table-panel glass-panel" aria-label="Jurisdiction Ranking Table">
+      <div class="table-wrapper">
+        <table class="rankings-table" id="rankingsTable">
+          <thead>
+            <tr>
+              <th style="width: 60px;">RANK</th>
+              <th style="width: 290px;">JURISDICTION</th>
+              <th style="width: 120px;">TOPSIS SCORE</th>
+              <th style="width: 170px;">RELATIVE CLOSENESS</th>
+              <th style="width: 125px;">CAPITAL REQ</th>
+              <th style="width: 120px;">RUNWAY IMPACT</th>
+              <th style="width: 170px;">STATUS</th>
+              <th style="width: 110px; text-align: right;">ACTIONS</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Row 1: UAE (Rank 1 Highlight) -->
+            <tr class="row-rank-1" id="row-ARE">
+              <td><span class="rank-number mono">#1</span></td>
+              <td>
+                <div class="jurisdiction-cell">
+                  <span class="flag-icon">🇦🇪</span>
+                  <div class="jurisdiction-meta">
+                    <span class="jurisdiction-name">United Arab Emirates</span>
+                    <span class="jurisdiction-subtitle" data-tooltip="Abu Dhabi Global Market &amp; Virtual Assets Regulatory Authority">Abu Dhabi / Dubai · ADGM &amp; VARA</span>
+                  </div>
+                </div>
+              </td>
+              <td><span class="score-text mono">0.8150</span></td>
+              <td>
+                <div class="closeness-cell">
+                  <div class="closeness-bar-track">
+                    <div class="closeness-bar-fill" style="width: 81.5%;"></div>
+                  </div>
+                  <span class="closeness-pct mono">81.5%</span>
+                </div>
+              </td>
+              <td><span class="mono">$3,000,000</span></td>
+              <td><span class="mono impact-pct">25.0%</span></td>
+              <td>
+                <span class="status-pill-badge qualified">Qualified · Wave 1</span>
+              </td>
+              <td style="text-align: right;">
+                <button type="button" class="action-link" data-jurisdiction="ARE">View Matrix &rarr;</button>
+              </td>
+            </tr>
+
+            <!-- Row 2: Singapore -->
+            <tr id="row-SGP">
+              <td><span class="rank-number mono">#2</span></td>
+              <td>
+                <div class="jurisdiction-cell">
+                  <span class="flag-icon">🇸🇬</span>
+                  <div class="jurisdiction-meta">
+                    <span class="jurisdiction-name">Singapore</span>
+                    <span class="jurisdiction-subtitle" data-tooltip="Monetary Authority of Singapore Payment Services Act">MAS Payment Services Act · MPI Licence</span>
+                  </div>
+                </div>
+              </td>
+              <td><span class="score-text mono">0.7984</span></td>
+              <td>
+                <div class="closeness-cell">
+                  <div class="closeness-bar-track">
+                    <div class="closeness-bar-fill" style="width: 79.8%;"></div>
+                  </div>
+                  <span class="closeness-pct mono">79.8%</span>
+                </div>
+              </td>
+              <td><span class="mono">$2,500,000</span></td>
+              <td><span class="mono impact-pct">20.8%</span></td>
+              <td>
+                <span class="status-pill-badge qualified">Qualified · Wave 1</span>
+              </td>
+              <td style="text-align: right;">
+                <button type="button" class="action-link" data-jurisdiction="SGP">View Matrix &rarr;</button>
+              </td>
+            </tr>
+
+            <!-- Row 3: United Kingdom -->
+            <tr id="row-GBR">
+              <td><span class="rank-number mono">#3</span></td>
+              <td>
+                <div class="jurisdiction-cell">
+                  <span class="flag-icon">🇬🇧</span>
+                  <div class="jurisdiction-meta">
+                    <span class="jurisdiction-name">United Kingdom</span>
+                    <span class="jurisdiction-subtitle" data-tooltip="Financial Conduct Authority Cryptoasset Registration &amp; FPO">FCA Cryptoasset Regime · Financial Promotions Order</span>
+                  </div>
+                </div>
+              </td>
+              <td><span class="score-text mono">0.7421</span></td>
+              <td>
+                <div class="closeness-cell">
+                  <div class="closeness-bar-track">
+                    <div class="closeness-bar-fill" style="width: 74.2%;"></div>
+                  </div>
+                  <span class="closeness-pct mono">74.2%</span>
+                </div>
+              </td>
+              <td><span class="mono">$2,750,000</span></td>
+              <td><span class="mono impact-pct">22.9%</span></td>
+              <td>
+                <span class="status-pill-badge evaluation">Evaluation · Wave 2</span>
+              </td>
+              <td style="text-align: right;">
+                <button type="button" class="action-link" data-jurisdiction="GBR">View Matrix &rarr;</button>
+              </td>
+            </tr>
+
+            <!-- Row 4: Brazil -->
+            <tr id="row-BRA">
+              <td><span class="rank-number mono">#4</span></td>
+              <td>
+                <div class="jurisdiction-cell">
+                  <span class="flag-icon">🇧🇷</span>
+                  <div class="jurisdiction-meta">
+                    <span class="jurisdiction-name">Brazil</span>
+                    <span class="jurisdiction-subtitle" data-tooltip="Banco Central do Brasil Federal Law 14.478 VASP Framework">Banco Central do Brasil · Law 14.478 VASP Framework</span>
+                  </div>
+                </div>
+              </td>
+              <td><span class="score-text mono">0.6843</span></td>
+              <td>
+                <div class="closeness-cell">
+                  <div class="closeness-bar-track">
+                    <div class="closeness-bar-fill" style="width: 68.4%;"></div>
+                  </div>
+                  <span class="closeness-pct mono">68.4%</span>
+                </div>
+              </td>
+              <td><span class="mono">$1,800,000</span></td>
+              <td><span class="mono impact-pct">15.0%</span></td>
+              <td>
+                <span class="status-pill-badge evaluation">Evaluation · Wave 2</span>
+              </td>
+              <td style="text-align: right;">
+                <button type="button" class="action-link" data-jurisdiction="BRA">View Matrix &rarr;</button>
+              </td>
+            </tr>
+
+            <!-- Row 5: Japan -->
+            <tr id="row-JPN">
+              <td><span class="rank-number mono">#5</span></td>
+              <td>
+                <div class="jurisdiction-cell">
+                  <span class="flag-icon">🇯🇵</span>
+                  <div class="jurisdiction-meta">
+                    <span class="jurisdiction-name">Japan</span>
+                    <span class="jurisdiction-subtitle" data-tooltip="Japan Financial Services Agency Crypto Asset Exchange Provider">JFSA Crypto Asset Exchange Service Provider (CAESP)</span>
+                  </div>
+                </div>
+              </td>
+              <td><span class="score-text mono">0.6312</span></td>
+              <td>
+                <div class="closeness-cell">
+                  <div class="closeness-bar-track">
+                    <div class="closeness-bar-fill" style="width: 63.1%;"></div>
+                  </div>
+                  <span class="closeness-pct mono">63.1%</span>
+                </div>
+              </td>
+              <td><span class="mono">$3,800,000</span></td>
+              <td><span class="mono impact-pct">31.7%</span></td>
+              <td>
+                <span class="status-pill-badge evaluation">Evaluation · Wave 2</span>
+              </td>
+              <td style="text-align: right;">
+                <button type="button" class="action-link" data-jurisdiction="JPN">View Matrix &rarr;</button>
+              </td>
+            </tr>
+
+            <!-- Row 6: Vietnam (Disqualified / Knocked Out) -->
+            <tr class="row-knocked-out" id="row-VNM">
+              <td><span class="rank-number mono" id="vnmRank">—</span></td>
+              <td>
+                <div class="jurisdiction-cell">
+                  <span class="flag-icon">🇻🇳</span>
+                  <div class="jurisdiction-meta">
+                    <span class="jurisdiction-name">Vietnam</span>
+                    <span class="jurisdiction-subtitle" data-tooltip="State Bank of Vietnam Circular 18 Mandatory On-Soil Data">State Bank of Vietnam · Circular 18 Mandatory On-Soil</span>
+                  </div>
+                </div>
+              </td>
+              <td><span class="score-text mono">0.3420</span></td>
+              <td>
+                <div class="closeness-cell">
+                  <div class="closeness-bar-track">
+                    <div class="closeness-bar-fill" style="width: 34.2%;"></div>
+                  </div>
+                  <span class="closeness-pct mono">34.2%</span>
+                </div>
+              </td>
+              <td><span class="mono">$14,500,000</span></td>
+              <td><span class="mono impact-pct">120.8%</span></td>
+              <td>
+                <span class="status-pill-badge knocked-out" id="vnmStatusPill">Knocked Out: Capital Exceeded</span>
+              </td>
+              <td style="text-align: right;">
+                <span class="action-ineligible" id="vnmAction">Ineligible</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- BOTTOM TWO-COLUMN ROW -->
+    <section class="bottom-grid" id="audit-trail-section">
+
+      <!-- Left Card: Criteria Decomposition -->
+      <div class="bottom-card glass-panel" id="decompositionCard">
+        <div class="bottom-card-header">
+          <h2 class="bottom-card-title">United Arab Emirates Criteria Decomposition (C1–C8 Normalized)</h2>
+          <span class="formula-notation mono">v_ij = w_j · r_ij / √(Σ r_kj²)</span>
+        </div>
+
+        <div class="criteria-list">
+          <div class="criterion-row">
+            <div class="criterion-meta">
+              <span><span class="criterion-name">Market Depth &amp; Exchange HHI</span><span class="criterion-code">C1</span></span>
+              <span class="criterion-val mono">0.84</span>
+            </div>
+            <div class="criterion-track"><div class="criterion-fill" style="width: 84%;"></div></div>
+          </div>
+
+          <div class="criterion-row">
+            <div class="criterion-meta">
+              <span><span class="criterion-name">Economic Power &amp; GNI Per Capita</span><span class="criterion-code">C2</span></span>
+              <span class="criterion-val mono">0.88</span>
+            </div>
+            <div class="criterion-track"><div class="criterion-fill" style="width: 88%;"></div></div>
+          </div>
+
+          <div class="criterion-row">
+            <div class="criterion-meta">
+              <span><span class="criterion-name">Pathway Clarity &amp; De Jure Rules</span><span class="criterion-code">C3</span></span>
+              <span class="criterion-val mono">0.85</span>
+            </div>
+            <div class="criterion-track"><div class="criterion-fill" style="width: 85%;"></div></div>
+          </div>
+
+          <div class="criterion-row">
+            <div class="criterion-meta">
+              <span><span class="criterion-name">Leverage Fit &amp; Banking Access</span><span class="criterion-code">C4</span></span>
+              <span class="criterion-val mono">0.75</span>
+            </div>
+            <div class="criterion-track"><div class="criterion-fill" style="width: 75%;"></div></div>
+          </div>
+
+          <div class="criterion-row">
+            <div class="criterion-meta">
+              <span><span class="criterion-name">Crypto Readiness &amp; VASP Signal</span><span class="criterion-code">C5</span></span>
+              <span class="criterion-val mono">0.92</span>
+            </div>
+            <div class="criterion-track"><div class="criterion-fill" style="width: 92%;"></div></div>
+          </div>
+
+          <div class="criterion-row">
+            <div class="criterion-meta">
+              <span><span class="criterion-name">Capital Burden &amp; Reserve Lock</span><span class="criterion-code">C6</span></span>
+              <span class="criterion-val mono">0.68</span>
+            </div>
+            <div class="criterion-track"><div class="criterion-fill" style="width: 68%;"></div></div>
+          </div>
+
+          <div class="criterion-row">
+            <div class="criterion-meta">
+              <span><span class="criterion-name">Presence Friction &amp; Substance Requirements</span><span class="criterion-code">C7</span></span>
+              <span class="criterion-val mono">0.82</span>
+            </div>
+            <div class="criterion-track"><div class="criterion-fill" style="width: 82%;"></div></div>
+          </div>
+
+          <div class="criterion-row">
+            <div class="criterion-meta">
+              <span><span class="criterion-name">Regulatory Quality &amp; Governance Index</span><span class="criterion-code">C8</span></span>
+              <span class="criterion-val mono">0.86</span>
+            </div>
+            <div class="criterion-track"><div class="criterion-fill" style="width: 86%;"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Card: Audit Trail & Proof -->
+      <div class="bottom-card glass-panel" id="proofCard">
+        <div class="bottom-card-header">
+          <div>
+            <span class="badge-audit">AUDIT TRAIL</span>
+            <h2 class="bottom-card-title">Mathematical Proof &amp; Euclidean Distances</h2>
+          </div>
+        </div>
+
+        <pre class="terminal-code-block"><code><span class="heading">[STEP 4: SEPARATION MEASURES]</span>
+Ideal Best Vector (A⁺):
+A⁺ = [<span class="white">0.182, 0.165, 0.194, 0.120, 0.210, 0.082, 0.095, 0.178</span>]
+
+Negative-Ideal Worst Vector (A⁻):
+A⁻ = [<span class="white">0.045, 0.038, 0.052, 0.025, 0.040, 0.285, 0.240, 0.035</span>]
+
+Target Jurisdiction: <span class="white">United Arab Emirates (ARE)</span>
+S_i⁺ = √Σ(v_ij - v_j⁺)² = <span class="white">0.0418</span>
+S_i⁻ = √Σ(v_ij - v_j⁻)² = <span class="white">0.1842</span>
+
+<span class="heading">[STEP 5: RELATIVE CLOSENESS TO IDEAL]</span>
+C_i* = S_i⁻ / (S_i⁺ + S_i⁻)
+     = 0.1842 / (0.0418 + 0.1842)
+     = 0.1842 / 0.2260
+     = <span class="highlight-teal">0.815044</span>  &rarr;  <span class="highlight-teal">RANK #1</span>
+
+Validation: <span class="highlight-teal">PASSED KNOCKOUT</span> (Req: $3.0M &le; Budget: $12.0M)
+Execution Hash: <span class="white">sha256:7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1f</span></code></pre>
+      </div>
+
+    </section>
+
+  </main>
+
+</div>
+
+<!-- =======================================================================
+     VIEW MATRIX AUDIT MODAL
+     (Reusing the exact styling of the bottom two panels for each jurisdiction)
+     ======================================================================= -->
+<div class="modal-overlay" id="auditModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal-dialog">
+    <div class="modal-header">
+      <div class="modal-title-wrap">
+        <span id="modalFlag" style="font-size: 22px;">🇦🇪</span>
+        <div>
+          <h3 class="modal-title" id="modalTitle">United Arab Emirates (ARE)</h3>
+          <span style="font-size: 12px; color: var(--text-muted);" id="modalSubtitle">ADGM &amp; VARA Multi-License Regime</span>
+        </div>
+      </div>
+      <button type="button" class="modal-close-btn" id="modalCloseBtn" aria-label="Close modal">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <!-- Two-column layout reusing bottom panels styling -->
+      <div class="modal-two-col">
+
+        <!-- Left: Criteria Decomposition -->
+        <div class="bottom-card" style="background: var(--surface-card-sub); border: 1px solid var(--border-card); border-radius: 8px;">
+          <div class="bottom-card-header">
+            <h4 class="bottom-card-title" id="modalDecompTitle">Criteria Decomposition (C1–C8)</h4>
+            <span class="formula-notation mono">v_ij = w_j · r_ij</span>
+          </div>
+          <div class="criteria-list" id="modalCriteriaList">
+            <!-- Dynamically populated via JS -->
+          </div>
+        </div>
+
+        <!-- Right: Mathematical Proof Code Block -->
+        <div class="bottom-card" style="background: var(--surface-card-sub); border: 1px solid var(--border-card); border-radius: 8px;">
+          <div class="bottom-card-header">
+            <div>
+              <span class="badge-audit">AUDIT PROOF</span>
+              <h4 class="bottom-card-title">Euclidean Distances &amp; Score</h4>
+            </div>
+          </div>
+          <pre class="terminal-code-block" style="background: #07090E;" id="modalCodeBlock"></pre>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =======================================================================
+     CLIENT INTERACTIVITY LOGIC
+     ======================================================================= -->
+<script>
+(function() {
+  'use strict';
+
+  // 1. DATA REPOSITORY FOR JURISDICTIONS
+  const jurisdictionDetails = {
+    'ARE': {
+      flag: '🇦🇪',
+      name: 'United Arab Emirates',
+      code: 'ARE',
+      subtitle: 'Abu Dhabi / Dubai · ADGM & VARA',
+      score: '0.8150',
+      sepPos: '0.0418',
+      sepNeg: '0.1842',
+      criteria: [
+        { code: 'C1', name: 'Market Depth & Exchange HHI', val: '0.84', pct: '84%' },
+        { code: 'C2', name: 'Economic Power & GNI Per Capita', val: '0.88', pct: '88%' },
+        { code: 'C3', name: 'Pathway Clarity & De Jure Rules', val: '0.85', pct: '85%' },
+        { code: 'C4', name: 'Leverage Fit & Banking Access', val: '0.75', pct: '75%' },
+        { code: 'C5', name: 'Crypto Readiness & VASP Signal', val: '0.92', pct: '92%' },
+        { code: 'C6', name: 'Capital Burden & Reserve Lock', val: '0.68', pct: '68%' },
+        { code: 'C7', name: 'Presence Friction & Substance Requirements', val: '0.82', pct: '82%' },
+        { code: 'C8', name: 'Regulatory Quality & Governance Index', val: '0.86', pct: '86%' }
+      ],
+      proof: `<span class="heading">[STEP 4: SEPARATION MEASURES]</span>
+Ideal Best Vector (A⁺):
+A⁺ = [<span class="white">0.182, 0.165, 0.194, 0.120, 0.210, 0.082, 0.095, 0.178</span>]
+
+Negative-Ideal Worst Vector (A⁻):
+A⁻ = [<span class="white">0.045, 0.038, 0.052, 0.025, 0.040, 0.285, 0.240, 0.035</span>]
+
+Target: <span class="white">United Arab Emirates (ARE)</span>
+S_i⁺ = √Σ(v_ij - v_j⁺)² = <span class="white">0.0418</span>
+S_i⁻ = √Σ(v_ij - v_j⁻)² = <span class="white">0.1842</span>
+
+<span class="heading">[STEP 5: RELATIVE CLOSENESS TO IDEAL]</span>
+C_i* = S_i⁻ / (S_i⁺ + S_i⁻)
+     = 0.1842 / (0.0418 + 0.1842)
+     = <span class="highlight-teal">0.815044</span>  &rarr;  <span class="highlight-teal">RANK #1</span>
+
+Validation: <span class="highlight-teal">PASSED KNOCKOUT</span> (Req: $3.0M &le; Budget)
+Execution Hash: <span class="white">sha256:7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1f</span>`
+    },
+    'SGP': {
+      flag: '🇸🇬',
+      name: 'Singapore',
+      code: 'SGP',
+      subtitle: 'MAS Payment Services Act · Major Payment Institution',
+      score: '0.7984',
+      sepPos: '0.0462',
+      sepNeg: '0.1829',
+      criteria: [
+        { code: 'C1', name: 'Market Depth & Exchange HHI', val: '0.86', pct: '86%' },
+        { code: 'C2', name: 'Economic Power & GNI Per Capita', val: '0.92', pct: '92%' },
+        { code: 'C3', name: 'Pathway Clarity & De Jure Rules', val: '0.87', pct: '87%' },
+        { code: 'C4', name: 'Leverage Fit & Banking Access', val: '0.78', pct: '78%' },
+        { code: 'C5', name: 'Crypto Readiness & VASP Signal', val: '0.84', pct: '84%' },
+        { code: 'C6', name: 'Capital Burden & Reserve Lock', val: '0.62', pct: '62%' },
+        { code: 'C7', name: 'Presence Friction & Substance Requirements', val: '0.74', pct: '74%' },
+        { code: 'C8', name: 'Regulatory Quality & Governance Index', val: '0.94', pct: '94%' }
+      ],
+      proof: `<span class="heading">[STEP 4: SEPARATION MEASURES]</span>
+Ideal Best Vector (A⁺):
+A⁺ = [<span class="white">0.182, 0.165, 0.194, 0.120, 0.210, 0.082, 0.095, 0.178</span>]
+
+Negative-Ideal Worst Vector (A⁻):
+A⁻ = [<span class="white">0.045, 0.038, 0.052, 0.025, 0.040, 0.285, 0.240, 0.035</span>]
+
+Target: <span class="white">Singapore (SGP)</span>
+S_i⁺ = √Σ(v_ij - v_j⁺)² = <span class="white">0.0462</span>
+S_i⁻ = √Σ(v_ij - v_j⁻)² = <span class="white">0.1829</span>
+
+<span class="heading">[STEP 5: RELATIVE CLOSENESS TO IDEAL]</span>
+C_i* = S_i⁻ / (S_i⁺ + S_i⁻)
+     = 0.1829 / (0.0462 + 0.1829)
+     = <span class="highlight-teal">0.798402</span>  &rarr;  <span class="highlight-teal">RANK #2</span>
+
+Validation: <span class="highlight-teal">PASSED KNOCKOUT</span> (Req: $2.5M &le; Budget)
+Execution Hash: <span class="white">sha256:d83b271a39cc527495b6c08f92a3449e7b233a11</span>`
+    },
+    'GBR': {
+      flag: '🇬🇧',
+      name: 'United Kingdom',
+      code: 'GBR',
+      subtitle: 'FCA Cryptoasset Regime · Financial Promotions Order',
+      score: '0.7421',
+      sepPos: '0.0594',
+      sepNeg: '0.1708',
+      criteria: [
+        { code: 'C1', name: 'Market Depth & Exchange HHI', val: '0.88', pct: '88%' },
+        { code: 'C2', name: 'Economic Power & GNI Per Capita', val: '0.82', pct: '82%' },
+        { code: 'C3', name: 'Pathway Clarity & De Jure Rules', val: '0.76', pct: '76%' },
+        { code: 'C4', name: 'Leverage Fit & Banking Access', val: '0.71', pct: '71%' },
+        { code: 'C5', name: 'Crypto Readiness & VASP Signal', val: '0.79', pct: '79%' },
+        { code: 'C6', name: 'Capital Burden & Reserve Lock', val: '0.64', pct: '64%' },
+        { code: 'C7', name: 'Presence Friction & Substance Requirements', val: '0.68', pct: '68%' },
+        { code: 'C8', name: 'Regulatory Quality & Governance Index', val: '0.89', pct: '89%' }
+      ],
+      proof: `<span class="heading">[STEP 4: SEPARATION MEASURES]</span>
+Ideal Best Vector (A⁺):
+A⁺ = [<span class="white">0.182, 0.165, 0.194, 0.120, 0.210, 0.082, 0.095, 0.178</span>]
+
+Negative-Ideal Worst Vector (A⁻):
+A⁻ = [<span class="white">0.045, 0.038, 0.052, 0.025, 0.040, 0.285, 0.240, 0.035</span>]
+
+Target: <span class="white">United Kingdom (GBR)</span>
+S_i⁺ = √Σ(v_ij - v_j⁺)² = <span class="white">0.0594</span>
+S_i⁻ = √Σ(v_ij - v_j⁻)² = <span class="white">0.1708</span>
+
+<span class="heading">[STEP 5: RELATIVE CLOSENESS TO IDEAL]</span>
+C_i* = S_i⁻ / (S_i⁺ + S_i⁻)
+     = 0.1708 / (0.0594 + 0.1708)
+     = <span class="highlight-teal">0.742131</span>  &rarr;  <span class="highlight-teal">RANK #3</span>
+
+Validation: <span class="highlight-teal">PASSED KNOCKOUT</span> (Req: $2.75M &le; Budget)
+Execution Hash: <span class="white">sha256:12984aef54bb3cd647a829f0183acbd894101e4a</span>`
+    },
+    'BRA': {
+      flag: '🇧🇷',
+      name: 'Brazil',
+      code: 'BRA',
+      subtitle: 'Banco Central do Brasil · Law 14.478 VASP Framework',
+      score: '0.6843',
+      sepPos: '0.0732',
+      sepNeg: '0.1587',
+      criteria: [
+        { code: 'C1', name: 'Market Depth & Exchange HHI', val: '0.74', pct: '74%' },
+        { code: 'C2', name: 'Economic Power & GNI Per Capita', val: '0.62', pct: '62%' },
+        { code: 'C3', name: 'Pathway Clarity & De Jure Rules', val: '0.80', pct: '80%' },
+        { code: 'C4', name: 'Leverage Fit & Banking Access', val: '0.66', pct: '66%' },
+        { code: 'C5', name: 'Crypto Readiness & VASP Signal', val: '0.81', pct: '81%' },
+        { code: 'C6', name: 'Capital Burden & Reserve Lock', val: '0.82', pct: '82%' },
+        { code: 'C7', name: 'Presence Friction & Substance Requirements', val: '0.72', pct: '72%' },
+        { code: 'C8', name: 'Regulatory Quality & Governance Index', val: '0.70', pct: '70%' }
+      ],
+      proof: `<span class="heading">[STEP 4: SEPARATION MEASURES]</span>
+Target: <span class="white">Brazil (BRA)</span>
+S_i⁺ = √Σ(v_ij - v_j⁺)² = <span class="white">0.0732</span>
+S_i⁻ = √Σ(v_ij - v_j⁻)² = <span class="white">0.1587</span>
+
+<span class="heading">[STEP 5: RELATIVE CLOSENESS TO IDEAL]</span>
+C_i* = S_i⁻ / (S_i⁺ + S_i⁻)
+     = 0.1587 / (0.0732 + 0.1587)
+     = <span class="highlight-teal">0.684320</span>  &rarr;  <span class="highlight-teal">RANK #4</span>
+
+Validation: <span class="highlight-teal">PASSED KNOCKOUT</span> (Req: $1.8M &le; Budget)
+Execution Hash: <span class="white">sha256:b59218dcc738a9e201b1c34a067ff2411985390e</span>`
+    },
+    'JPN': {
+      flag: '🇯🇵',
+      name: 'Japan',
+      code: 'JPN',
+      subtitle: 'JFSA Crypto Asset Exchange Service Provider (CAESP)',
+      score: '0.6312',
+      sepPos: '0.0864',
+      sepNeg: '0.1481',
+      criteria: [
+        { code: 'C1', name: 'Market Depth & Exchange HHI', val: '0.72', pct: '72%' },
+        { code: 'C2', name: 'Economic Power & GNI Per Capita', val: '0.84', pct: '84%' },
+        { code: 'C3', name: 'Pathway Clarity & De Jure Rules', val: '0.74', pct: '74%' },
+        { code: 'C4', name: 'Leverage Fit & Banking Access', val: '0.55', pct: '55%' },
+        { code: 'C5', name: 'Crypto Readiness & VASP Signal', val: '0.70', pct: '70%' },
+        { code: 'C6', name: 'Capital Burden & Reserve Lock', val: '0.54', pct: '54%' },
+        { code: 'C7', name: 'Presence Friction & Substance Requirements', val: '0.52', pct: '52%' },
+        { code: 'C8', name: 'Regulatory Quality & Governance Index', val: '0.87', pct: '87%' }
+      ],
+      proof: `<span class="heading">[STEP 4: SEPARATION MEASURES]</span>
+Target: <span class="white">Japan (JPN)</span>
+S_i⁺ = √Σ(v_ij - v_j⁺)² = <span class="white">0.0864</span>
+S_i⁻ = √Σ(v_ij - v_j⁻)² = <span class="white">0.1481</span>
+
+<span class="heading">[STEP 5: RELATIVE CLOSENESS TO IDEAL]</span>
+C_i* = S_i⁻ / (S_i⁺ + S_i⁻)
+     = 0.1481 / (0.0864 + 0.1481)
+     = <span class="highlight-teal">0.631245</span>  &rarr;  <span class="highlight-teal">RANK #5</span>
+
+Validation: <span class="highlight-teal">PASSED KNOCKOUT</span> (Req: $3.8M &le; Budget)
+Execution Hash: <span class="white">sha256:68ae2401f89bc92e10471bce18430589bc839d20</span>`
+    },
+    'VNM': {
+      flag: '🇻🇳',
+      name: 'Vietnam',
+      code: 'VNM',
+      subtitle: 'State Bank of Vietnam · Circular 18 Mandatory On-Soil',
+      score: '0.3420',
+      sepPos: '0.1542',
+      sepNeg: '0.0801',
+      criteria: [
+        { code: 'C1', name: 'Market Depth & Exchange HHI', val: '0.52', pct: '52%' },
+        { code: 'C2', name: 'Economic Power & GNI Per Capita', val: '0.40', pct: '40%' },
+        { code: 'C3', name: 'Pathway Clarity & De Jure Rules', val: '0.32', pct: '32%' },
+        { code: 'C4', name: 'Leverage Fit & Banking Access', val: '0.38', pct: '38%' },
+        { code: 'C5', name: 'Crypto Readiness & VASP Signal', val: '0.62', pct: '62%' },
+        { code: 'C6', name: 'Capital Burden & Reserve Lock', val: '0.15', pct: '15%' },
+        { code: 'C7', name: 'Presence Friction & Substance Requirements', val: '0.28', pct: '28%' },
+        { code: 'C8', name: 'Regulatory Quality & Governance Index', val: '0.45', pct: '45%' }
+      ],
+      proof: `<span class="heading">[STEP 4: SEPARATION MEASURES]</span>
+Target: <span class="white">Vietnam (VNM)</span>
+S_i⁺ = √Σ(v_ij - v_j⁺)² = <span class="white">0.1542</span>
+S_i⁻ = √Σ(v_ij - v_j⁻)² = <span class="white">0.0801</span>
+
+<span class="heading">[STEP 5: RELATIVE CLOSENESS TO IDEAL]</span>
+C_i* = S_i⁻ / (S_i⁺ + S_i⁻)
+     = 0.0801 / (0.1542 + 0.0801)
+     = <span class="highlight-teal">0.341829</span>  &rarr;  <span class="white">RANK #6 (KNOCKED OUT)</span>
+
+<span class="heading">[HARD KNOCKOUT SCREEN TRIGGERED]</span>
+Condition: C6 Capital Burden ($14.5M) &gt; Runway Budget ($12.0M)
+Status: <span style="color: var(--status-crimson);">DISQUALIFIED FROM WAVE 1 &amp; 2 DEPLOYMENT</span>`
+    }
+  };
+
+  // 2. LIQUID RUNWAY BUDGET LIVE COMMA FORMATTER
+  const runwayInput = document.getElementById('runwayInput');
+  function formatNumberWithCommas(val) {
+    const clean = val.replace(/[^\d]/g, '');
+    if (!clean) return '';
+    return parseInt(clean, 10).toLocaleString('en-US');
+  }
+
+  function getNumericRunway() {
+    if (!runwayInput) return 12000000;
+    const raw = runwayInput.value.replace(/[^\d]/g, '');
+    const num = parseInt(raw, 10);
+    return isNaN(num) || num <= 0 ? 12000000 : num;
+  }
+
+  function updateRunwayImpacts() {
+    const budget = getNumericRunway();
+    const rows = [
+      { id: 'row-ARE', cap: 3000000 },
+      { id: 'row-SGP', cap: 2500000 },
+      { id: 'row-GBR', cap: 2750000 },
+      { id: 'row-BRA', cap: 1800000 },
+      { id: 'row-JPN', cap: 3800000 },
+      { id: 'row-VNM', cap: 14500000 },
+    ];
+    rows.forEach(r => {
+      const el = document.getElementById(r.id);
+      if (el) {
+        const impactCell = el.querySelector('.impact-pct');
+        if (impactCell) {
+          const pct = ((r.cap / budget) * 100).toFixed(1);
+          impactCell.textContent = pct + '%';
+        }
+      }
+    });
+  }
+
+  if (runwayInput) {
+    runwayInput.addEventListener('input', () => {
+      const cursor = runwayInput.selectionStart;
+      const prevLen = runwayInput.value.length;
+      const formatted = formatNumberWithCommas(runwayInput.value);
+      runwayInput.value = formatted;
+      const newLen = formatted.length;
+      const nextPos = Math.max(0, cursor + (newLen - prevLen));
+      runwayInput.setSelectionRange(nextPos, nextPos);
+      updateRunwayImpacts();
+    });
+
+    runwayInput.addEventListener('blur', () => {
+      if (!runwayInput.value.trim()) {
+        runwayInput.value = '12,000,000';
+      }
+      updateRunwayImpacts();
+    });
+  }
+
+  // 3. WEIGHTING MODE DROPDOWN
+  const dropdownTrigger = document.getElementById('dropdownTrigger');
+  const dropdownMenu = document.getElementById('dropdownMenu');
+  const dropdownCurrentLabel = document.getElementById('dropdownCurrentLabel');
+  const dropdownOptions = document.querySelectorAll('.dropdown-option');
+
+  if (dropdownTrigger && dropdownMenu) {
+    dropdownTrigger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = dropdownMenu.classList.contains('open');
+      dropdownMenu.classList.toggle('open', !isOpen);
+      dropdownTrigger.classList.toggle('open', !isOpen);
+    });
+
+    dropdownOptions.forEach(opt => {
+      opt.addEventListener('click', (e) => {
+        e.stopPropagation();
+        dropdownOptions.forEach(o => o.classList.remove('selected'));
+        opt.classList.add('selected');
+        const text = opt.querySelector('span:first-child').textContent;
+        dropdownCurrentLabel.textContent = text;
+        dropdownMenu.classList.remove('open');
+        dropdownTrigger.classList.remove('open');
+      });
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!dropdownTrigger.contains(e.target) && !dropdownMenu.contains(e.target)) {
+        dropdownMenu.classList.remove('open');
+        dropdownTrigger.classList.remove('open');
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && dropdownMenu.classList.contains('open')) {
+        dropdownMenu.classList.remove('open');
+        dropdownTrigger.classList.remove('open');
+      }
+    });
+  }
+
+  // 4. CHECKBOX TOGGLE FOR DISQUALIFIED ROW (VIETNAM)
+  const knockoutToggle = document.getElementById('knockoutToggle');
+  const checkboxBox = document.getElementById('checkboxBox');
+  const vnmRow = document.getElementById('row-VNM');
+  const vnmRank = document.getElementById('vnmRank');
+  const vnmStatusPill = document.getElementById('vnmStatusPill');
+
+  let isKnockoutExcluded = true;
+
+  if (knockoutToggle && checkboxBox && vnmRow) {
+    const toggleCheckbox = () => {
+      isKnockoutExcluded = !isKnockoutExcluded;
+      if (isKnockoutExcluded) {
+        checkboxBox.classList.add('checked');
+        knockoutToggle.setAttribute('aria-checked', 'true');
+        vnmRow.classList.add('row-knocked-out');
+        if (vnmRank) vnmRank.textContent = '—';
+        if (vnmStatusPill) {
+          vnmStatusPill.className = 'status-pill-badge knocked-out';
+          vnmStatusPill.textContent = 'Knocked Out: Capital Exceeded';
+        }
+        const actTd = vnmRow.querySelector('td:last-child');
+        if (actTd) actTd.innerHTML = '<span class="action-ineligible" id="vnmAction">Ineligible</span>';
+      } else {
+        checkboxBox.classList.remove('checked');
+        knockoutToggle.setAttribute('aria-checked', 'false');
+        vnmRow.classList.remove('row-knocked-out');
+        if (vnmRank) vnmRank.textContent = '#6';
+        if (vnmStatusPill) {
+          vnmStatusPill.className = 'status-pill-badge evaluation';
+          vnmStatusPill.textContent = 'Wave 3 · Exceeded';
+        }
+        const actTd = vnmRow.querySelector('td:last-child');
+        if (actTd) {
+          actTd.innerHTML = '<button type="button" class="action-link" data-jurisdiction="VNM">View Matrix &rarr;</button>';
+          wireActionLinks();
+        }
+      }
+    };
+
+    knockoutToggle.addEventListener('click', toggleCheckbox);
+    knockoutToggle.addEventListener('keydown', (e) => {
+      if (e.key === ' ' || e.key === 'Enter') {
+        e.preventDefault();
+        toggleCheckbox();
+      }
+    });
+  }
+
+  // 5. RECALCULATE RANKING BUTTON
+  const recalcBtn = document.getElementById('recalcBtn');
+  const recalcIcon = document.getElementById('recalcIcon');
+  const recalcText = document.getElementById('recalcText');
+  const recBanner = document.getElementById('recBanner');
+  const tableRows = document.querySelectorAll('#rankingsTable tbody tr');
+
+  if (recalcBtn) {
+    recalcBtn.addEventListener('click', () => {
+      recalcBtn.classList.add('loading');
+      recalcIcon.style.animation = 'spin 0.75s linear infinite';
+      recalcText.textContent = 'Recalculating…';
+
+      setTimeout(() => {
+        recalcIcon.style.animation = '';
+        recalcText.textContent = 'Recalculate Ranking';
+        recalcBtn.classList.remove('loading');
+
+        // Flash all table rows
+        tableRows.forEach(row => {
+          row.classList.remove('row-flash');
+          void row.offsetWidth; // trigger reflow
+          row.classList.add('row-flash');
+        });
+
+        // Flash banner
+        if (recBanner) {
+          recBanner.classList.add('flash');
+          setTimeout(() => recBanner.classList.remove('flash'), 650);
+        }
+      }, 950);
+    });
+  }
+
+  // 6. INSPECT CALCULATION SMOOTH SCROLL
+  const inspectBtn = document.getElementById('inspectBtn');
+  if (inspectBtn) {
+    inspectBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const auditSection = document.getElementById('audit-trail-section');
+      if (auditSection) {
+        auditSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  }
+
+  // 7. VIEW MATRIX MODAL (Reusing bottom two panels styling)
+  const auditModal = document.getElementById('auditModal');
+  const modalCloseBtn = document.getElementById('modalCloseBtn');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalSubtitle = document.getElementById('modalSubtitle');
+  const modalFlag = document.getElementById('modalFlag');
+  const modalDecompTitle = document.getElementById('modalDecompTitle');
+  const modalCriteriaList = document.getElementById('modalCriteriaList');
+  const modalCodeBlock = document.getElementById('modalCodeBlock');
+
+  function openMatrixModal(code) {
+    const data = jurisdictionDetails[code] || jurisdictionDetails['ARE'];
+    if (modalTitle) modalTitle.textContent = `${data.name} (${data.code})`;
+    if (modalSubtitle) modalSubtitle.textContent = data.subtitle;
+    if (modalFlag) modalFlag.textContent = data.flag;
+    if (modalDecompTitle) modalDecompTitle.textContent = `${data.name} Criteria Decomposition (C1–C8)`;
+
+    // Populate criteria bars
+    if (modalCriteriaList && data.criteria) {
+      modalCriteriaList.innerHTML = data.criteria.map(c => `
+        <div class="criterion-row">
+          <div class="criterion-meta">
+            <span><span class="criterion-name">${c.name}</span><span class="criterion-code">${c.code}</span></span>
+            <span class="criterion-val mono">${c.val}</span>
+          </div>
+          <div class="criterion-track"><div class="criterion-fill" style="width: ${c.pct};"></div></div>
+        </div>
+      `).join('');
+    }
+
+    if (modalCodeBlock) {
+      modalCodeBlock.innerHTML = `<code>${data.proof}</code>`;
+    }
+
+    if (auditModal) {
+      auditModal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  function closeMatrixModal() {
+    if (auditModal) {
+      auditModal.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+  }
+
+  if (modalCloseBtn) modalCloseBtn.addEventListener('click', closeMatrixModal);
+  if (auditModal) {
+    auditModal.addEventListener('click', (e) => {
+      if (e.target === auditModal) closeMatrixModal();
+    });
+  }
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && auditModal && auditModal.classList.contains('open')) {
+      closeMatrixModal();
+    }
+  });
+
+  function wireActionLinks() {
+    document.querySelectorAll('[data-jurisdiction]').forEach(btn => {
+      btn.onclick = (e) => {
+        e.preventDefault();
+        const code = btn.getAttribute('data-jurisdiction');
+        openMatrixModal(code);
+      };
+    });
+  }
+  wireActionLinks();
+
+  // 8. REAL CSV EXPORT DOWNLOAD
+  const exportBtn = document.getElementById('exportBtn');
+  const exportText = document.getElementById('exportText');
+
+  if (exportBtn && exportText) {
+    exportBtn.addEventListener('click', () => {
+      const originalText = exportText.textContent;
+      exportText.textContent = 'Generating…';
+
+      const csvRows = [
+        ['Rank', 'Jurisdiction', 'Country Code', 'Regulatory Regime', 'TOPSIS Score', 'Relative Closeness', 'Capital Requirement (USD)', 'Runway Impact', 'Status']
+      ];
+
+      const rows = [
+        ['1', 'United Arab Emirates', 'ARE', 'ADGM & VARA', '0.8150', '81.5%', '$3,000,000', '25.0%', 'Qualified · Wave 1'],
+        ['2', 'Singapore', 'SGP', 'MAS Payment Services Act', '0.7984', '79.8%', '$2,500,000', '20.8%', 'Qualified · Wave 1'],
+        ['3', 'United Kingdom', 'GBR', 'FCA Cryptoasset Regime', '0.7421', '74.2%', '$2,750,000', '22.9%', 'Evaluation · Wave 2'],
+        ['4', 'Brazil', 'BRA', 'Law 14.478 VASP Framework', '0.6843', '68.4%', '$1,800,000', '15.0%', 'Evaluation · Wave 2'],
+        ['5', 'Japan', 'JPN', 'JFSA CAESP Framework', '0.6312', '63.1%', '$3,800,000', '31.7%', 'Evaluation · Wave 2'],
+        [isKnockoutExcluded ? 'DISQUALIFIED' : '6', 'Vietnam', 'VNM', 'Circular 18 On-Soil', '0.3420', '34.2%', '$14,500,000', '120.8%', isKnockoutExcluded ? 'Knocked Out: Capital Exceeded' : 'Wave 3 · Exceeded']
+      ];
+
+      rows.forEach(r => csvRows.push(r));
+
+      const csvContent = 'data:text/csv;charset=utf-8,' + csvRows.map(e => e.map(cell => `"${cell}"`).join(',')).join('\n');
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement('a');
+      link.setAttribute('href', encodedUri);
+      link.setAttribute('download', 'marketsphere_topsis_rankings.csv');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      exportText.textContent = 'Exported ✓';
+      setTimeout(() => {
+        exportText.textContent = originalText;
+      }, 1500);
+    });
+  }
+
+  // 9. METHODOLOGY & DOCS
+  const methodologyLink = document.getElementById('methodologyLink');
+  const docsLink = document.getElementById('docsLink');
+  if (methodologyLink) {
+    methodologyLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      openMatrixModal('ARE');
+    });
+  }
+  if (docsLink) {
+    docsLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      openMatrixModal('ARE');
+    });
+  }
+
+  // CSS Keyframe injection for spinner
+  const keyframesStyle = document.createElement("style");
+  keyframesStyle.innerText = `
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+  `;
+  document.head.appendChild(keyframesStyle);
+
+})();
+</script>
+</body>
+</html>
