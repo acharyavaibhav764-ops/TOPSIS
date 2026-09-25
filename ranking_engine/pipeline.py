@@ -32,6 +32,7 @@ from .topsis_rad import topsis_rad
 from .robustness_smaa import smaa_topsis
 from .robustness_mc import monte_carlo_robustness
 from .knapsack import solve_multi_period
+from data_feeds.entity_resolution import normalize_entity_name
 
 try:
     from .weighting_bwm_bayes import bayesian_bwm_weights
@@ -350,13 +351,40 @@ class RankingPipeline:
         artifacts    : dict of intermediate outputs (matrix, weights, rai, mc, allocation)
                        for debugging, logging, and downstream reporting
         """
+        # ── Pipeline boundary: normalize all entity names regardless of source ──────────────
+        # This catches facts loaded from disk (facts_live.json) or any future Tier-3 feed
+        # that bypasses make_fact() and writes a RawFact() constructor directly.
+        # This is the authoritative deduplication point — no other layer is sufficient.
+        facts = [
+            dataclasses.replace(f, jurisdiction=normalize_entity_name(f.jurisdiction))
+            for f in facts
+        ]
+        # ── Strategic exclusion: Drop India (offshore AIF structure) ──────────────────────
+        facts = [f for f in facts if f.jurisdiction != "India"]
+
         cfg = self.cfg
 
         # ---- V0: Matrix assembly + hard knockout -----------------------------------------
         if verbose: print("=== V0: Building decision matrix + knockout screen ===")
         pre_knockout_matrix = build_decision_matrix(facts, MAPPING_FUNCTIONS)
         capital_required = extract_capital_required(facts)
-        
+
+        # ── UAE merge verification ── print raw row for manual inspection ────────────────
+        if verbose:
+            uae_key = "United Arab Emirates"
+            if uae_key in pre_knockout_matrix.index:
+                row = pre_knockout_matrix.loc[uae_key]
+                active_cols = [c for c in row.index if not pd.isna(row[c])]
+                print(f"\n  [MATRIX VERIFY] {uae_key} raw scores:")
+                for col in active_cols:
+                    print(f"    {col}: {row[col]:.4f}")
+                if pd.isna(row.get("C5", float("nan"))):
+                    print(f"    C5: NaN  ← C5 seed fact NOT merged correctly")
+                print()
+            else:
+                print(f"\n  [MATRIX VERIFY] WARNING: '{uae_key}' not found in matrix index!")
+                print(f"    Matrix index: {list(pre_knockout_matrix.index)}\n")
+
         # Run Audit
         audit_df = audit_data_availability(facts, pre_knockout_matrix, capital_required, cfg.liquid_runway_usd)
         if verbose:
