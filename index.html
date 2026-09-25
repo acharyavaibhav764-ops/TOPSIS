@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MarketSphere — Quantitative Market Expansion Intelligence</title>
+<title>TOPSIS — Quantitative Jurisdiction Ranking</title>
 <meta name="description" content="Class-leading TOPSIS multi-criteria optimization engines that autonomously rank global jurisdictions and sequence capital deployment.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -31,7 +31,6 @@
 
 html, body {
   width: 100%;
-  height: 100%;
   background: var(--black);
   color: var(--text-1);
   font-family: var(--font-sans);
@@ -39,6 +38,8 @@ html, body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+html { min-height: 100%; }
+body { min-height: 100vh; }
 
 /* =========================================================================
    HERO CONTAINER — full bleed viewport
@@ -454,43 +455,6 @@ html, body {
   padding: 10px 20px;
 }
 
-/* Video modal */
-.video-modal-card {
-  max-width: 640px;
-  padding: 16px;
-  padding-top: 36px;
-}
-.video-modal-card .modal-close {
-  top: 8px;
-  right: 10px;
-}
-.video-placeholder-box {
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  background: #080B10;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  cursor: pointer;
-}
-.video-play-btn {
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.18);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.15s, transform 0.15s;
-}
-.video-placeholder-box:hover .video-play-btn {
-  background: rgba(255, 255, 255, 0.32);
-  transform: scale(1.06);
-}
-
 /* Re-Run Button Loading State */
 .btn-pill-glass.is-running {
   pointer-events: none;
@@ -653,9 +617,15 @@ html, body {
   font-family: var(--font-sans);
   transition: color 180ms ease;
   padding: 4px 6px;
+  text-decoration: none;
 }
 .console-nav-link:hover {
   color: var(--text-1);
+}
+.console-nav-link:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 3px;
+  border-radius: 3px;
 }
 .console-divider {
   width: 1px;
@@ -2045,155 +2015,130 @@ html, body {
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.1),
     0 16px 36px rgba(0, 0, 0, 0.55);
-  cursor: pointer;
-  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+  transition: border-color 0.2s ease, background 0.2s ease;
 }
 .floating-glass-card:hover {
-  transform: translateY(-2px);
   border-color: rgba(255, 255, 255, 0.22);
   background: rgba(18, 24, 34, 0.75);
 }
 
-.card-title {
-  font-size: 13px;
-  font-weight: 500;
-  color: #F3F4F6;
-  margin-bottom: 8px;
-  padding-left: 2px;
-}
-
-.terminal-mockup {
-  background: #080B10;
-  border-radius: 6px;
-  padding: 9px 11px;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  line-height: 1.55;
-  color: #9CA3AF;
-  border: 1px solid rgba(255, 255, 255, 0.04);
-  margin-bottom: 10px;
-}
-.terminal-line {
-  display: block;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.terminal-prompt {
-  color: var(--teal);
-  margin-right: 4px;
-}
-.terminal-cursor {
-  display: inline-block;
-  width: 7px;
-  height: 12px;
-  background: #6B7280;
-  vertical-align: middle;
-  margin-left: 4px;
-  animation: blink 1s step-end infinite;
-}
-@keyframes blink {
-  50% { opacity: 0; }
-}
-
-.card-footer {
+.ranking-snapshot .card-title {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.6);
+  font-size: 13px;
+  font-weight: 500;
+  color: #F3F4F6;
+  margin-bottom: 7px;
   padding: 0 2px;
 }
-.card-watch {
-  display: flex;
+
+.ranking-snapshot-label,
+.ranking-snapshot-rank,
+.ranking-snapshot-score {
+  font-family: var(--font-mono);
+}
+.ranking-snapshot-label {
+  font-size: 9px;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+}
+.ranking-snapshot-list {
+  list-style: none;
+  display: grid;
+  gap: 1px;
+  margin-bottom: 8px;
+}
+.ranking-snapshot-row {
+  display: grid;
+  grid-template-columns: 20px 18px minmax(0, 1fr) auto;
   align-items: center;
   gap: 6px;
+  min-height: 23px;
 }
-.play-btn-circle {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.35);
-  display: inline-flex;
+.ranking-snapshot-rank {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+.ranking-snapshot-flag {
+  font-size: 14px;
+  line-height: 1;
+}
+.ranking-snapshot-name {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--text-secondary);
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ranking-snapshot-score {
+  font-size: 10.5px;
+  color: var(--text-primary);
+}
+.ranking-snapshot-row:first-child .ranking-snapshot-score {
+  color: var(--accent-teal);
+}
+.ranking-snapshot-link {
+  display: flex;
   align-items: center;
-  justify-content: center;
-  transition: background 0.15s;
+  justify-content: space-between;
+  border-top: 1px solid var(--border-card);
+  padding: 8px 2px 0;
+  color: var(--teal);
+  font-size: 11px;
+  text-decoration: none;
 }
-.floating-glass-card:hover .play-btn-circle {
-  background: rgba(255, 255, 255, 0.6);
-}
-.play-btn-circle svg {
-  width: 6px;
-  height: 6px;
-  fill: #FFFFFF;
-  margin-left: 1px;
-}
-.card-duration {
-  font-family: var(--font-mono);
-  font-size: 11.5px;
-  color: rgba(255, 255, 255, 0.4);
+.ranking-snapshot-link:hover {
+  color: #FFFFFF;
 }
 
 /* =========================================================================
-   BOTTOM LOGO STRIP (Pinned to very bottom edge)
+   DECISION WORKFLOW STRIP (Pinned to very bottom edge)
    ========================================================================= */
-.logo-strip {
+.workflow-strip {
   position: relative;
   z-index: 20;
   width: 100%;
-  height: 48px;
+  min-height: 48px;
   border-top: 1px solid rgba(255, 255, 255, 0.06);
   background: rgba(7, 9, 14, 0.85);
   display: flex;
   align-items: center;
-  overflow: hidden;
-  mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.workflow-strip::-webkit-scrollbar {
+  display: none;
 }
 
-.logo-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  width: 100%;
-  padding: 0 44px;
-}
-
-.logo-item {
-  color: rgba(255, 255, 255, 0.22);
+.workflow-row {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: color 0.2s;
-  user-select: none;
-}
-.logo-item:hover {
-  color: rgba(255, 255, 255, 0.45);
+  gap: 24px;
+  width: max-content;
+  min-width: 100%;
+  padding: 0 32px;
 }
 
-.logo-wordmark {
-  font-size: 13.5px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+.workflow-label {
+  color: var(--teal);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
   white-space: nowrap;
 }
-.logo-wordmark.caps-wide {
-  letter-spacing: 0.12em;
-  font-weight: 800;
+.workflow-item {
+  color: rgba(229, 231, 235, 0.58);
+  font-size: 11px;
+  white-space: nowrap;
 }
-.logo-wordmark.script-feel {
-  font-style: italic;
-  font-family: serif;
-  font-size: 15px;
-  font-weight: 500;
-  letter-spacing: 0.02em;
-}
-.logo-wordmark.mono-font {
-  font-family: var(--font-mono);
-  font-weight: 500;
-  font-size: 12.5px;
-  letter-spacing: 0.06em;
+
+.workflow-item + .workflow-item {
+  border-left: 1px solid rgba(255, 255, 255, 0.12);
+  padding-left: 24px;
 }
 
 /* =========================================================================
@@ -2204,7 +2149,8 @@ html, body {
   .nav-links { display: none; }
   .hero-content { padding: 40px 20px 0; }
   .floating-glass-card { display: none; }
-  .logo-row { gap: 24px; justify-content: flex-start; overflow-x: auto; }
+  .workflow-row { justify-content: flex-start; gap: 18px; padding: 0 20px; }
+  .workflow-item + .workflow-item { padding-left: 18px; }
 }
 </style>
 </head>
@@ -2250,31 +2196,31 @@ html, body {
             <line x1="5" y1="17" x2="19" y2="17" stroke="#00CC99" stroke-width="1.3" stroke-dasharray="2 2"/>
           </svg>
         </span>
-        MarketSphere
+        TOPSIS
       </a>
 
       <div class="nav-links">
         <div class="nav-dropdown-wrapper">
           <button type="button" class="nav-dropdown-trigger" aria-expanded="false">
-            Console
+            Dashboard
             <svg viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1L5 5L9 1"/></svg>
           </button>
           <div class="nav-dropdown-menu">
-            <a href="#console" class="nav-dropdown-item">Dashboard</a>
-            <a href="#console" class="nav-dropdown-item">Live Runs</a>
-            <a href="#console" class="nav-dropdown-item">History</a>
+            <a href="#console" class="nav-dropdown-item">Overview</a>
+            <a href="#rankingsTable" class="nav-dropdown-item">Jurisdiction rankings</a>
+            <a href="#recBanner" class="nav-dropdown-item">Top recommendation</a>
           </div>
         </div>
 
         <div class="nav-dropdown-wrapper">
           <button type="button" class="nav-dropdown-trigger" aria-expanded="false">
-            Decision Matrix
+            Criteria
             <svg viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1L5 5L9 1"/></svg>
           </button>
           <div class="nav-dropdown-menu">
-            <a href="#console" class="nav-dropdown-item">Sovereign Weights</a>
-            <a href="#console" class="nav-dropdown-item">TOPSIS Scores</a>
-            <a href="#console" class="nav-dropdown-item">Ranking Matrix</a>
+            <a href="#weightingDropdown" class="nav-dropdown-item">Weighting method</a>
+            <a href="#runwayInput" class="nav-dropdown-item">Runway budget</a>
+            <a href="#knockoutToggle" class="nav-dropdown-item">Eligibility filter</a>
           </div>
         </div>
 
@@ -2284,21 +2230,20 @@ html, body {
             <svg viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1L5 5L9 1"/></svg>
           </button>
           <div class="nav-dropdown-menu">
-            <a href="#console" class="nav-dropdown-item">Monte Carlo Runs</a>
-            <a href="#console" class="nav-dropdown-item">Weight Perturbations</a>
-            <a href="#console" class="nav-dropdown-item">Scenario Explorer</a>
+            <a href="#demoModeToggle" class="nav-dropdown-item">Weight sensitivity</a>
+            <a href="#recalcBtn" class="nav-dropdown-item">Recalculate ranking</a>
           </div>
         </div>
 
         <div class="nav-dropdown-wrapper">
           <button type="button" class="nav-dropdown-trigger" aria-expanded="false">
-            Audit Log
+            Audit
             <svg viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1L5 5L9 1"/></svg>
           </button>
           <div class="nav-dropdown-menu">
-            <a href="#audit-trail-section" class="nav-dropdown-item">Execution Hashes</a>
-            <a href="#audit-trail-section" class="nav-dropdown-item">Compliance Verification</a>
-            <a href="#console" class="nav-dropdown-item">Export Ledger</a>
+            <a href="#decompositionCard" class="nav-dropdown-item">Criteria breakdown</a>
+            <a href="#proofCard" class="nav-dropdown-item">Calculation proof</a>
+            <a href="#exportBtn" class="nav-dropdown-item">Export rankings</a>
           </div>
         </div>
       </div>
@@ -2326,7 +2271,7 @@ html, body {
     </p>
 
     <p class="hero-body">
-      Whatever market matters to you, optimize it automatically with MarketSphere. Just set your runway and watch as iterative experiments drive measurable strategic advantage.
+      Compare jurisdictions against your criteria, set a runway budget, and review the ranking with its calculation trail.
     </p>
 
     <div class="hero-actions">
@@ -2390,57 +2335,50 @@ html, body {
   </div>
 
   <!-- =====================================================================
-       FLOATING GLASS CARD (Bottom-Right)
+       CURRENT TOPSIS RANKING SNAPSHOT
        ===================================================================== -->
-  <aside class="floating-glass-card">
-    <div class="card-title">Introducing MarketSphere CLI</div>
-    <div class="terminal-mockup">
-      <span class="terminal-line"><span class="terminal-prompt">$</span>run marketsphere --help to get started</span>
-      <span class="terminal-line" style="margin-top: 3px; color: #4B5563;">^ A<span class="terminal-cursor"></span></span>
+  <aside class="floating-glass-card ranking-snapshot" aria-label="Current TOPSIS ranking snapshot">
+    <div class="card-title">
+      <span>Current ranking</span>
+      <span class="ranking-snapshot-label">TOPSIS</span>
     </div>
-    <div class="card-footer" id="watchFilmBtn" style="cursor: pointer;" role="button" tabindex="0" aria-label="Watch the film">
-      <div class="card-watch">
-        <span class="play-btn-circle">
-          <svg viewBox="0 0 8 10"><polygon points="1,1 7,5 1,9"/></svg>
-        </span>
-        <span>Watch the film</span>
-      </div>
-      <span class="card-duration">1:08</span>
-    </div>
+    <ol class="ranking-snapshot-list">
+      <li class="ranking-snapshot-row">
+        <span class="ranking-snapshot-rank">#1</span>
+        <span class="ranking-snapshot-flag" aria-hidden="true">🇦🇪</span>
+        <span class="ranking-snapshot-name">United Arab Emirates</span>
+        <span class="ranking-snapshot-score">0.8150</span>
+      </li>
+      <li class="ranking-snapshot-row">
+        <span class="ranking-snapshot-rank">#2</span>
+        <span class="ranking-snapshot-flag" aria-hidden="true">🇸🇬</span>
+        <span class="ranking-snapshot-name">Singapore</span>
+        <span class="ranking-snapshot-score">0.7984</span>
+      </li>
+      <li class="ranking-snapshot-row">
+        <span class="ranking-snapshot-rank">#3</span>
+        <span class="ranking-snapshot-flag" aria-hidden="true">🇬🇧</span>
+        <span class="ranking-snapshot-name">United Kingdom</span>
+        <span class="ranking-snapshot-score">0.7421</span>
+      </li>
+    </ol>
+    <a class="ranking-snapshot-link" href="console/index.html">
+      <span>Open full console</span>
+      <svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 8h9M8 4l4 4-4 4"/></svg>
+    </a>
   </aside>
 
   <!-- =====================================================================
-       BOTTOM LOGO STRIP (Pinned to very bottom edge)
+       DECISION WORKFLOW STRIP
        ===================================================================== -->
-  <footer class="logo-strip">
-    <div class="logo-row">
-      <div class="logo-item">
-        <span class="logo-wordmark script-feel">Ready Meds</span>
-      </div>
-      <div class="logo-item">
-        <span class="logo-wordmark" style="font-weight:800; font-size:15px; letter-spacing:-0.03em;">flex</span>
-      </div>
-      <div class="logo-item">
-        <span class="logo-wordmark caps-wide" style="font-size:12.5px;">SHIFTSMART</span>
-      </div>
-      <div class="logo-item">
-        <span class="logo-wordmark" style="font-weight:700; letter-spacing:0.02em;">POSTMAN</span>
-      </div>
-      <div class="logo-item">
-        <span class="logo-wordmark script-feel" style="font-size:17px; font-weight:700;">Rio</span>
-      </div>
-      <div class="logo-item">
-        <span class="logo-wordmark caps-wide" style="font-size:13px; font-weight:800;">DOORDASH</span>
-      </div>
-      <div class="logo-item">
-        <span class="logo-wordmark mono-font">capital.com</span>
-      </div>
-      <div class="logo-item">
-        <span class="logo-wordmark" style="font-weight:700; letter-spacing:0.04em;">afriex</span>
-      </div>
-      <div class="logo-item">
-        <span class="logo-wordmark mono-font" style="font-weight:600;">toast</span>
-      </div>
+  <footer class="workflow-strip" aria-label="Decision workflow">
+    <div class="workflow-row">
+      <span class="workflow-label">DECISION WORKFLOW</span>
+      <span class="workflow-item">8 evaluation criteria</span>
+      <span class="workflow-item">BWM + CRITIC-M weights</span>
+      <span class="workflow-item">TOPSIS-RAD ranking</span>
+      <span class="workflow-item">Monte Carlo robustness</span>
+      <span class="workflow-item">Auditable results</span>
     </div>
   </footer>
 
@@ -2467,7 +2405,7 @@ html, body {
             <line x1="3" y1="12" x2="21" y2="12" stroke="#FFFFFF" stroke-width="1.3"/>
             <line x1="5" y1="7" x2="19" y2="7" stroke="#00CC99" stroke-width="1.3" stroke-dasharray="2 2"/>
           </svg>
-          <span>MarketSphere TOPSIS</span>
+          <span>TOPSIS</span>
         </a>
         <span class="console-badge">INTERNAL TOOL</span>
       </div>
@@ -2475,6 +2413,7 @@ html, body {
       <div class="console-header-right">
         <button type="button" class="console-nav-link" id="methodologyLink">View Methodology</button>
         <button type="button" class="console-nav-link" id="docsLink">Documentation</button>
+        <a class="console-nav-link" href="console/index.html">Open Full Console</a>
         <div class="console-divider"></div>
         <button type="button" class="btn-export-console" id="exportBtn" title="Export current rankings as CSV">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
@@ -3002,11 +2941,11 @@ Execution Hash: <span class="white">sha256:7f83b1657ff1fc53b92dc18148a1d65dfc2d4
   <div class="modal-card">
     <button type="button" class="modal-close" id="closeSigninModal" aria-label="Close modal">&times;</button>
     <h2 class="modal-heading" id="signinTitle">Sign in</h2>
-    <p class="modal-subheading">Access your MarketSphere quantitative console</p>
+    <p class="modal-subheading">Access the TOPSIS ranking console</p>
     <form class="modal-form" onsubmit="event.preventDefault();">
       <div class="modal-field">
         <label for="signinEmail">Email address</label>
-        <input type="email" id="signinEmail" placeholder="analyst@marketsphere.ai" autocomplete="email" required>
+        <input type="email" id="signinEmail" placeholder="analyst@example.com" autocomplete="email" required>
       </div>
       <div class="modal-field">
         <label for="signinPassword">Password</label>
@@ -3014,19 +2953,6 @@ Execution Hash: <span class="white">sha256:7f83b1657ff1fc53b92dc18148a1d65dfc2d4
       </div>
       <button type="submit" class="btn-pill-white modal-submit-btn">Sign In</button>
     </form>
-  </div>
-</div>
-
-<!-- Video Player Modal -->
-<div class="modal-backdrop" id="videoModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="videoTitle">
-  <div class="modal-card video-modal-card">
-    <button type="button" class="modal-close" id="closeVideoModal" aria-label="Close video player">&times;</button>
-    <h3 id="videoTitle" class="sr-only">Introducing MarketSphere CLI Film</h3>
-    <div class="video-placeholder-box">
-      <div class="video-play-btn">
-        <svg viewBox="0 0 24 24" width="28" height="28" fill="#FFFFFF"><polygon points="8,5 19,12 8,19"/></svg>
-      </div>
-    </div>
   </div>
 </div>
 
@@ -3380,7 +3306,7 @@ Execution Hash: <span class="white">sha256:7f83b1657ff1fc53b92dc18148a1d65dfc2d4
       });
       const consoleTarget = document.getElementById('console');
       if (consoleTarget) {
-        consoleTarget.scrollIntoView({ behavior: 'smooth' });
+        consoleTarget.scrollIntoView({ behavior: 'auto', block: 'start' });
       }
     });
   });
@@ -3393,11 +3319,19 @@ Execution Hash: <span class="white">sha256:7f83b1657ff1fc53b92dc18148a1d65dfc2d4
         w.querySelector('.nav-dropdown-trigger')?.setAttribute('aria-expanded', 'false');
       });
       const href = item.getAttribute('href');
+      if (href?.startsWith('#')) {
+        const target = document.getElementById(href.slice(1));
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'auto', block: 'start' });
+          return;
+        }
+      }
       if (href === '#audit-trail-section' || href === '/console/#audit-trail-section') {
         e.preventDefault();
         const auditTarget = document.getElementById('audit-trail-section');
         if (auditTarget) {
-          auditTarget.scrollIntoView({ behavior: 'smooth' });
+          auditTarget.scrollIntoView({ behavior: 'auto', block: 'start' });
           return;
         }
       }
@@ -3405,7 +3339,7 @@ Execution Hash: <span class="white">sha256:7f83b1657ff1fc53b92dc18148a1d65dfc2d4
         e.preventDefault();
         const consoleTarget = document.getElementById('console');
         if (consoleTarget) {
-          consoleTarget.scrollIntoView({ behavior: 'smooth' });
+          consoleTarget.scrollIntoView({ behavior: 'auto', block: 'start' });
           return;
         }
       }
@@ -3413,7 +3347,7 @@ Execution Hash: <span class="white">sha256:7f83b1657ff1fc53b92dc18148a1d65dfc2d4
         e.preventDefault();
         const consoleTarget = document.getElementById('console');
         if (consoleTarget) {
-          consoleTarget.scrollIntoView({ behavior: 'smooth' });
+          consoleTarget.scrollIntoView({ behavior: 'auto', block: 'start' });
         }
       }
     });
@@ -3885,7 +3819,7 @@ Execution Hash: <span class="white">${top.data.hash}</span>`;
 
       if (isDemoModeActive) {
         demoSlidersPanel.style.display = 'block';
-        demoSlidersPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        demoSlidersPanel.scrollIntoView({ behavior: 'auto', block: 'nearest' });
       } else {
         demoSlidersPanel.style.display = 'none';
       }
@@ -4026,7 +3960,7 @@ Execution Hash: <span class="white">${top.data.hash}</span>`;
       e.preventDefault();
       const auditSection = document.getElementById('audit-trail-section');
       if (auditSection) {
-        auditSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        auditSection.scrollIntoView({ behavior: 'auto', block: 'start' });
       }
     });
   }
@@ -4153,7 +4087,7 @@ Execution Hash: <span class="white">${jur.hash}</span></code>`;
       const encodedUri = encodeURI(csvContent);
       const link = document.createElement('a');
       link.setAttribute('href', encodedUri);
-      link.setAttribute('download', 'marketsphere_topsis_rankings.csv');
+      link.setAttribute('download', 'topsis_jurisdiction_rankings.csv');
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -4201,36 +4135,10 @@ Execution Hash: <span class="white">${jur.hash}</span></code>`;
     });
   }
 
-  // 6. "Watch the film" Modal
-  const videoModal = document.getElementById('videoModal');
-  const watchFilmBtn = document.getElementById('watchFilmBtn');
-  const closeVideoModal = document.getElementById('closeVideoModal');
-
-  if (watchFilmBtn) {
-    watchFilmBtn.addEventListener('click', () => openModal(videoModal));
-    watchFilmBtn.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        openModal(videoModal);
-      }
-    });
-  }
-
-  if (closeVideoModal) {
-    closeVideoModal.addEventListener('click', () => closeModal(videoModal));
-  }
-
-  if (videoModal) {
-    videoModal.addEventListener('click', (e) => {
-      if (e.target === videoModal) closeModal(videoModal);
-    });
-  }
-
   // Global Escape key handler to close any active modal or dropdown
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
       closeModal(signinModal);
-      closeModal(videoModal);
       dropdownWrappers.forEach(w => {
         w.classList.remove('active');
         w.querySelector('.nav-dropdown-trigger')?.setAttribute('aria-expanded', 'false');

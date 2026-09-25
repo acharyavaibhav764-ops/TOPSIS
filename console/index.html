@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MarketSphere TOPSIS — Internal Console</title>
+<title>TOPSIS — Internal Ranking Console</title>
 <meta name="description" content="Quantitative sovereign jurisdiction multi-criteria ranking console powered by TOPSIS and CRITIC-M optimization.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -85,8 +85,8 @@ html, body {
   inset: 0;
   background-image: repeating-linear-gradient(
     to right,
-    rgba(255, 255, 255, 0.024) 0px,
-    rgba(255, 255, 255, 0.024) 1px,
+    rgba(255, 255, 255, 0.012) 0px,
+    rgba(255, 255, 255, 0.012) 1px,
     transparent 1px,
     transparent 88px
   );
@@ -106,9 +106,9 @@ html, body {
   height: 600px;
   background: radial-gradient(
     ellipse 65% 50% at 50% 30%,
-    rgba(0, 204, 153, 0.16) 0%,
-    rgba(0, 204, 153, 0.08) 35%,
-    rgba(0, 204, 153, 0.02) 65%,
+    rgba(0, 204, 153, 0.08) 0%,
+    rgba(0, 204, 153, 0.04) 35%,
+    rgba(0, 204, 153, 0.01) 65%,
     transparent 85%
   );
   filter: blur(65px);
@@ -310,12 +310,12 @@ html, body {
 }
 
 .glass-panel {
-  background: rgba(20, 26, 38, 0.82);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  background: rgba(20, 26, 38, 0.96);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
   border: 1px solid var(--border-card);
   border-radius: 10px;
-  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.04);
+  box-shadow: none;
 }
 
 /* =========================================================================
@@ -658,8 +658,8 @@ html, body {
 .demo-sliders-panel {
   padding: 22px 24px;
   margin-bottom: 24px;
-  border: 1px solid rgba(0, 204, 153, 0.35);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6), 0 0 24px rgba(0, 204, 153, 0.07);
+  border: 1px solid rgba(0, 204, 153, 0.2);
+  box-shadow: none;
   animation: demoFadeIn 240ms ease-out forwards;
 }
 
@@ -701,8 +701,6 @@ html, body {
   height: 6px;
   border-radius: 50%;
   background: var(--accent-teal);
-  box-shadow: 0 0 6px var(--accent-teal);
-  animation: pulse-dot 1.5s ease-in-out infinite;
 }
 
 .demo-panel-title {
@@ -1089,6 +1087,12 @@ html, body {
    RANKINGS TABLE
    ========================================================================= */
 .table-panel {
+  overflow: hidden;
+}
+
+.demo-ranking-panel {
+  display: none;
+  margin-bottom: 24px;
   overflow: hidden;
 }
 
@@ -1601,18 +1605,18 @@ html, body {
   <header class="top-bar">
     <div class="top-bar-left">
       <!-- 1. Wordmark links back to hero page (/) -->
-      <a href="/" class="wordmark" id="wordmarkHome" title="Return to MarketSphere hero page">
+      <a href="../index.html" class="wordmark" id="wordmarkHome" title="Return to TOPSIS overview">
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none">
           <circle cx="12" cy="12" r="9.5" stroke="#FFFFFF" stroke-width="1.6"/>
           <line x1="3" y1="12" x2="21" y2="12" stroke="#FFFFFF" stroke-width="1.3"/>
           <line x1="5" y1="7" x2="19" y2="7" stroke="#00CC99" stroke-width="1.3" stroke-dasharray="2 2"/>
         </svg>
-        <span>MarketSphere TOPSIS</span>
+        <span>TOPSIS</span>
       </a>
       <span class="wordmark-badge">INTERNAL TOOL</span>
       <span class="top-divider-subtle"></span>
       <!-- 1. Small "← Back to site" text link linking back to hero page (/) -->
-      <a href="/" class="back-link" id="backToSiteLink" title="Return to MarketSphere hero page">
+      <a href="../index.html" class="back-link" id="backToSiteLink" title="Return to TOPSIS overview">
         <span style="font-size: 13px;">&larr;</span>
         <span>Back to site</span>
       </a>
@@ -1697,7 +1701,7 @@ html, body {
 
       <div class="control-bar-right">
         <!-- Demo Mode Toggle Button -->
-        <button type="button" class="btn-demo-toggle" id="demoModeToggle" aria-pressed="false" title="Toggle Stakeholder Weighting Sandbox">
+        <button type="button" class="btn-demo-toggle" id="demoModeToggle" aria-pressed="false" title="Toggle Demo Mode">
           <span class="demo-toggle-switch"><span class="demo-toggle-knob"></span></span>
           <span class="demo-toggle-text">Demo Mode</span>
           <span class="demo-toggle-badge">SLIDERS</span>
@@ -1715,55 +1719,46 @@ html, body {
 
     <!-- Stakeholder Multi-Criteria Weighting Sandbox (Demo Mode Panel) -->
     <section class="demo-sliders-panel glass-panel" id="demoSlidersPanel" aria-label="Stakeholder Weighting Sandbox" style="display: none;">
-      <!-- Panel Header -->
       <div class="demo-panel-header">
         <div class="demo-panel-title-area">
-          <div class="demo-sandbox-pill">BWM STAKEHOLDER WEIGHTING &amp; SENSITIVITY SANDBOX</div>
-          <h2 class="demo-panel-title">Tune Criteria Importance &amp; Test Ranking Sensitivity</h2>
-          <p class="demo-panel-desc">Stakeholders prioritize criteria on a 1–10 Saaty importance scale. The engine normalizes weights dynamically (Σ w<sub>j</sub> = 100%) and instantly recomputes TOPSIS Euclidean separation, relative closeness scores, and ranking positions in real time.</p>
+          <div class="demo-sandbox-pill">DEMO MODE</div>
+          <h2 class="demo-panel-title">Adjust criteria importance</h2>
+          <p class="demo-panel-desc">Drag any slider. The other seven rebalance automatically so weights always sum to 100%.</p>
         </div>
         <div class="demo-panel-metrics">
           <div class="demo-metric-pill">
-            <span>Normalized Sum:</span>
+            <span>Total weight:</span>
             <strong id="weightsSumLabel">100.0%</strong>
-          </div>
-          <div class="demo-metric-pill">
-            <span>Active Preset:</span>
-            <strong id="activePresetLabel" style="color: var(--text-primary);">Baseline Consensus</strong>
           </div>
           <button type="button" class="btn-reset-demo" id="resetDemoBtn" title="Reset all sliders to production baseline weights">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
-            <span>Reset Baseline</span>
+            <span>Reset to Default Weights</span>
           </button>
         </div>
       </div>
 
-      <!-- Presets Selector Bar -->
-      <div class="presets-bar">
-        <span class="presets-label">Stakeholder Archetype Presets:</span>
-        <div class="presets-list" id="presetsList">
-          <button type="button" class="btn-preset active" data-preset="baseline">⚖️ Baseline Consensus</button>
-          <button type="button" class="btn-preset" data-preset="compliance">🛡️ Legal &amp; Compliance (C3+C8)</button>
-          <button type="button" class="btn-preset" data-preset="cfo">💰 Capital-Conscious CFO (C6+C7)</button>
-          <button type="button" class="btn-preset" data-preset="growth">🚀 Commercial Growth (C1+C2+C4)</button>
-          <button type="button" class="btn-preset" data-preset="treasury">🏦 Treasury &amp; Banking (C5 Rails)</button>
-        </div>
-      </div>
-
-      <!-- 8 Criteria Sliders Grid -->
       <div class="sliders-grid" id="slidersGrid">
-        <!-- Rendered via JS -->
       </div>
 
-      <!-- Demo Footer Status -->
       <div class="demo-panel-footer">
-        <div class="demo-engine-status">
-          <span class="demo-engine-dot"></span>
-          <span><strong>Live TOPSIS-RAD Engine:</strong> Dynamic vector normalization &amp; Euclidean separation active (<span class="mono" style="color:var(--accent-teal);">&lt;2ms</span>)</span>
-        </div>
-        <div>
-          <span>BWM Consistency: <span class="mono" style="color:var(--accent-teal);">ξ = 0.042 (Consistent)</span> · Non-reversal DPL anchor: <span class="mono" style="color:var(--text-primary);">8.50</span></span>
-        </div>
+        <span>Sample decision matrix is fixed; only the weight vector changes as you drag.</span>
+      </div>
+    </section>
+
+    <section class="demo-ranking-panel table-panel glass-panel" id="demoRankingPanel" aria-label="Demo Mode Jurisdiction Ranking">
+      <div class="table-wrapper">
+        <table class="rankings-table" aria-label="Live TOPSIS ranking">
+          <thead>
+            <tr>
+              <th style="width: 60px;">RANK</th>
+              <th>JURISDICTION</th>
+              <th style="width: 140px;">TOPSIS SCORE</th>
+              <th style="width: 190px;">RELATIVE CLOSENESS</th>
+              <th style="width: 150px;">STATUS</th>
+            </tr>
+          </thead>
+          <tbody id="demoRankingBody"></tbody>
+        </table>
       </div>
     </section>
 
@@ -1780,7 +1775,7 @@ html, body {
     </section>
 
     <!-- RANKINGS TABLE -->
-    <section class="table-panel glass-panel" aria-label="Jurisdiction Ranking Table">
+    <section class="table-panel glass-panel" id="staticRankingPanel" aria-label="Jurisdiction Ranking Table">
       <div class="table-wrapper">
         <table class="rankings-table" id="rankingsTable">
           <thead>
@@ -2365,6 +2360,146 @@ Status: <span style="color: var(--status-crimson);">DISQUALIFIED FROM WAVE 1 &am
     }
   };
 
+  // Demo Mode uses the fixed sample matrix from the standalone reference.
+  const demoCriteria = [
+    { key: 'c1', name: 'C1 · Market Velocity', sub: 'TAM', weight: 18.2 },
+    { key: 'c2', name: 'C2 · Regulatory Clarity', sub: 'Sandbox depth', weight: 22.4 },
+    { key: 'c3', name: 'C3 · Tax Efficiency', sub: 'Inverse of drag', weight: 8.3 },
+    { key: 'c4', name: 'C4 · Licensing Speed', sub: 'Inverse of latency', weight: 14.1 },
+    { key: 'c5', name: 'C5 · Senior Talent Pool', sub: 'Density', weight: 4.1 },
+    { key: 'c6', name: 'C6 · Capital Efficiency', sub: 'Setup cost ratio', weight: 11.5 },
+    { key: 'c7', name: 'C7 · Banking Rail Speed', sub: 'Inverse of latency', weight: 15.6 },
+    { key: 'c8', name: 'C8 · Geopolitical Hedge', sub: 'Risk offset', weight: 5.8 },
+  ];
+  const demoDefaultWeights = demoCriteria.map(criterion => criterion.weight);
+  const demoJurisdictions = [
+    { name: 'United Arab Emirates', sub: 'Abu Dhabi / Dubai · ADGM & VARA', flag: '🇦🇪', r: [0.90, 0.96, 0.88, 0.85, 0.78, 0.72, 0.91, 0.80] },
+    { name: 'Singapore', sub: 'MAS Payment Services Act · MPI', flag: '🇸🇬', r: [0.85, 0.93, 0.65, 0.90, 0.88, 0.68, 0.95, 0.85] },
+    { name: 'United Kingdom', sub: 'FCA Cryptoasset Regime', flag: '🇬🇧', r: [0.80, 0.89, 0.55, 0.75, 0.92, 0.60, 0.88, 0.70] },
+    { name: 'Brazil', sub: 'Banco Central · Law 14.478', flag: '🇧🇷', r: [0.75, 0.60, 0.50, 0.55, 0.65, 0.80, 0.55, 0.45] },
+    { name: 'Japan', sub: 'JFSA · CAESP Framework', flag: '🇯🇵', r: [0.70, 0.82, 0.45, 0.60, 0.85, 0.50, 0.75, 0.60] },
+    { name: 'Vietnam', sub: 'State Bank of Vietnam', flag: '🇻🇳', r: [0.55, 0.48, 0.60, 0.40, 0.50, 0.35, 0.45, 0.38] },
+  ];
+  let demoWeights = [...demoDefaultWeights];
+
+  const demoModeToggle = document.getElementById('demoModeToggle');
+  const demoSlidersPanel = document.getElementById('demoSlidersPanel');
+  const demoRankingPanel = document.getElementById('demoRankingPanel');
+  const demoRankingBody = document.getElementById('demoRankingBody');
+  const staticRankingPanel = document.getElementById('staticRankingPanel');
+  const demoRecommendationBanner = document.getElementById('recBanner');
+  const demoSlidersGrid = document.getElementById('slidersGrid');
+  const demoWeightsSumLabel = document.getElementById('weightsSumLabel');
+
+  function buildDemoSliders() {
+    demoSlidersGrid.innerHTML = demoCriteria.map((criterion, index) => `
+      <div class="slider-card">
+        <div class="slider-card-top">
+          <span class="slider-code-badge">${criterion.key.toUpperCase()}</span>
+          <span class="slider-weight-badge" id="demoWeight-${index}">${demoWeights[index].toFixed(1)}%</span>
+        </div>
+        <div class="slider-info">
+          <span class="slider-name">${criterion.name}</span>
+          <span class="slider-desc">${criterion.sub}</span>
+        </div>
+        <div class="slider-input-wrap">
+          <input class="criteria-range-input" type="range" min="0" max="60" step="0.1" value="${demoWeights[index]}" data-demo-index="${index}" aria-label="${criterion.name} weight">
+          <div class="slider-ticks"><span>0%</span><span>60%</span></div>
+        </div>
+      </div>`).join('');
+
+    demoSlidersGrid.querySelectorAll('input[type="range"]').forEach(input => {
+      input.style.background = `linear-gradient(90deg, var(--accent-teal) ${input.value / 60 * 100}%, #1F2937 ${input.value / 60 * 100}%)`;
+      input.addEventListener('input', onDemoSlide);
+    });
+  }
+
+  function onDemoSlide(event) {
+    const index = Number(event.target.dataset.demoIndex);
+    const newValue = Math.max(0, Math.min(60, Number(event.target.value)));
+    const oldValue = demoWeights[index];
+    const delta = newValue - oldValue;
+    const othersSum = 100 - oldValue;
+    if (othersSum > 0.001) {
+      const scale = (othersSum - delta) / othersSum;
+      for (let otherIndex = 0; otherIndex < demoWeights.length; otherIndex++) {
+        if (otherIndex !== index) demoWeights[otherIndex] = Math.max(0, demoWeights[otherIndex] * scale);
+      }
+    }
+    demoWeights[index] = newValue;
+    let sum = demoWeights.reduce((total, weight) => total + weight, 0);
+    demoWeights[index] += (100 - sum);
+    demoWeights[index] = Math.max(0, demoWeights[index]);
+
+    demoWeights.forEach((weight, weightIndex) => {
+      const valueElement = document.getElementById(`demoWeight-${weightIndex}`);
+      if (valueElement) valueElement.textContent = weight.toFixed(1) + '%';
+      if (weightIndex !== index) {
+        const input = demoSlidersGrid.querySelector(`input[data-demo-index="${weightIndex}"]`);
+        if (input) {
+          input.value = weight;
+          input.style.background = `linear-gradient(90deg, var(--accent-teal) ${weight / 60 * 100}%, #1F2937 ${weight / 60 * 100}%)`;
+        }
+      }
+    });
+    event.target.style.background = `linear-gradient(90deg, var(--accent-teal) ${newValue / 60 * 100}%, #1F2937 ${newValue / 60 * 100}%)`;
+    demoWeightsSumLabel.textContent = demoWeights.reduce((total, weight) => total + weight, 0).toFixed(1) + '%';
+    renderDemoRanking();
+  }
+
+  function calculateDemoTopsis() {
+    const normalizedWeights = demoWeights.map(weight => weight / 100);
+    const weightedMatrix = demoJurisdictions.map(jurisdiction => jurisdiction.r.map((value, index) => value * normalizedWeights[index]));
+    const best = normalizedWeights.map((_, index) => Math.max(...weightedMatrix.map(row => row[index])));
+    const worst = normalizedWeights.map((_, index) => Math.min(...weightedMatrix.map(row => row[index])));
+    return demoJurisdictions.map((jurisdiction, index) => {
+      const dPlus = Math.sqrt(weightedMatrix[index].reduce((total, value, criterionIndex) => total + (value - best[criterionIndex]) ** 2, 0));
+      const dMinus = Math.sqrt(weightedMatrix[index].reduce((total, value, criterionIndex) => total + (value - worst[criterionIndex]) ** 2, 0));
+      const ci = dMinus / (dPlus + dMinus || 1);
+      return { ...jurisdiction, ci };
+    }).sort((left, right) => right.ci - left.ci);
+  }
+
+  function renderDemoRanking() {
+    const ranked = calculateDemoTopsis();
+    demoRankingBody.innerHTML = ranked.map((jurisdiction, index) => {
+      const status = jurisdiction.ci >= 0.7
+        ? '<span class="status-pill-badge qualified">Qualified</span>'
+        : jurisdiction.ci >= 0.5
+          ? '<span class="status-pill-badge evaluation">Evaluation</span>'
+          : '<span class="status-pill-badge knocked-out">Knocked Out</span>';
+      return `
+        <tr class="${index === 0 ? 'row-rank-1' : ''}">
+          <td><span class="rank-number mono">#${index + 1}</span></td>
+          <td><div class="jurisdiction-cell"><span class="flag-icon">${jurisdiction.flag}</span><div class="jurisdiction-meta"><span class="jurisdiction-name">${jurisdiction.name}</span><span class="jurisdiction-subtitle">${jurisdiction.sub}</span></div></div></td>
+          <td><span class="score-text">${jurisdiction.ci.toFixed(4)}</span></td>
+          <td><div class="closeness-cell"><div class="closeness-bar-track"><div class="closeness-bar-fill" style="width: ${(jurisdiction.ci * 100).toFixed(1)}%"></div></div><span class="closeness-pct">${(jurisdiction.ci * 100).toFixed(1)}%</span></div></td>
+          <td>${status}</td>
+        </tr>`;
+    }).join('');
+  }
+
+  function setDemoMode(enabled) {
+    demoModeToggle.classList.toggle('active', enabled);
+    demoModeToggle.setAttribute('aria-pressed', String(enabled));
+    demoSlidersPanel.style.display = enabled ? 'block' : 'none';
+    demoRankingPanel.style.display = enabled ? 'block' : 'none';
+    staticRankingPanel.style.display = enabled ? 'none' : '';
+    demoRecommendationBanner.style.display = enabled ? 'none' : '';
+  }
+
+  buildDemoSliders();
+  renderDemoRanking();
+  demoModeToggle.addEventListener('click', () => {
+    setDemoMode(demoModeToggle.getAttribute('aria-pressed') !== 'true');
+  });
+  document.getElementById('resetDemoBtn').addEventListener('click', () => {
+    demoWeights = [...demoDefaultWeights];
+    buildDemoSliders();
+    demoWeightsSumLabel.textContent = '100.0%';
+    renderDemoRanking();
+  });
+
   // 2. LIQUID RUNWAY BUDGET LIVE COMMA FORMATTER
   const runwayInput = document.getElementById('runwayInput');
   function formatNumberWithCommas(val) {
@@ -2656,7 +2791,7 @@ Status: <span style="color: var(--status-crimson);">DISQUALIFIED FROM WAVE 1 &am
       const encodedUri = encodeURI(csvContent);
       const link = document.createElement('a');
       link.setAttribute('href', encodedUri);
-      link.setAttribute('download', 'marketsphere_topsis_rankings.csv');
+      link.setAttribute('download', 'topsis_jurisdiction_rankings.csv');
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
