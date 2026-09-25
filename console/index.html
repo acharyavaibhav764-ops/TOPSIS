@@ -1723,7 +1723,7 @@ html, body {
         <div class="demo-panel-title-area">
           <div class="demo-sandbox-pill">DEMO MODE</div>
           <h2 class="demo-panel-title">Adjust criteria importance</h2>
-          <p class="demo-panel-desc">Drag any slider. The other seven rebalance automatically so weights always sum to 100%.</p>
+          <p class="demo-panel-desc">Drag any slider to change that criterion’s importance. The other seven rebalance to 100%; higher scores are better for benefits, while lower scores are better for costs.</p>
         </div>
         <div class="demo-panel-metrics">
           <div class="demo-metric-pill">
@@ -1741,7 +1741,7 @@ html, body {
       </div>
 
       <div class="demo-panel-footer">
-        <span>Sample decision matrix is fixed; only the weight vector changes as you drag.</span>
+        <span>C6 Capital Burden and C7 Presence Friction are cost criteria; their lower scores are preferred.</span>
       </div>
     </section>
 
@@ -2360,25 +2360,24 @@ Status: <span style="color: var(--status-crimson);">DISQUALIFIED FROM WAVE 1 &am
     }
   };
 
-  // Demo Mode uses the fixed sample matrix from the standalone reference.
   const demoCriteria = [
-    { key: 'c1', name: 'C1 · Market Velocity', sub: 'TAM', weight: 18.2 },
-    { key: 'c2', name: 'C2 · Regulatory Clarity', sub: 'Sandbox depth', weight: 22.4 },
-    { key: 'c3', name: 'C3 · Tax Efficiency', sub: 'Inverse of drag', weight: 8.3 },
-    { key: 'c4', name: 'C4 · Licensing Speed', sub: 'Inverse of latency', weight: 14.1 },
-    { key: 'c5', name: 'C5 · Senior Talent Pool', sub: 'Density', weight: 4.1 },
-    { key: 'c6', name: 'C6 · Capital Efficiency', sub: 'Setup cost ratio', weight: 11.5 },
-    { key: 'c7', name: 'C7 · Banking Rail Speed', sub: 'Inverse of latency', weight: 15.6 },
-    { key: 'c8', name: 'C8 · Geopolitical Hedge', sub: 'Risk offset', weight: 5.8 },
+    { key: 'c1', name: 'C1 · Market Depth & Exchange HHI', sub: 'Market depth and concentration', direction: 'benefit', weight: 18.2 },
+    { key: 'c2', name: 'C2 · Economic Power & GNI Per Capita', sub: 'Economic power', direction: 'benefit', weight: 22.4 },
+    { key: 'c3', name: 'C3 · Pathway Clarity & De Jure Rules', sub: 'Regulatory pathway', direction: 'benefit', weight: 8.3 },
+    { key: 'c4', name: 'C4 · Leverage Fit & Banking Access', sub: 'Banking access', direction: 'benefit', weight: 14.1 },
+    { key: 'c5', name: 'C5 · Crypto Readiness & VASP Signal', sub: 'Crypto readiness', direction: 'benefit', weight: 4.1 },
+    { key: 'c6', name: 'C6 · Capital Burden & Reserve Lock', sub: 'Lower is better', direction: 'cost', weight: 11.5 },
+    { key: 'c7', name: 'C7 · Presence Friction & Substance Requirements', sub: 'Lower is better', direction: 'cost', weight: 15.6 },
+    { key: 'c8', name: 'C8 · Regulatory Quality & Governance Index', sub: 'Governance quality', direction: 'benefit', weight: 5.8 },
   ];
   const demoDefaultWeights = demoCriteria.map(criterion => criterion.weight);
   const demoJurisdictions = [
-    { name: 'United Arab Emirates', sub: 'Abu Dhabi / Dubai · ADGM & VARA', flag: '🇦🇪', r: [0.90, 0.96, 0.88, 0.85, 0.78, 0.72, 0.91, 0.80] },
-    { name: 'Singapore', sub: 'MAS Payment Services Act · MPI', flag: '🇸🇬', r: [0.85, 0.93, 0.65, 0.90, 0.88, 0.68, 0.95, 0.85] },
-    { name: 'United Kingdom', sub: 'FCA Cryptoasset Regime', flag: '🇬🇧', r: [0.80, 0.89, 0.55, 0.75, 0.92, 0.60, 0.88, 0.70] },
-    { name: 'Brazil', sub: 'Banco Central · Law 14.478', flag: '🇧🇷', r: [0.75, 0.60, 0.50, 0.55, 0.65, 0.80, 0.55, 0.45] },
-    { name: 'Japan', sub: 'JFSA · CAESP Framework', flag: '🇯🇵', r: [0.70, 0.82, 0.45, 0.60, 0.85, 0.50, 0.75, 0.60] },
-    { name: 'Vietnam', sub: 'State Bank of Vietnam', flag: '🇻🇳', r: [0.55, 0.48, 0.60, 0.40, 0.50, 0.35, 0.45, 0.38] },
+    { name: 'United Arab Emirates', sub: 'Abu Dhabi / Dubai · ADGM & VARA', flag: '🇦🇪', r: [0.84, 0.88, 0.85, 0.75, 0.92, 0.68, 0.82, 0.86] },
+    { name: 'Singapore', sub: 'MAS Payment Services Act · MPI', flag: '🇸🇬', r: [0.86, 0.92, 0.87, 0.78, 0.84, 0.62, 0.74, 0.94] },
+    { name: 'United Kingdom', sub: 'FCA Cryptoasset Regime', flag: '🇬🇧', r: [0.88, 0.82, 0.76, 0.71, 0.79, 0.64, 0.68, 0.89] },
+    { name: 'Brazil', sub: 'Banco Central · Law 14.478', flag: '🇧🇷', r: [0.74, 0.62, 0.80, 0.66, 0.81, 0.82, 0.72, 0.70] },
+    { name: 'Japan', sub: 'JFSA · CAESP Framework', flag: '🇯🇵', r: [0.72, 0.84, 0.74, 0.55, 0.70, 0.54, 0.52, 0.87] },
+    { name: 'Vietnam', sub: 'State Bank of Vietnam', flag: '🇻🇳', r: [0.52, 0.40, 0.32, 0.38, 0.62, 0.15, 0.28, 0.45] },
   ];
   let demoWeights = [...demoDefaultWeights];
 
@@ -2396,6 +2395,7 @@ Status: <span style="color: var(--status-crimson);">DISQUALIFIED FROM WAVE 1 &am
       <div class="slider-card">
         <div class="slider-card-top">
           <span class="slider-code-badge">${criterion.key.toUpperCase()}</span>
+          <span class="slider-nature-badge ${criterion.direction}">${criterion.direction === 'cost' ? 'Cost' : 'Benefit'}</span>
           <span class="slider-weight-badge" id="demoWeight-${index}">${demoWeights[index].toFixed(1)}%</span>
         </div>
         <div class="slider-info">
@@ -2450,8 +2450,14 @@ Status: <span style="color: var(--status-crimson);">DISQUALIFIED FROM WAVE 1 &am
   function calculateDemoTopsis() {
     const normalizedWeights = demoWeights.map(weight => weight / 100);
     const weightedMatrix = demoJurisdictions.map(jurisdiction => jurisdiction.r.map((value, index) => value * normalizedWeights[index]));
-    const best = normalizedWeights.map((_, index) => Math.max(...weightedMatrix.map(row => row[index])));
-    const worst = normalizedWeights.map((_, index) => Math.min(...weightedMatrix.map(row => row[index])));
+    const best = normalizedWeights.map((_, index) => {
+      const values = weightedMatrix.map(row => row[index]);
+      return demoCriteria[index].direction === 'cost' ? Math.min(...values) : Math.max(...values);
+    });
+    const worst = normalizedWeights.map((_, index) => {
+      const values = weightedMatrix.map(row => row[index]);
+      return demoCriteria[index].direction === 'cost' ? Math.max(...values) : Math.min(...values);
+    });
     return demoJurisdictions.map((jurisdiction, index) => {
       const dPlus = Math.sqrt(weightedMatrix[index].reduce((total, value, criterionIndex) => total + (value - best[criterionIndex]) ** 2, 0));
       const dMinus = Math.sqrt(weightedMatrix[index].reduce((total, value, criterionIndex) => total + (value - worst[criterionIndex]) ** 2, 0));

@@ -2506,13 +2506,13 @@ body { min-height: 100vh; }
       <!-- Panel Header -->
       <div class="demo-panel-header">
         <div class="demo-panel-title-area">
-          <div class="demo-sandbox-pill">BWM STAKEHOLDER WEIGHTING &amp; SENSITIVITY SANDBOX</div>
-          <h2 class="demo-panel-title">Tune Criteria Importance &amp; Test Ranking Sensitivity</h2>
-          <p class="demo-panel-desc">Stakeholders prioritize criteria on a 1–10 Saaty importance scale. The engine normalizes weights dynamically (Σ w<sub>j</sub> = 100%) and instantly recomputes TOPSIS Euclidean separation, relative closeness scores, and ranking positions in real time.</p>
+          <div class="demo-sandbox-pill">TOPSIS WEIGHT SENSITIVITY</div>
+          <h2 class="demo-panel-title">Adjust criteria importance</h2>
+          <p class="demo-panel-desc">Set any criterion from 0% to 60%. The other seven rebalance automatically; higher benefit scores and lower cost scores are preferred.</p>
         </div>
         <div class="demo-panel-metrics">
           <div class="demo-metric-pill">
-            <span>Normalized Sum:</span>
+            <span>Total weight:</span>
             <strong id="weightsSumLabel">100.0%</strong>
           </div>
           <div class="demo-metric-pill">
@@ -2521,7 +2521,7 @@ body { min-height: 100vh; }
           </div>
           <button type="button" class="btn-reset-demo" id="resetDemoBtn" title="Reset all sliders to production baseline weights">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
-            <span>Reset Baseline</span>
+            <span>Reset Default Weights</span>
           </button>
         </div>
       </div>
@@ -2547,10 +2547,10 @@ body { min-height: 100vh; }
       <div class="demo-panel-footer">
         <div class="demo-engine-status">
           <span class="demo-engine-dot"></span>
-          <span><strong>Live TOPSIS-RAD Engine:</strong> Dynamic vector normalization &amp; Euclidean separation active (<span class="mono" style="color:var(--accent-teal);">&lt;2ms</span>)</span>
+          <span><strong>Live TOPSIS-RAD:</strong> Ranking and audit details update with each weight change.</span>
         </div>
         <div>
-          <span>BWM Consistency: <span class="mono" style="color:var(--accent-teal);">ξ = 0.042 (Consistent)</span> · Non-reversal DPL anchor: <span class="mono" style="color:var(--text-1);">8.50</span></span>
+          <span>C6 Capital Burden and C7 Presence Friction are cost criteria; lower scores are preferred.</span>
         </div>
       </div>
     </section>
@@ -3393,7 +3393,14 @@ Execution Hash: <span class="white">sha256:7f83b1657ff1fc53b92dc18148a1d65dfc2d4
     }
   };
 
-  // 3. Raw Direction-Corrected Jurisdiction Matrix (1-10 Scale)
+  function preferenceLevelsToWeights(levels) {
+    const total = levels.reduce((sum, value) => sum + value, 0) || 1;
+    const weights = levels.map(value => Math.round((value / total * 100) * 10) / 10);
+    weights[weights.length - 1] += 100 - weights.reduce((sum, value) => sum + value, 0);
+    return weights;
+  }
+
+  // 3. Raw Jurisdiction Matrix (1-10 Scale)
   const JURISDICTIONS = {
     'ARE': {
       code: 'ARE', name: 'United Arab Emirates', flag: '🇦🇪',
@@ -3453,7 +3460,7 @@ Execution Hash: <span class="white">sha256:7f83b1657ff1fc53b92dc18148a1d65dfc2d4
 
   // 4. Reactive State
   let isDemoModeActive = false;
-  let currentLevels = [...STAKEHOLDER_PRESETS.baseline.levels];
+  let currentLevels = preferenceLevelsToWeights(STAKEHOLDER_PRESETS.baseline.levels);
   let currentBudget = 12000000;
   let isKnockoutExcluded = true;
   let activePresetKey = 'baseline';
@@ -3464,8 +3471,7 @@ Execution Hash: <span class="white">sha256:7f83b1657ff1fc53b92dc18148a1d65dfc2d4
   const DENOM = Math.sqrt(Math.pow(VPL, 2) + Math.pow(DPL, 2)); // 8.55862
 
   function computeWeights(levels) {
-    const sum = levels.reduce((acc, val) => acc + val, 0) || 1;
-    return levels.map(l => l / sum);
+    return levels.map(weight => weight / 100);
   }
 
   function runTopsis(weights, budget, excludeKnockout) {
@@ -3475,7 +3481,10 @@ Execution Hash: <span class="white">sha256:7f83b1657ff1fc53b92dc18148a1d65dfc2d4
 
     const scored = codes.map(code => {
       const data = JURISDICTIONS[code];
-      const capped = data.rawScores.map(val => Math.min(val, DPL));
+      const capped = data.rawScores.map((value, index) => {
+        const directionCorrected = CRITERIA_SPECS[index].type === 'cost' ? 11 - value : value;
+        return Math.min(directionCorrected, DPL);
+      });
       const wn = capped.map((c, j) => (c / DENOM) * weights[j]);
 
       let dPosSq = 0;
@@ -3551,10 +3560,9 @@ Execution Hash: <span class="white">sha256:7f83b1657ff1fc53b92dc18148a1d65dfc2d4
   // 7. Render Sliders into DOM
   function renderSliderCards() {
     if (!slidersGrid) return;
-    const weights = computeWeights(currentLevels);
 
     slidersGrid.innerHTML = CRITERIA_SPECS.map((c, idx) => {
-      const weightPct = (weights[idx] * 100).toFixed(1);
+      const weightPct = currentLevels[idx].toFixed(1);
       const isBenefit = c.type === 'benefit';
       return `
         <div class="slider-card" id="sliderCard-${c.code}">
@@ -3570,15 +3578,15 @@ Execution Hash: <span class="white">sha256:7f83b1657ff1fc53b92dc18148a1d65dfc2d4
             <div class="slider-desc">${c.desc}</div>
           </div>
           <div class="slider-input-wrap">
-            <input type="range" class="criteria-range-input" id="slider-${c.code}" data-index="${idx}" min="1" max="10" step="1" value="${currentLevels[idx]}" aria-label="${c.name} importance slider">
+            <input type="range" class="criteria-range-input" id="slider-${c.code}" data-index="${idx}" min="0" max="60" step="0.1" value="${currentLevels[idx]}" aria-label="${c.name} importance slider">
             <div class="slider-ticks">
-              <span>1 Low</span>
-              <span>5 Med</span>
-              <span>10 Critical</span>
+              <span>0%</span>
+              <span>30%</span>
+              <span>60%</span>
             </div>
             <div class="slider-level-text">
-              <span>Stakeholder Priority:</span>
-              <span class="slider-level-val mono" id="levelVal-${c.code}">${currentLevels[idx]} / 10</span>
+              <span>Criterion weight:</span>
+              <span class="slider-level-val mono" id="levelVal-${c.code}">${weightPct}%</span>
             </div>
           </div>
         </div>
@@ -3590,10 +3598,18 @@ Execution Hash: <span class="white">sha256:7f83b1657ff1fc53b92dc18148a1d65dfc2d4
       const slider = document.getElementById(`slider-${c.code}`);
       if (slider) {
         slider.addEventListener('input', (e) => {
-          const val = parseInt(e.target.value, 10);
-          currentLevels[idx] = val;
-          const levelValSpan = document.getElementById(`levelVal-${c.code}`);
-          if (levelValSpan) levelValSpan.textContent = `${val} / 10`;
+          const newValue = Math.max(0, Math.min(60, parseFloat(e.target.value)));
+          const oldValue = currentLevels[idx];
+          const delta = newValue - oldValue;
+          const otherWeightsTotal = 100 - oldValue;
+          if (otherWeightsTotal > 0.001) {
+            const scale = (otherWeightsTotal - delta) / otherWeightsTotal;
+            for (let otherIndex = 0; otherIndex < currentLevels.length; otherIndex++) {
+              if (otherIndex !== idx) currentLevels[otherIndex] = Math.max(0, currentLevels[otherIndex] * scale);
+            }
+          }
+          currentLevels[idx] = newValue;
+          currentLevels[idx] += 100 - currentLevels.reduce((sum, weight) => sum + weight, 0);
 
           setActivePreset('custom');
           triggerLiveRecalculation();
@@ -3606,17 +3622,17 @@ Execution Hash: <span class="white">sha256:7f83b1657ff1fc53b92dc18148a1d65dfc2d4
   function updateSliderDisplay() {
     const weights = computeWeights(currentLevels);
     CRITERIA_SPECS.forEach((c, idx) => {
-      const pct = (weights[idx] * 100).toFixed(1);
+      const pct = currentLevels[idx].toFixed(1);
       const badge = document.getElementById(`weightBadge-${c.code}`);
       if (badge) badge.textContent = `${pct}%`;
       const slider = document.getElementById(`slider-${c.code}`);
-      if (slider && parseInt(slider.value, 10) !== currentLevels[idx]) {
+      if (slider && Math.abs(parseFloat(slider.value) - currentLevels[idx]) > 0.001) {
         slider.value = currentLevels[idx];
       }
       const levelVal = document.getElementById(`levelVal-${c.code}`);
-      if (levelVal) levelVal.textContent = `${currentLevels[idx]} / 10`;
+      if (levelVal) levelVal.textContent = `${pct}%`;
     });
-    if (weightsSumLabel) weightsSumLabel.textContent = '100.0%';
+    if (weightsSumLabel) weightsSumLabel.textContent = `${currentLevels.reduce((sum, weight) => sum + weight, 0).toFixed(1)}%`;
   }
 
   // 9. Update Dashboard, Table, Recommended Banner & Audit Proof
@@ -3716,8 +3732,9 @@ Execution Hash: <span class="white">sha256:7f83b1657ff1fc53b92dc18148a1d65dfc2d4
       if (listDiv) {
         listDiv.innerHTML = CRITERIA_SPECS.map((c, j) => {
           const rawScore = top.data.rawScores[j];
-          const valStr = (rawScore / 10).toFixed(2);
-          const pctStr = `${Math.round(rawScore * 10)}%`;
+          const displayScore = c.type === 'cost' ? 11 - rawScore : rawScore;
+          const valStr = (displayScore / 10).toFixed(2);
+          const pctStr = `${Math.round(displayScore * 10)}%`;
           return `
             <div class="criterion-row">
               <div class="criterion-meta">
@@ -3792,7 +3809,7 @@ Execution Hash: <span class="white">${top.data.hash}</span>`;
     btn.addEventListener('click', () => {
       const key = btn.getAttribute('data-preset');
       if (STAKEHOLDER_PRESETS[key]) {
-        currentLevels = [...STAKEHOLDER_PRESETS[key].levels];
+        currentLevels = preferenceLevelsToWeights(STAKEHOLDER_PRESETS[key].levels);
         setActivePreset(key);
         triggerLiveRecalculation();
       }
@@ -3801,7 +3818,7 @@ Execution Hash: <span class="white">${top.data.hash}</span>`;
 
   if (resetDemoBtn) {
     resetDemoBtn.addEventListener('click', () => {
-      currentLevels = [...STAKEHOLDER_PRESETS.baseline.levels];
+      currentLevels = preferenceLevelsToWeights(STAKEHOLDER_PRESETS.baseline.levels);
       setActivePreset('baseline');
       triggerLiveRecalculation();
     });
@@ -3820,6 +3837,7 @@ Execution Hash: <span class="white">${top.data.hash}</span>`;
       if (isDemoModeActive) {
         demoSlidersPanel.style.display = 'block';
         demoSlidersPanel.scrollIntoView({ behavior: 'auto', block: 'nearest' });
+        triggerLiveRecalculation();
       } else {
         demoSlidersPanel.style.display = 'none';
       }
@@ -3899,16 +3917,16 @@ Execution Hash: <span class="white">${top.data.hash}</span>`;
 
         const mode = opt.getAttribute('data-value');
         if (mode === 'critic') {
-          currentLevels = [8, 8, 5, 8, 7, 7, 7, 7];
+          currentLevels = preferenceLevelsToWeights([8, 8, 5, 8, 7, 7, 7, 7]);
           setActivePreset('custom');
         } else if (mode === 'equal') {
-          currentLevels = [5, 5, 5, 5, 5, 5, 5, 5];
+          currentLevels = preferenceLevelsToWeights([5, 5, 5, 5, 5, 5, 5, 5]);
           setActivePreset('custom');
         } else if (mode === 'entropy') {
-          currentLevels = [9, 7, 6, 8, 8, 4, 6, 8];
+          currentLevels = preferenceLevelsToWeights([9, 7, 6, 8, 8, 4, 6, 8]);
           setActivePreset('custom');
         } else {
-          currentLevels = [...STAKEHOLDER_PRESETS.baseline.levels];
+          currentLevels = preferenceLevelsToWeights(STAKEHOLDER_PRESETS.baseline.levels);
           setActivePreset('baseline');
         }
         triggerLiveRecalculation();
@@ -3989,8 +4007,9 @@ Execution Hash: <span class="white">${top.data.hash}</span>`;
     if (modalCriteriaList) {
       modalCriteriaList.innerHTML = CRITERIA_SPECS.map((c, j) => {
         const rawScore = jur.rawScores[j];
-        const valStr = (rawScore / 10).toFixed(2);
-        const pctStr = `${Math.round(rawScore * 10)}%`;
+        const displayScore = c.type === 'cost' ? 11 - rawScore : rawScore;
+        const valStr = (displayScore / 10).toFixed(2);
+        const pctStr = `${Math.round(displayScore * 10)}%`;
         return `
           <div class="criterion-row">
             <div class="criterion-meta">
