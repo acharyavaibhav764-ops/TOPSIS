@@ -487,6 +487,169 @@ ranking_engine/
 
 ---
 
+## 14. Known issues & fixes (live engineering log)
+
+### 14.1 The division-by-zero — root cause, and why masking-after-the-fact doesn't fix it
+
+I reproduced this exactly. It is **not** a separate bug from Tier 3 being unimplemented — it's a direct symptom of it, and the two need one fix, not two.
+
+`c /= stddev[:, None]` is inside NumPy's own `np.corrcoef`, not your code. Here's the chain: C3/C4/C6/C7 get stubbed with a constant (the column median) → CRITIC-M's own normalization step turns that constant column into another constant column (a constant input always logistic-squashes to the same output) → `np.corrcoef` divides by that column's standard deviation, which is exactly 0 → `NaN` for every cell in that row/column of the correlation matrix → the `NaN` poisons the *entire* weight vector (not just the broken criterion's weight), because CRITIC-M's information score for every criterion depends on its conflict with all others.
+
+**My first attempt at a fix — clamping the CRITIC-M weight for that one column to ~0 — still failed the same way**, because by then `np.corrcoef` had already run on the full matrix and produced `NaN`. Clamping *after* computing doesn't help; the matrix has to never contain the dead column when the statistics run:
+
+```python
+def compute_weights_with_coverage(matrix: pd.DataFrame, benefit_mask: np.ndarray,
+                                    w_bwm_full: np.ndarray, pending_cols: set[str], lam=0.6):
+    """Drop pending columns from the matrix BEFORE any variance/correlation math touches
+    it. Do not compute-then-mask — by then NaN has already propagated through corrcoef."""
+    active_idx = [i for i, c in enumerate(matrix.columns) if c not in pending_cols]
+    active_cols = [matrix.columns[i] for i in active_idx]
+    sub_matrix, sub_benefit_mask = matrix[active_cols], benefit_mask[active_idx]
+
+    w_cm_active = critic_m_weights(sub_matrix, sub_benefit_mask)   # computed on clean subset only
+    w_bwm_active = w_bwm_full[active_idx]
+    w_bwm_active = w_bwm_active / w_bwm_active.sum()                # renormalize BWM too
+
+    fused_active = lam * w_bwm_active + (1 - lam) * w_cm_active
+    fused_active = fused_active / fused_active.sum()
+
+    full = np.zeros(len(matrix.columns))
+    for i, w in zip(active_idx, fused_active):
+        full[i] = w
+    return full, len(active_idx) / len(matrix.columns)   # (8-length weight vec, coverage %)
+```
+
+Tested against the exact failure pattern (C3/C4/C6/C7 stubbed to an identical value): raw CRITIC-M on the full 8-column matrix does produce `NaN` across all 8 weights, confirming your traceback. Dropping the pending columns first gives a clean 4-active-criteria weight vector with **zero NaN/Inf**, e.g. `{C1: 0.26, C2: 0.21, C5: 0.18, C8: 0.34}` on a toy matrix — and it's your call whether `C5` belongs in that active set right now (see §14.3).
+
+I also added a defense-in-depth `eps` floor on the IQR inside `critic_m_weights` for the case where *real* data (not stubs) coincidentally ties on a criterion — that's a legitimate zero-variance case with only 15 jurisdictions and shouldn't crash either.
+
+**Why this hit SMAA and Monte Carlo hardest:** those two stages call the weighting/ranking step thousands of times in a loop (§9). A single `NaN`-producing column doesn't fail once — it fails on every one of those thousands of trials, which is why the crash looked bigger than "one bad column."
+
+**One more thing to check on your side:** confirm which exact `critic_weights` your pipeline calls. If it's `pymcdm.weights.critic_weights` rather than the custom `critic_m_weights` from §6.3, the fix is the same principle — pre-filter the matrix passed into it — but you'd apply it at the call site instead of inside the weighting function itself, since you shouldn't patch a third-party library in place.
+
+### 14.2 Tier 3 gap — treat "criterion has zero real data" as a first-class state, not a value to fill in
+
+Stubbing with the median is the thing actively causing §14.1, and it also quietly lies to BWM/CRITIC-M ("this criterion has no variance, so it must not matter"), which is the opposite of true — C3/C4/C6 carry some of the *highest* BWM weights in the doc's own example. Two changes, both already in the fix above:
+
+1. **Never stub a fully-missing criterion into the matrix.** Use `compute_weights_with_coverage` to exclude it and renormalize the rest, rather than inventing a value for it.
+2. **Attach a completeness/coverage field to every ranking run's output** (the second return value above) — e.g. `"matrix_completeness": 0.5, "active_criteria": ["C1","C2","C5","C8"], "pending_criteria": ["C3","C4","C6","C7"]`. Right now the knapsack allocator and Monte Carlo are silently trusting an 8-criteria answer that's actually a 4-criteria answer — surfacing the real coverage number is what stops that from misleading anyone reading the output.
+
+This gets you an honest, if partial, ranking today, and the same code needs zero changes once Tier 3 ships — pending criteria just start moving into the active set on their own.
+
+### 14.3 C5 (Local Rail Fit) — this isn't a ranking-model problem, it's a fifth Tier-3 criterion
+
+The strategy doc's original plan routed C5 through the World Bank's financial-inclusion/mobile-money data as an automatable proxy. The gap you flagged earlier is real: mobile-money account *penetration* (a retail consumer metric) doesn't tell you whether *banks will open accounts for VASP businesses* (a B2B underwriting/compliance question) — those can point in opposite directions in the same country. No standard API answers the second question.
+
+That makes C5 epistemically identical to C3/C4/C6/C7: a qualitative fact that only exists in regulator guidance, bank policy statements, or industry banking-access surveys — i.e., it belongs in the LLM extraction backlog, not in your data-fetching code. Two ways to unblock it, not mutually exclusive:
+
+- **Move it into Tier 3 properly** (the clean long-term fix): give the extraction pipeline a narrow, well-scoped question per jurisdiction ("does regulator guidance or public bank policy indicate willingness to bank licensed VASPs — yes / partial / no, with citation") using the exact same `RawFact` schema from §1. This is a much narrower extraction task than parsing full leverage-cap statutes, so it's realistically cheaper to add than the other four.
+- **Interim human-curated seed table**, tagged `ANALYST_ESTIMATE`, so the ranking math doesn't need a special case for it:
+
+```python
+# seed_c5_estimates.py — manually maintained until Tier 3 covers C5, refreshed on a cadence
+C5_SEED = [
+    RawFact("UAE", "C5", raw_value=8, evidence_tag=EvidenceTag.ANALYST_ESTIMATE,
+            source_citation="DFSA/CBUAE bank-VASP onboarding guidance, analyst read, 2026-Q3", as_of=date(2026,9,1)),
+    RawFact("Brazil", "C5", raw_value=6, evidence_tag=EvidenceTag.ANALYST_ESTIMATE,
+            source_citation="BCB Pix + VASP account-opening precedent, analyst read, 2026-Q3", as_of=date(2026,9,1)),
+    # ... one row per target jurisdiction
+]
+```
+
+Either way, C5 flows through the same `RawFact` → mapping-config → matrix pipeline as everything else — nothing in §6–§9 needs to know which path a criterion's data took to get there.
+
+### 14.4 15-country data-gap validation
+
+I can't call `worldbank.org` or `cryptocompare.com` from this sandbox to test this live — outbound network here is restricted to package registries (pypi, npm, github). Everything below is grounded in the current API docs I just checked, not executed, so validate the exact response shape once you run it against your own network.
+
+**World Bank (C2, C8) — this one is the easy case.** The v2 API takes ISO-2 *or* ISO-3 codes directly, batches multiple countries with a semicolon, needs no auth, and the confirmed URL shape is:
+
+```
+https://api.worldbank.org/v2/country/{code1};{code2};.../indicator/{indicator_code}?format=json&date=2023:2026
+```
+
+So a canonical ISO-3 registry solves the "US vs USA" ambiguity outright — World Bank's own country metadata endpoint (`/v2/country?format=json`) returns each country's ISO-3 code directly, so you resolve names once against that endpoint rather than hand-writing a name-matching table:
+
+```python
+JURISDICTIONS = {  # your 15 targets, canonical ISO-3
+    "United States": "USA", "United Kingdom": "GBR", "Singapore": "SGP",
+    "Australia": "AUS", "Switzerland": "CHE", "Hong Kong": "HKG", "Japan": "JPN",
+    "India": "IND", "UAE": "ARE", "Canada": "CAN", "France": "FRA",
+    "Germany": "DEU", "Netherlands": "NLD", "South Korea": "KOR", "Brazil": "BRA",
+}
+
+import requests
+def fetch_worldbank(iso3_codes: list[str], indicator: str) -> dict[str, float | None]:
+    codes = ";".join(iso3_codes)
+    url = f"https://api.worldbank.org/v2/country/{codes}/indicator/{indicator}?format=json&per_page=1000"
+    resp = requests.get(url, timeout=15).json()
+    rows = resp[1] if len(resp) > 1 and resp[1] else []
+    latest = {}
+    for r in rows:  # API returns multiple years per country; keep the most recent non-null
+        code, val = r["countryiso3code"], r["value"]
+        if val is not None and code not in latest:
+            latest[code] = val
+    return {c: latest.get(c) for c in iso3_codes}   # explicit None, not silent omission
+```
+
+Returning explicit `None` for a missing country (instead of just omitting the key) is the important part — it lets you tell "API has no data for Hong Kong" apart from "Hong Kong failed the knockout threshold," which your problem statement correctly identifies as two very different situations that must not collapse into the same "dropped from the matrix" outcome. One flag worth knowing: the WGI Regulatory Quality indicator I checked for C8 appears to have been **renamed** in a 2025 methodology revision (`RQ.EST` → `GOV_WGI_RQ_EST` on some current World Bank pages) — indicator codes do drift, so this needs a runtime check, not a hardcoded assumption:
+
+```python
+def audit_indicator_availability(iso3_codes: list[str], indicator_candidates: list[str]) -> dict:
+    """Try each candidate code, keep the first that actually returns data for >0 countries."""
+    for code in indicator_candidates:
+        result = fetch_worldbank(iso3_codes, code)
+        if any(v is not None for v in result.values()):
+            return {"indicator_used": code, "data": result,
+                    "missing": [c for c, v in result.items() if v is None]}
+    return {"indicator_used": None, "data": {}, "missing": iso3_codes}
+
+c8_audit = audit_indicator_availability(list(JURISDICTIONS.values()),
+                                         indicator_candidates=["GOV_WGI_RQ_EST", "RQ.EST"])
+```
+
+**CryptoCompare (C1) — this is the harder case, and worth flagging before you build around it.** CryptoCompare's API is organized entirely by *exchange* and *trading pair* (`topExchanges('BTC','USD', n)` returns exchange names and volumes) — there is no jurisdiction/country field anywhere in it. So "does CryptoCompare have data for all 15 countries" isn't quite the right question; the real gap is a **missing exchange-to-jurisdiction crosswalk that no API provides**, because an exchange's operating volume and its regulatory home jurisdiction are two unrelated facts. You'll need a small, manually maintained table (`exchange_name -> licensing_jurisdiction`) alongside the CryptoCompare pull, and — separately — it's worth double-checking that your team's "CryptoCompare for C1/C2" note matches the doc: per §1's data-source table, C2 (Revenue Depth) is specified as World Bank GNI-per-capita-PPP data (`NY.GNP.PCAP.PP.CD`), not CryptoCompare; CryptoCompare/Kaiko + the HHI calculation is specified for C1 only. Worth a quick sync with whoever's wiring that fetcher so C2 doesn't end up pointed at the wrong source.
+
+```python
+# exchange_jurisdiction_crosswalk.py — manually maintained, no API supplies this
+EXCHANGE_JURISDICTION = {
+    "Binance": "ARE",      # regulated entity used for HHI attribution, not global HQ
+    "Coinbase": "USA",
+    "Kraken": "USA",
+    "OKX": "SGP",
+    # ... one row per exchange that shows up in your top-N CryptoCompare pulls
+}
+```
+
+### 14.5 One audit function tying all four together
+
+```python
+@dataclass
+class DataStatus:
+    AVAILABLE = "available"
+    DATA_UNAVAILABLE = "data_unavailable"        # API/source has no data — plumbing problem
+    KNOCKOUT_FAILED_THRESHOLD = "knocked_out"     # has data, and it failed the C6 threshold
+
+def audit_run(jurisdictions: dict[str, str], c2_data: dict, c8_data: dict,
+              capital_burden: dict, liquid_runway_usd: float) -> pd.DataFrame:
+    rows = []
+    for name, iso3 in jurisdictions.items():
+        if iso3 not in capital_burden:
+            status = DataStatus.DATA_UNAVAILABLE          # Tier 3 hasn't produced C6 yet
+        elif capital_burden[iso3] > liquid_runway_usd:
+            status = DataStatus.KNOCKOUT_FAILED_THRESHOLD  # correctly, deliberately excluded
+        else:
+            status = DataStatus.AVAILABLE
+        rows.append({"jurisdiction": name, "iso3": iso3, "status": status,
+                      "c2_found": c2_data.get(iso3) is not None,
+                      "c8_found": c8_data.get(iso3) is not None})
+    return pd.DataFrame(rows)
+```
+
+Run this before the knockout screen, not as an afterthought — a country that's missing purely because of an API/naming mismatch should never look the same in your logs as one that was correctly, deliberately excluded for failing the capital-burden threshold.
+
+---
+
 ## Summary
 
 | Version | Adds | Key library |
@@ -499,3 +662,6 @@ ranking_engine/
 | V4 | SMAA + evidence-calibrated Monte Carlo | numpy |
 | V5 | Capital-constrained expansion sequencing | pulp==3.3.2 |
 | V6 | Orchestration + output contract | — |
+| 14.1–14.2 | Zero-variance guard + completeness-aware weighting | numpy/pandas |
+| 14.3 | C5 rerouted into Tier 3 + interim seed table | — |
+| 14.4–14.5 | Jurisdiction registry + data-availability audit | requests |

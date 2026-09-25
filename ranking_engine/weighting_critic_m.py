@@ -43,6 +43,20 @@ would perform a second inversion: a market with genuinely low capital burden
 The benefit_mask parameter is kept in the signature for documentation and
 so callers can see what the criteria's RAW semantics are, but it is not
 used for any computation here.
+
+Zero-variance guard (§14.1 of implementation plan)
+---------------------------------------------------
+When a criterion column has zero variance after the logistic squash (e.g. all
+jurisdictions score identically because the criterion is a constant or was
+median-imputed), np.corrcoef divides by that column's std and produces NaN
+for the *entire* correlation matrix — poisoning ALL weights, not just that
+criterion's weight.
+
+The fix: identify zero-variance columns *after* the squash, exclude them from
+the corrcoef call entirely, and assign them zero information content.
+Do NOT try to jitter them — jitter on the raw column is overwritten by the
+logistic squash, and jitter on the post-squash column still leaves std ≈ 0,
+which corrcoef can't tolerate.
 """
 
 import numpy as np
@@ -72,26 +86,54 @@ def critic_m_weights(
     np.ndarray shape (n_criteria,) summing to 1.0
     """
     X = matrix.values.astype(float).copy()
+    n_cols = X.shape[1]
 
     # Step 1: Logistic squash — robust normalization around median/IQR.
     # All columns are treated identically (no direction flip) because the
     # decision matrix is already fully direction-corrected.
-    for j in range(X.shape[1]):
+    for j in range(n_cols):
         col = X[:, j]                           # higher already = better for every column
         med = np.median(col)
-        iqr = float(np.subtract(*np.percentile(col, [75, 25]))) or 1e-9  # guard zero-IQR
-        # Logistic squash: robust to outliers, bounded in (0,1)
-        X[:, j] = 1.0 / (1.0 + np.exp(-(col - med) / iqr))
+        iqr = float(np.subtract(*np.percentile(col, [75, 25])))
+        if iqr < 1e-9:
+            # Zero-IQR: all jurisdictions score identically on this criterion.
+            # Logistic squash with IQR≈0 would overflow or produce a constant 0.5.
+            # Force the constant explicitly — its std will be 0 and it gets zero weight.
+            X[:, j] = 0.5
+        else:
+            # Logistic squash: robust to outliers, bounded in (0,1)
+            X[:, j] = 1.0 / (1.0 + np.exp(-(col - med) / iqr))
 
     # Step 2: information content = std × conflict (sum of 1-corr with every other crit)
     std = X.std(axis=0, ddof=1)
-    corr_matrix = np.corrcoef(X, rowvar=False)
-    conflict = (1.0 - corr_matrix).sum(axis=0)   # shape (n_criteria,)
-    information = std * conflict
+
+    # Identify active (non-zero-variance) columns.
+    # np.corrcoef divides by std internally. If ANY column std == 0, the entire
+    # correlation matrix becomes NaN, poisoning ALL weights — not just that column's.
+    # Fix (plan §14.1): exclude zero-variance columns from corrcoef entirely;
+    # assign them zero information content (correct: they add no discriminating signal).
+    active = np.where(std > 1e-10)[0]
+    information = np.zeros(n_cols)
+
+    if len(active) >= 2:
+        X_active = X[:, active]
+        std_active = std[active]
+        corr_active = np.corrcoef(X_active, rowvar=False)
+        # Guard residual NaN (shouldn't occur after active filter, but be defensive)
+        corr_active = np.nan_to_num(corr_active, nan=0.0)
+        conflict_active = (1.0 - corr_active).sum(axis=0)
+        information[active] = std_active * conflict_active
+    elif len(active) == 1:
+        # Only one criterion has any variance — it gets all the weight
+        information[active[0]] = std[active[0]]
+    # else: all zero-variance → information stays zeros → raises below
 
     if information.sum() == 0:
-        raise ValueError("CRITIC-M: all criteria have zero information content — "
-                         "check that your matrix has more than one row.")
+        raise ValueError(
+            "CRITIC-M: all criteria have zero information content — "
+            "check that your matrix has more than one row and that "
+            "not all criteria are completely constant across jurisdictions."
+        )
 
     return information / information.sum()
 

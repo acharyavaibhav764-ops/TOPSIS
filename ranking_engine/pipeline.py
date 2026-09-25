@@ -40,6 +40,52 @@ except ImportError:
     _BBWM_AVAILABLE = False
 
 
+class DataStatus:
+    """Namespace for data availability status constants."""
+    AVAILABLE = "available"
+    DATA_UNAVAILABLE = "data_unavailable"        # API/source has no data — plumbing problem
+    KNOCKOUT_FAILED_THRESHOLD = "knocked_out"     # has data, and it failed the C6 threshold
+
+def audit_data_availability(
+    facts: list[RawFact],
+    pre_knockout_matrix: pd.DataFrame,
+    capital_required: dict[str, float],
+    liquid_runway_usd: float
+) -> pd.DataFrame:
+    """Audit why jurisdictions are missing or present in the final matrix.
+
+    Returns one row per jurisdiction with:
+      status  : DataStatus constant
+      reason  : human-readable explanation for downstream logs / reports
+    """
+    all_jurisdictions = list(set(f.jurisdiction for f in facts))
+
+    rows = []
+    for jur in all_jurisdictions:
+        if jur not in pre_knockout_matrix.index:
+            status = DataStatus.DATA_UNAVAILABLE
+            reason = "No rows produced by build_decision_matrix — check mapping functions"
+        elif jur not in capital_required:
+            # C6 data simply hasn't been fetched yet (Tier-3 pending).
+            # This is NOT an API failure — it's expected while C6 is unimplemented.
+            status = DataStatus.DATA_UNAVAILABLE
+            reason = "C6 capital burden not yet available (Tier-3 pending) — knockout skipped"
+        elif capital_required[jur] > liquid_runway_usd:
+            status = DataStatus.KNOCKOUT_FAILED_THRESHOLD
+            reason = (f"Capital required ${capital_required[jur]:,.0f} "
+                      f"> runway ${liquid_runway_usd:,.0f}")
+        else:
+            status = DataStatus.AVAILABLE
+            reason = "ok"
+
+        rows.append({
+            "jurisdiction": jur,
+            "status": status,
+            "reason": reason,
+            "capital_burden": capital_required.get(jur),
+        })
+    return pd.DataFrame(rows)
+
 @dataclass
 class PipelineConfig:
     """All configuration that the business layer can tune without touching math code."""
@@ -308,9 +354,18 @@ class RankingPipeline:
 
         # ---- V0: Matrix assembly + hard knockout -----------------------------------------
         if verbose: print("=== V0: Building decision matrix + knockout screen ===")
-        matrix = build_decision_matrix(facts, MAPPING_FUNCTIONS)
+        pre_knockout_matrix = build_decision_matrix(facts, MAPPING_FUNCTIONS)
         capital_required = extract_capital_required(facts)
-        matrix = knockout_screen(matrix, capital_required, cfg.liquid_runway_usd)
+        
+        # Run Audit
+        audit_df = audit_data_availability(facts, pre_knockout_matrix, capital_required, cfg.liquid_runway_usd)
+        if verbose:
+            print("\n  [AUDIT] Data Availability:")
+            for _, row in audit_df.iterrows():
+                print(f"    - {row['jurisdiction']:<25}: {row['status']:<20}  ({row['reason']})")
+            print()
+            
+        matrix = knockout_screen(pre_knockout_matrix, capital_required, cfg.liquid_runway_usd)
 
         if matrix.empty:
             raise ValueError("All jurisdictions were knocked out by the capital screen. "
@@ -460,6 +515,8 @@ class RankingPipeline:
         artifacts = {
             "decision_matrix": matrix,
             "active_criteria": active_criteria,
+            "pending_criteria": [c for c in CRITERIA if c not in active_criteria],
+            "matrix_completeness": len(active_criteria) / len(CRITERIA),
             "weights": dict(zip(active_criteria, weights)),
             # Fix #3: expose raw BWM and CRITIC-M vectors so ResultsStore can
             # write per-criterion breakdown to the weights table without reading
@@ -497,6 +554,9 @@ class RankingPipeline:
                 allocation=allocation,
                 results=results,
             )
+            # Also dump the audit table
+            audit_df.to_csv(Path(dump_dir) / "00_audit_log.csv", index=False)
+            
             if verbose:
                 print(f"=== Stage artifacts written to: {dump_dir} ===")
 

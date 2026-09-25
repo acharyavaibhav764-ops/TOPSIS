@@ -32,8 +32,9 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 # ── imports (data_feeds don't need numpy/ranking_engine) ──────────────────
 from data_feeds import worldbank_client, exchange_hhi_client, governance_index_client, scoring
 from data_feeds.raw_fact_adapter import (
-    c1_from_hhi, c2_from_worldbank, c5_base_signal, c8_from_wgi,
+    c1_from_hhi, c2_from_worldbank, c8_from_wgi,
 )
+from data_feeds.seed_c5_estimates import C5_SEED
 
 # ranking_engine imports (require numpy — use sys Python with full deps)
 from ranking_engine.pipeline   import RankingPipeline, PipelineConfig
@@ -92,11 +93,7 @@ def fetch_all_facts(api_key: str | None, skip_hhi: bool, verbose: bool) -> list[
                 ))
                 if verbose:
                     print(f"       C2={c2s:.2f} (GNI={inputs['gni_ppp']:,}, Findex={inputs['account_ownership_pct']}%)")
-            c5s = scoring.score_c5_base_signal(inputs["account_ownership_pct"])
-            if c5s is not None:
-                new_facts.append(c5_base_signal(name, inputs["account_ownership_pct"], inputs["findex_year"]))
-                if verbose:
-                    print(f"       C5={c5s:.2f} (base signal only — VASP-openness manual)")
+            # C5 is now appended via C5_SEED (see below)
         except Exception as e:
             warnings.append(f"[{iso3}] C2/C5 fetch failed: {e}")
 
@@ -136,6 +133,9 @@ def fetch_all_facts(api_key: str | None, skip_hhi: bool, verbose: bool) -> list[
         print(f"\n  Warnings ({len(warnings)}):")
         for w in warnings:
             print(f"    {w}")
+
+    # Append C5 interim seed data
+    new_facts.extend(C5_SEED)
 
     return new_facts
 

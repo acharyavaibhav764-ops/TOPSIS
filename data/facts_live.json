@@ -10,15 +10,6 @@
   },
   {
     "jurisdiction": "United States",
-    "criterion_code": "C5",
-    "raw_value": 10.0,
-    "evidence_tag": "analyst_estimate",
-    "source_citation": "World Bank FX.OWN.TOTL.ZS (digital-payments proxy, year=2024); VASP-openness component NOT included \u2014 see Tier 3",
-    "as_of": "2024-12-31",
-    "alt_raw_value": null
-  },
-  {
-    "jurisdiction": "United States",
     "criterion_code": "C8",
     "raw_value": 7.9345,
     "evidence_tag": "verified_fact",
@@ -42,15 +33,6 @@
     "evidence_tag": "verified_fact",
     "source_citation": "World Bank: NY.GNP.PCAP.PP.CD + FX.OWN.TOTL.ZS (year=2025)",
     "as_of": "2025-12-31",
-    "alt_raw_value": null
-  },
-  {
-    "jurisdiction": "United Kingdom",
-    "criterion_code": "C5",
-    "raw_value": 10.0,
-    "evidence_tag": "analyst_estimate",
-    "source_citation": "World Bank FX.OWN.TOTL.ZS (digital-payments proxy, year=2024); VASP-openness component NOT included \u2014 see Tier 3",
-    "as_of": "2024-12-31",
     "alt_raw_value": null
   },
   {
@@ -82,15 +64,6 @@
   },
   {
     "jurisdiction": "Singapore",
-    "criterion_code": "C5",
-    "raw_value": 10.0,
-    "evidence_tag": "analyst_estimate",
-    "source_citation": "World Bank FX.OWN.TOTL.ZS (digital-payments proxy, year=2024); VASP-openness component NOT included \u2014 see Tier 3",
-    "as_of": "2024-12-31",
-    "alt_raw_value": null
-  },
-  {
-    "jurisdiction": "Singapore",
     "criterion_code": "C8",
     "raw_value": 9.3378,
     "evidence_tag": "verified_fact",
@@ -114,15 +87,6 @@
     "evidence_tag": "verified_fact",
     "source_citation": "World Bank: NY.GNP.PCAP.PP.CD + FX.OWN.TOTL.ZS (year=2025)",
     "as_of": "2025-12-31",
-    "alt_raw_value": null
-  },
-  {
-    "jurisdiction": "Australia",
-    "criterion_code": "C5",
-    "raw_value": 10.0,
-    "evidence_tag": "analyst_estimate",
-    "source_citation": "World Bank FX.OWN.TOTL.ZS (digital-payments proxy, year=2024); VASP-openness component NOT included \u2014 see Tier 3",
-    "as_of": "2024-12-31",
     "alt_raw_value": null
   },
   {
@@ -154,15 +118,6 @@
   },
   {
     "jurisdiction": "Switzerland",
-    "criterion_code": "C5",
-    "raw_value": 10.0,
-    "evidence_tag": "analyst_estimate",
-    "source_citation": "World Bank FX.OWN.TOTL.ZS (digital-payments proxy, year=2024); VASP-openness component NOT included \u2014 see Tier 3",
-    "as_of": "2024-12-31",
-    "alt_raw_value": null
-  },
-  {
-    "jurisdiction": "Switzerland",
     "criterion_code": "C8",
     "raw_value": 8.6879,
     "evidence_tag": "verified_fact",
@@ -186,15 +141,6 @@
     "evidence_tag": "verified_fact",
     "source_citation": "World Bank: NY.GNP.PCAP.PP.CD + FX.OWN.TOTL.ZS (year=2025)",
     "as_of": "2025-12-31",
-    "alt_raw_value": null
-  },
-  {
-    "jurisdiction": "Hong Kong",
-    "criterion_code": "C5",
-    "raw_value": 10.0,
-    "evidence_tag": "analyst_estimate",
-    "source_citation": "World Bank FX.OWN.TOTL.ZS (digital-payments proxy, year=2024); VASP-openness component NOT included \u2014 see Tier 3",
-    "as_of": "2024-12-31",
     "alt_raw_value": null
   },
   {
@@ -226,15 +172,6 @@
   },
   {
     "jurisdiction": "Japan",
-    "criterion_code": "C5",
-    "raw_value": 10.0,
-    "evidence_tag": "analyst_estimate",
-    "source_citation": "World Bank FX.OWN.TOTL.ZS (digital-payments proxy, year=2024); VASP-openness component NOT included \u2014 see Tier 3",
-    "as_of": "2024-12-31",
-    "alt_raw_value": null
-  },
-  {
-    "jurisdiction": "Japan",
     "criterion_code": "C8",
     "raw_value": 7.8933,
     "evidence_tag": "verified_fact",
@@ -258,15 +195,6 @@
     "evidence_tag": "verified_fact",
     "source_citation": "World Bank: NY.GNP.PCAP.PP.CD + FX.OWN.TOTL.ZS (year=2025)",
     "as_of": "2025-12-31",
-    "alt_raw_value": null
-  },
-  {
-    "jurisdiction": "India",
-    "criterion_code": "C5",
-    "raw_value": 10.0,
-    "evidence_tag": "analyst_estimate",
-    "source_citation": "World Bank FX.OWN.TOTL.ZS (digital-payments proxy, year=2024); VASP-openness component NOT included \u2014 see Tier 3",
-    "as_of": "2024-12-31",
     "alt_raw_value": null
   },
   {
@@ -298,15 +226,6 @@
   },
   {
     "jurisdiction": "United Arab Emirates",
-    "criterion_code": "C5",
-    "raw_value": 10.0,
-    "evidence_tag": "analyst_estimate",
-    "source_citation": "World Bank FX.OWN.TOTL.ZS (digital-payments proxy, year=2021); VASP-openness component NOT included \u2014 see Tier 3",
-    "as_of": "2021-12-31",
-    "alt_raw_value": null
-  },
-  {
-    "jurisdiction": "United Arab Emirates",
     "criterion_code": "C8",
     "raw_value": 7.5263,
     "evidence_tag": "verified_fact",
@@ -330,15 +249,6 @@
     "evidence_tag": "verified_fact",
     "source_citation": "World Bank: NY.GNP.PCAP.PP.CD + FX.OWN.TOTL.ZS (year=2025)",
     "as_of": "2025-12-31",
-    "alt_raw_value": null
-  },
-  {
-    "jurisdiction": "Canada",
-    "criterion_code": "C5",
-    "raw_value": 10.0,
-    "evidence_tag": "analyst_estimate",
-    "source_citation": "World Bank FX.OWN.TOTL.ZS (digital-payments proxy, year=2024); VASP-openness component NOT included \u2014 see Tier 3",
-    "as_of": "2024-12-31",
     "alt_raw_value": null
   },
   {
@@ -370,15 +280,6 @@
   },
   {
     "jurisdiction": "France",
-    "criterion_code": "C5",
-    "raw_value": 10.0,
-    "evidence_tag": "analyst_estimate",
-    "source_citation": "World Bank FX.OWN.TOTL.ZS (digital-payments proxy, year=2024); VASP-openness component NOT included \u2014 see Tier 3",
-    "as_of": "2024-12-31",
-    "alt_raw_value": null
-  },
-  {
-    "jurisdiction": "France",
     "criterion_code": "C8",
     "raw_value": 7.5631,
     "evidence_tag": "verified_fact",
@@ -406,15 +307,6 @@
   },
   {
     "jurisdiction": "Germany",
-    "criterion_code": "C5",
-    "raw_value": 10.0,
-    "evidence_tag": "analyst_estimate",
-    "source_citation": "World Bank FX.OWN.TOTL.ZS (digital-payments proxy, year=2024); VASP-openness component NOT included \u2014 see Tier 3",
-    "as_of": "2024-12-31",
-    "alt_raw_value": null
-  },
-  {
-    "jurisdiction": "Germany",
     "criterion_code": "C8",
     "raw_value": 8.1965,
     "evidence_tag": "verified_fact",
@@ -429,15 +321,6 @@
     "evidence_tag": "verified_fact",
     "source_citation": "World Bank: NY.GNP.PCAP.PP.CD + FX.OWN.TOTL.ZS (year=2025)",
     "as_of": "2025-12-31",
-    "alt_raw_value": null
-  },
-  {
-    "jurisdiction": "Netherlands",
-    "criterion_code": "C5",
-    "raw_value": 10.0,
-    "evidence_tag": "analyst_estimate",
-    "source_citation": "World Bank FX.OWN.TOTL.ZS (digital-payments proxy, year=2024); VASP-openness component NOT included \u2014 see Tier 3",
-    "as_of": "2024-12-31",
     "alt_raw_value": null
   },
   {
@@ -469,15 +352,6 @@
   },
   {
     "jurisdiction": "South Korea",
-    "criterion_code": "C5",
-    "raw_value": 10.0,
-    "evidence_tag": "analyst_estimate",
-    "source_citation": "World Bank FX.OWN.TOTL.ZS (digital-payments proxy, year=2024); VASP-openness component NOT included \u2014 see Tier 3",
-    "as_of": "2024-12-31",
-    "alt_raw_value": null
-  },
-  {
-    "jurisdiction": "South Korea",
     "criterion_code": "C8",
     "raw_value": 7.3246,
     "evidence_tag": "verified_fact",
@@ -505,15 +379,6 @@
   },
   {
     "jurisdiction": "Brazil",
-    "criterion_code": "C5",
-    "raw_value": 10.0,
-    "evidence_tag": "analyst_estimate",
-    "source_citation": "World Bank FX.OWN.TOTL.ZS (digital-payments proxy, year=2024); VASP-openness component NOT included \u2014 see Tier 3",
-    "as_of": "2024-12-31",
-    "alt_raw_value": null
-  },
-  {
-    "jurisdiction": "Brazil",
     "criterion_code": "C8",
     "raw_value": 4.9698,
     "evidence_tag": "verified_fact",
@@ -528,6 +393,141 @@
     "evidence_tag": "analyst_estimate",
     "source_citation": "CryptoCompare /data/exchanges/general \u2014 n=3 exchanges (33082, 81572, 868156); HHI=8101",
     "as_of": "2026-09-25",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "United States",
+    "criterion_code": "C5",
+    "raw_value": 5,
+    "evidence_tag": "analyst_estimate",
+    "source_citation": "Fragmented state regulations, uneven banking access for VASPs (2026 est)",
+    "as_of": "2026-09-01",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "United Kingdom",
+    "criterion_code": "C5",
+    "raw_value": 7,
+    "evidence_tag": "analyst_estimate",
+    "source_citation": "FCA registered VASPs generally have access to Faster Payments (2026 est)",
+    "as_of": "2026-09-01",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "Singapore",
+    "criterion_code": "C5",
+    "raw_value": 9,
+    "evidence_tag": "analyst_estimate",
+    "source_citation": "MAS licensed entities strongly supported by local banking infrastructure",
+    "as_of": "2026-09-01",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "Australia",
+    "criterion_code": "C5",
+    "raw_value": 6,
+    "evidence_tag": "analyst_estimate",
+    "source_citation": "De-banking remains a minor issue, but Tier 1 rails available to fully licensed AUSTRAC entities",
+    "as_of": "2026-09-01",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "Switzerland",
+    "criterion_code": "C5",
+    "raw_value": 8,
+    "evidence_tag": "analyst_estimate",
+    "source_citation": "Crypto Valley banks explicitly service digital assets",
+    "as_of": "2026-09-01",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "Hong Kong",
+    "criterion_code": "C5",
+    "raw_value": 8,
+    "evidence_tag": "analyst_estimate",
+    "source_citation": "HKMA issued strong circulars to banks supporting licensed VATPs",
+    "as_of": "2026-09-01",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "Japan",
+    "criterion_code": "C5",
+    "raw_value": 8,
+    "evidence_tag": "analyst_estimate",
+    "source_citation": "JFSA licensed exchanges integrated closely with domestic bank rails",
+    "as_of": "2026-09-01",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "India",
+    "criterion_code": "C5",
+    "raw_value": 3,
+    "evidence_tag": "analyst_estimate",
+    "source_citation": "Shadow ban history; UPI access for VASPs highly constrained/volatile",
+    "as_of": "2026-09-01",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "UAE",
+    "criterion_code": "C5",
+    "raw_value": 8,
+    "evidence_tag": "analyst_estimate",
+    "source_citation": "DFSA/CBUAE bank-VASP onboarding guidance, analyst read",
+    "as_of": "2026-09-01",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "Canada",
+    "criterion_code": "C5",
+    "raw_value": 6,
+    "evidence_tag": "analyst_estimate",
+    "source_citation": "Restricted dealers have rails but ongoing strict federal scrutiny limits banking competition",
+    "as_of": "2026-09-01",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "France",
+    "criterion_code": "C5",
+    "raw_value": 7,
+    "evidence_tag": "analyst_estimate",
+    "source_citation": "AMF PSAN registered entities have established EU banking pathways",
+    "as_of": "2026-09-01",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "Germany",
+    "criterion_code": "C5",
+    "raw_value": 7,
+    "evidence_tag": "analyst_estimate",
+    "source_citation": "BaFin licensed custody providers actively banked by German institutions",
+    "as_of": "2026-09-01",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "Netherlands",
+    "criterion_code": "C5",
+    "raw_value": 6,
+    "evidence_tag": "analyst_estimate",
+    "source_citation": "DNB registered entities face high compliance but have reliable Euro rail access",
+    "as_of": "2026-09-01",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "South Korea",
+    "criterion_code": "C5",
+    "raw_value": 7,
+    "evidence_tag": "analyst_estimate",
+    "source_citation": "Mandatory real-name bank accounts bind exchanges tightly to commercial banks",
+    "as_of": "2026-09-01",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "Brazil",
+    "criterion_code": "C5",
+    "raw_value": 6,
+    "evidence_tag": "analyst_estimate",
+    "source_citation": "BCB Pix + VASP account-opening precedent, analyst read",
+    "as_of": "2026-09-01",
     "alt_raw_value": null
   }
 ]

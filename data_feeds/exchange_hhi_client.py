@@ -50,6 +50,36 @@ _CC_COUNTRY_NAMES: dict[str, set[str]] = {
     # Add more as target list expands
 }
 
+# CryptoCompare's 'Country' field is unreliable. 
+# We maintain a manual exchange_name -> ISO-3 crosswalk for attribution.
+EXCHANGE_JURISDICTION: dict[str, str] = {
+    "Binance": "ARE",      # regulated entity used for HHI attribution
+    "Coinbase": "USA",
+    "Kraken": "USA",
+    "OKX": "SGP",
+    "Bybit": "ARE",
+    "Crypto.com": "SGP",
+    "Upbit": "KOR",
+    "Bitflyer": "JPN",
+    "Bithumb": "KOR",
+    "KuCoin": "SGP",
+    "Bitstamp": "GBR",
+    "Luno": "GBR",
+    "Mercado Bitcoin": "BRA",
+    "WazirX": "IND",
+    "CoinDCX": "IND",
+    "CoinSwitch": "IND",
+    "Bitfinex": "HKG",
+    "Gemini": "USA",
+    "NDAX": "CAN",
+    "Bitpanda": "CHE",     # Example
+    "Bitvavo": "NLD",
+    "Paymium": "FRA",
+    "Boerse Stuttgart Digital": "DEU",
+    "Independent Reserve": "AUS",
+    "BTC Markets": "AUS",
+}
+
 
 def _exchange_volume(info: dict) -> float:
     """
@@ -118,12 +148,22 @@ def compute_hhi(
         # ISO-3 not in our map — fall back to exact match on the raw Country field
         accepted_names = {iso3.lower()}
 
-    matched = {
-        name: _exchange_volume(info)
-        for name, info in data.items()
-        if (info.get("Country") or "").lower() in accepted_names
-        and _exchange_volume(info) > 0
-    }
+    matched = {}
+    for name, info in data.items():
+        # First try the manual crosswalk
+        assigned_iso3 = EXCHANGE_JURISDICTION.get(name)
+        if assigned_iso3 == iso3.upper():
+            matched_by_crosswalk = True
+        else:
+            # Fall back to checking the 'Country' string if no crosswalk exists
+            matched_by_crosswalk = False
+            raw_country = (info.get("Country") or "").lower()
+            if raw_country not in accepted_names:
+                continue
+        
+        vol = _exchange_volume(info)
+        if vol > 0:
+            matched[name] = vol
 
     n = len(matched)
     if n == 0:
