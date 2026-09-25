@@ -30,6 +30,7 @@ from datetime import date, datetime
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 from ranking_engine.schema import RawFact, EvidenceTag
+from .entity_resolution import normalize_entity_name
 
 
 def _parse_date(as_of: str | date | None) -> date:
@@ -67,7 +68,9 @@ def make_fact(
 
     Parameters map directly to the RawFact dataclass fields — using the
     real field names (criterion_code, source_citation) not the plan's aliases.
+    Applies standard entity normalization to the jurisdiction name.
     """
+    jurisdiction = normalize_entity_name(jurisdiction)
     return RawFact(
         jurisdiction=jurisdiction,
         criterion_code=criterion_code,
