@@ -1,0 +1,533 @@
+[
+  {
+    "jurisdiction": "United States",
+    "criterion_code": "C2",
+    "raw_value": 10.0,
+    "evidence_tag": "verified_fact",
+    "source_citation": "World Bank: NY.GNP.PCAP.PP.CD + FX.OWN.TOTL.ZS (year=2025)",
+    "as_of": "2025-12-31",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "United States",
+    "criterion_code": "C5",
+    "raw_value": 10.0,
+    "evidence_tag": "analyst_estimate",
+    "source_citation": "World Bank FX.OWN.TOTL.ZS (digital-payments proxy, year=2024); VASP-openness component NOT included \u2014 see Tier 3",
+    "as_of": "2024-12-31",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "United States",
+    "criterion_code": "C8",
+    "raw_value": 7.9345,
+    "evidence_tag": "verified_fact",
+    "source_citation": "World Bank WGI RQ.EST (year=2024)",
+    "as_of": "2024-12-31",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "United States",
+    "criterion_code": "C1",
+    "raw_value": 5.0,
+    "evidence_tag": "analyst_estimate",
+    "source_citation": "CryptoCompare /data/exchanges/general \u2014 n=10 exchanges (13228, 2438, 2439, 2493, 402240); HHI=2267",
+    "as_of": "2026-09-25",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "United Kingdom",
+    "criterion_code": "C2",
+    "raw_value": 10.0,
+    "evidence_tag": "verified_fact",
+    "source_citation": "World Bank: NY.GNP.PCAP.PP.CD + FX.OWN.TOTL.ZS (year=2025)",
+    "as_of": "2025-12-31",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "United Kingdom",
+    "criterion_code": "C5",
+    "raw_value": 10.0,
+    "evidence_tag": "analyst_estimate",
+    "source_citation": "World Bank FX.OWN.TOTL.ZS (digital-payments proxy, year=2024); VASP-openness component NOT included \u2014 see Tier 3",
+    "as_of": "2024-12-31",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "United Kingdom",
+    "criterion_code": "C8",
+    "raw_value": 8.2202,
+    "evidence_tag": "verified_fact",
+    "source_citation": "World Bank WGI RQ.EST (year=2024)",
+    "as_of": "2024-12-31",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "United Kingdom",
+    "criterion_code": "C1",
+    "raw_value": 1.0,
+    "evidence_tag": "analyst_estimate",
+    "source_citation": "CryptoCompare /data/exchanges/general \u2014 n=3 exchanges (16972, 2431, 2441); HHI=7683",
+    "as_of": "2026-09-25",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "Singapore",
+    "criterion_code": "C2",
+    "raw_value": 10.0,
+    "evidence_tag": "verified_fact",
+    "source_citation": "World Bank: NY.GNP.PCAP.PP.CD + FX.OWN.TOTL.ZS (year=2025)",
+    "as_of": "2025-12-31",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "Singapore",
+    "criterion_code": "C5",
+    "raw_value": 10.0,
+    "evidence_tag": "analyst_estimate",
+    "source_citation": "World Bank FX.OWN.TOTL.ZS (digital-payments proxy, year=2024); VASP-openness component NOT included \u2014 see Tier 3",
+    "as_of": "2024-12-31",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "Singapore",
+    "criterion_code": "C8",
+    "raw_value": 9.3378,
+    "evidence_tag": "verified_fact",
+    "source_citation": "World Bank WGI RQ.EST (year=2024)",
+    "as_of": "2024-12-31",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "Singapore",
+    "criterion_code": "C1",
+    "raw_value": 5.0,
+    "evidence_tag": "analyst_estimate",
+    "source_citation": "CryptoCompare /data/exchanges/general \u2014 n=8 exchanges (39381, 910485, 932459, 937227, 953949); HHI=1871",
+    "as_of": "2026-09-25",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "Australia",
+    "criterion_code": "C2",
+    "raw_value": 10.0,
+    "evidence_tag": "verified_fact",
+    "source_citation": "World Bank: NY.GNP.PCAP.PP.CD + FX.OWN.TOTL.ZS (year=2025)",
+    "as_of": "2025-12-31",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "Australia",
+    "criterion_code": "C5",
+    "raw_value": 10.0,
+    "evidence_tag": "analyst_estimate",
+    "source_citation": "World Bank FX.OWN.TOTL.ZS (digital-payments proxy, year=2024); VASP-openness component NOT included \u2014 see Tier 3",
+    "as_of": "2024-12-31",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "Australia",
+    "criterion_code": "C8",
+    "raw_value": 8.6002,
+    "evidence_tag": "verified_fact",
+    "source_citation": "World Bank WGI RQ.EST (year=2024)",
+    "as_of": "2024-12-31",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "Australia",
+    "criterion_code": "C1",
+    "raw_value": 3.0,
+    "evidence_tag": "analyst_estimate",
+    "source_citation": "CryptoCompare /data/exchanges/general \u2014 n=3 exchanges (19704, 917385, 925044); HHI=4073",
+    "as_of": "2026-09-25",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "Switzerland",
+    "criterion_code": "C2",
+    "raw_value": 10.0,
+    "evidence_tag": "verified_fact",
+    "source_citation": "World Bank: NY.GNP.PCAP.PP.CD + FX.OWN.TOTL.ZS (year=2025)",
+    "as_of": "2025-12-31",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "Switzerland",
+    "criterion_code": "C5",
+    "raw_value": 10.0,
+    "evidence_tag": "analyst_estimate",
+    "source_citation": "World Bank FX.OWN.TOTL.ZS (digital-payments proxy, year=2024); VASP-openness component NOT included \u2014 see Tier 3",
+    "as_of": "2024-12-31",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "Switzerland",
+    "criterion_code": "C8",
+    "raw_value": 8.6879,
+    "evidence_tag": "verified_fact",
+    "source_citation": "World Bank WGI RQ.EST (year=2024)",
+    "as_of": "2024-12-31",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "Switzerland",
+    "criterion_code": "C1",
+    "raw_value": 1.0,
+    "evidence_tag": "analyst_estimate",
+    "source_citation": "CryptoCompare /data/exchanges/general \u2014 n=1 exchanges (931833); HHI=10000",
+    "as_of": "2026-09-25",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "Hong Kong",
+    "criterion_code": "C2",
+    "raw_value": 10.0,
+    "evidence_tag": "verified_fact",
+    "source_citation": "World Bank: NY.GNP.PCAP.PP.CD + FX.OWN.TOTL.ZS (year=2025)",
+    "as_of": "2025-12-31",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "Hong Kong",
+    "criterion_code": "C5",
+    "raw_value": 10.0,
+    "evidence_tag": "analyst_estimate",
+    "source_citation": "World Bank FX.OWN.TOTL.ZS (digital-payments proxy, year=2024); VASP-openness component NOT included \u2014 see Tier 3",
+    "as_of": "2024-12-31",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "Hong Kong",
+    "criterion_code": "C8",
+    "raw_value": 8.6319,
+    "evidence_tag": "verified_fact",
+    "source_citation": "World Bank WGI RQ.EST (year=2024)",
+    "as_of": "2024-12-31",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "Hong Kong",
+    "criterion_code": "C1",
+    "raw_value": 3.0,
+    "evidence_tag": "analyst_estimate",
+    "source_citation": "CryptoCompare /data/exchanges/general \u2014 n=8 exchanges (863674, 899554, 927942, 930519, 932497); HHI=4235",
+    "as_of": "2026-09-25",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "Japan",
+    "criterion_code": "C2",
+    "raw_value": 10.0,
+    "evidence_tag": "verified_fact",
+    "source_citation": "World Bank: NY.GNP.PCAP.PP.CD + FX.OWN.TOTL.ZS (year=2025)",
+    "as_of": "2025-12-31",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "Japan",
+    "criterion_code": "C5",
+    "raw_value": 10.0,
+    "evidence_tag": "analyst_estimate",
+    "source_citation": "World Bank FX.OWN.TOTL.ZS (digital-payments proxy, year=2024); VASP-openness component NOT included \u2014 see Tier 3",
+    "as_of": "2024-12-31",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "Japan",
+    "criterion_code": "C8",
+    "raw_value": 7.8933,
+    "evidence_tag": "verified_fact",
+    "source_citation": "World Bank WGI RQ.EST (year=2024)",
+    "as_of": "2024-12-31",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "Japan",
+    "criterion_code": "C1",
+    "raw_value": 3.0,
+    "evidence_tag": "analyst_estimate",
+    "source_citation": "CryptoCompare /data/exchanges/general \u2014 n=5 exchanges (19706, 42116, 837358, 86472, 930485); HHI=3315",
+    "as_of": "2026-09-25",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "India",
+    "criterion_code": "C2",
+    "raw_value": 7.2,
+    "evidence_tag": "verified_fact",
+    "source_citation": "World Bank: NY.GNP.PCAP.PP.CD + FX.OWN.TOTL.ZS (year=2025)",
+    "as_of": "2025-12-31",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "India",
+    "criterion_code": "C5",
+    "raw_value": 10.0,
+    "evidence_tag": "analyst_estimate",
+    "source_citation": "World Bank FX.OWN.TOTL.ZS (digital-payments proxy, year=2024); VASP-openness component NOT included \u2014 see Tier 3",
+    "as_of": "2024-12-31",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "India",
+    "criterion_code": "C8",
+    "raw_value": 5.3271,
+    "evidence_tag": "verified_fact",
+    "source_citation": "World Bank WGI RQ.EST (year=2024)",
+    "as_of": "2024-12-31",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "India",
+    "criterion_code": "C1",
+    "raw_value": 1.0,
+    "evidence_tag": "analyst_estimate",
+    "source_citation": "CryptoCompare /data/exchanges/general \u2014 n=1 exchanges (33097); HHI=10000",
+    "as_of": "2026-09-25",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "United Arab Emirates",
+    "criterion_code": "C2",
+    "raw_value": 10.0,
+    "evidence_tag": "verified_fact",
+    "source_citation": "World Bank: NY.GNP.PCAP.PP.CD + FX.OWN.TOTL.ZS (year=2024)",
+    "as_of": "2024-12-31",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "United Arab Emirates",
+    "criterion_code": "C5",
+    "raw_value": 10.0,
+    "evidence_tag": "analyst_estimate",
+    "source_citation": "World Bank FX.OWN.TOTL.ZS (digital-payments proxy, year=2021); VASP-openness component NOT included \u2014 see Tier 3",
+    "as_of": "2021-12-31",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "United Arab Emirates",
+    "criterion_code": "C8",
+    "raw_value": 7.5263,
+    "evidence_tag": "verified_fact",
+    "source_citation": "World Bank WGI RQ.EST (year=2024)",
+    "as_of": "2024-12-31",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "United Arab Emirates",
+    "criterion_code": "C1",
+    "raw_value": 1.0,
+    "evidence_tag": "analyst_estimate",
+    "source_citation": "CryptoCompare /data/exchanges/general \u2014 n=2 exchanges (936726, 975665); HHI=7885",
+    "as_of": "2026-09-25",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "Canada",
+    "criterion_code": "C2",
+    "raw_value": 10.0,
+    "evidence_tag": "verified_fact",
+    "source_citation": "World Bank: NY.GNP.PCAP.PP.CD + FX.OWN.TOTL.ZS (year=2025)",
+    "as_of": "2025-12-31",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "Canada",
+    "criterion_code": "C5",
+    "raw_value": 10.0,
+    "evidence_tag": "analyst_estimate",
+    "source_citation": "World Bank FX.OWN.TOTL.ZS (digital-payments proxy, year=2024); VASP-openness component NOT included \u2014 see Tier 3",
+    "as_of": "2024-12-31",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "Canada",
+    "criterion_code": "C8",
+    "raw_value": 7.952,
+    "evidence_tag": "verified_fact",
+    "source_citation": "World Bank WGI RQ.EST (year=2024)",
+    "as_of": "2024-12-31",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "Canada",
+    "criterion_code": "C1",
+    "raw_value": 1.0,
+    "evidence_tag": "analyst_estimate",
+    "source_citation": "CryptoCompare /data/exchanges/general \u2014 n=1 exchanges (925924); HHI=10000",
+    "as_of": "2026-09-25",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "France",
+    "criterion_code": "C2",
+    "raw_value": 10.0,
+    "evidence_tag": "verified_fact",
+    "source_citation": "World Bank: NY.GNP.PCAP.PP.CD + FX.OWN.TOTL.ZS (year=2025)",
+    "as_of": "2025-12-31",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "France",
+    "criterion_code": "C5",
+    "raw_value": 10.0,
+    "evidence_tag": "analyst_estimate",
+    "source_citation": "World Bank FX.OWN.TOTL.ZS (digital-payments proxy, year=2024); VASP-openness component NOT included \u2014 see Tier 3",
+    "as_of": "2024-12-31",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "France",
+    "criterion_code": "C8",
+    "raw_value": 7.5631,
+    "evidence_tag": "verified_fact",
+    "source_citation": "World Bank WGI RQ.EST (year=2024)",
+    "as_of": "2024-12-31",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "France",
+    "criterion_code": "C1",
+    "raw_value": 1.0,
+    "evidence_tag": "analyst_estimate",
+    "source_citation": "CryptoCompare /data/exchanges/general \u2014 n=1 exchanges (34423); HHI=10000",
+    "as_of": "2026-09-25",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "Germany",
+    "criterion_code": "C2",
+    "raw_value": 10.0,
+    "evidence_tag": "verified_fact",
+    "source_citation": "World Bank: NY.GNP.PCAP.PP.CD + FX.OWN.TOTL.ZS (year=2025)",
+    "as_of": "2025-12-31",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "Germany",
+    "criterion_code": "C5",
+    "raw_value": 10.0,
+    "evidence_tag": "analyst_estimate",
+    "source_citation": "World Bank FX.OWN.TOTL.ZS (digital-payments proxy, year=2024); VASP-openness component NOT included \u2014 see Tier 3",
+    "as_of": "2024-12-31",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "Germany",
+    "criterion_code": "C8",
+    "raw_value": 8.1965,
+    "evidence_tag": "verified_fact",
+    "source_citation": "World Bank WGI RQ.EST (year=2024)",
+    "as_of": "2024-12-31",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "Netherlands",
+    "criterion_code": "C2",
+    "raw_value": 10.0,
+    "evidence_tag": "verified_fact",
+    "source_citation": "World Bank: NY.GNP.PCAP.PP.CD + FX.OWN.TOTL.ZS (year=2025)",
+    "as_of": "2025-12-31",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "Netherlands",
+    "criterion_code": "C5",
+    "raw_value": 10.0,
+    "evidence_tag": "analyst_estimate",
+    "source_citation": "World Bank FX.OWN.TOTL.ZS (digital-payments proxy, year=2024); VASP-openness component NOT included \u2014 see Tier 3",
+    "as_of": "2024-12-31",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "Netherlands",
+    "criterion_code": "C8",
+    "raw_value": 8.5993,
+    "evidence_tag": "verified_fact",
+    "source_citation": "World Bank WGI RQ.EST (year=2024)",
+    "as_of": "2024-12-31",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "Netherlands",
+    "criterion_code": "C1",
+    "raw_value": 1.0,
+    "evidence_tag": "analyst_estimate",
+    "source_citation": "CryptoCompare /data/exchanges/general \u2014 n=2 exchanges (933826, 969834); HHI=9999",
+    "as_of": "2026-09-25",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "South Korea",
+    "criterion_code": "C2",
+    "raw_value": 10.0,
+    "evidence_tag": "verified_fact",
+    "source_citation": "World Bank: NY.GNP.PCAP.PP.CD + FX.OWN.TOTL.ZS (year=2025)",
+    "as_of": "2025-12-31",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "South Korea",
+    "criterion_code": "C5",
+    "raw_value": 10.0,
+    "evidence_tag": "analyst_estimate",
+    "source_citation": "World Bank FX.OWN.TOTL.ZS (digital-payments proxy, year=2024); VASP-openness component NOT included \u2014 see Tier 3",
+    "as_of": "2024-12-31",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "South Korea",
+    "criterion_code": "C8",
+    "raw_value": 7.3246,
+    "evidence_tag": "verified_fact",
+    "source_citation": "World Bank WGI RQ.EST (year=2024)",
+    "as_of": "2024-12-31",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "South Korea",
+    "criterion_code": "C1",
+    "raw_value": 3.0,
+    "evidence_tag": "analyst_estimate",
+    "source_citation": "CryptoCompare /data/exchanges/general \u2014 n=7 exchanges (18846, 48526, 81495, 883323, 930486); HHI=3323",
+    "as_of": "2026-09-25",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "Brazil",
+    "criterion_code": "C2",
+    "raw_value": 8.6,
+    "evidence_tag": "verified_fact",
+    "source_citation": "World Bank: NY.GNP.PCAP.PP.CD + FX.OWN.TOTL.ZS (year=2025)",
+    "as_of": "2025-12-31",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "Brazil",
+    "criterion_code": "C5",
+    "raw_value": 10.0,
+    "evidence_tag": "analyst_estimate",
+    "source_citation": "World Bank FX.OWN.TOTL.ZS (digital-payments proxy, year=2024); VASP-openness component NOT included \u2014 see Tier 3",
+    "as_of": "2024-12-31",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "Brazil",
+    "criterion_code": "C8",
+    "raw_value": 4.9698,
+    "evidence_tag": "verified_fact",
+    "source_citation": "World Bank WGI RQ.EST (year=2024)",
+    "as_of": "2024-12-31",
+    "alt_raw_value": null
+  },
+  {
+    "jurisdiction": "Brazil",
+    "criterion_code": "C1",
+    "raw_value": 1.0,
+    "evidence_tag": "analyst_estimate",
+    "source_citation": "CryptoCompare /data/exchanges/general \u2014 n=3 exchanges (33082, 81572, 868156); HHI=8101",
+    "as_of": "2026-09-25",
+    "alt_raw_value": null
+  }
+]

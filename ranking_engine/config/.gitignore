@@ -1,0 +1,5 @@
+# vpl_dpl.json and surveys.json are team decisions, not source code.
+# They must not be committed alongside the engine code — future changes to
+# these values should be a deliberate team act, not a silent git commit.
+vpl_dpl.json
+surveys.json

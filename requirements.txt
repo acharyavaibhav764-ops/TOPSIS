@@ -1,0 +1,18 @@
+# MarketSphere TOPSIS — Python dependencies
+# All packages are available via MSYS2 pacman (mingw-w64-ucrt-x86_64-*) or pip.
+# Install command (MSYS2/UCRT64):
+#   See install_deps.ps1 for the one-shot install script.
+
+# ── Data feeds (Tier 4) ──────────────────────────────────────────────────────
+requests>=2.31.0          # World Bank + CryptoCompare HTTP calls
+
+# ── Ranking engine core ──────────────────────────────────────────────────────
+numpy>=1.26.0             # TOPSIS matrix ops, SMAA, Monte Carlo
+pandas>=2.0.0             # Decision matrix, CRITIC-M, TOPSIS-RAD
+scipy>=1.11.0             # scipy.optimize.linprog — BWM weights
+
+# ── Knapsack / expansion wave solver ────────────────────────────────────────
+pulp>=2.7.0               # LP solver used by knapsack.py
+
+# ── Testing ──────────────────────────────────────────────────────────────────
+pytest>=7.4.0             # All test suites under ranking_engine/tests/
