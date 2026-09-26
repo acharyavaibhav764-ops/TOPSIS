@@ -272,6 +272,14 @@ body { min-height: 100vh; }
   padding: 6px 0;
   transition: color 0.15s;
 }
+.nav-section-link {
+  text-decoration: none;
+}
+.nav-section-link:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 4px;
+  border-radius: 3px;
+}
 .nav-dropdown-trigger:hover,
 .nav-dropdown-wrapper.active .nav-dropdown-trigger {
   color: #FFFFFF;
@@ -454,6 +462,31 @@ body { min-height: 100vh; }
   margin-top: 6px;
   padding: 10px 20px;
 }
+.signin-session {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: var(--text-2);
+  font-size: 13px;
+  line-height: 1.5;
+}
+.signin-session[hidden],
+#signinForm[hidden] {
+  display: none;
+}
+.signin-end-btn {
+  align-self: center;
+  padding: 6px 10px;
+  border: 0;
+  background: transparent;
+  color: var(--text-3);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+.signin-end-btn:hover {
+  color: var(--text-1);
+}
 
 /* Re-Run Button Loading State */
 .btn-pill-glass.is-running {
@@ -555,6 +588,48 @@ body { min-height: 100vh; }
   display: flex;
   flex-direction: column;
   gap: 18px;
+}
+.workspace-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 26px 22px 28px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  scroll-margin-top: 20px;
+}
+.workspace-section-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 0 2px 4px;
+}
+.workspace-section-kicker {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--accent-teal);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+}
+.workspace-section-title {
+  color: var(--text-1);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+.workspace-section-description {
+  max-width: 650px;
+  margin-top: 4px;
+  color: var(--text-3);
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+.workspace-section .bottom-card {
+  width: 100%;
+}
+.workspace-section .demo-sliders-panel {
+  margin-bottom: 0;
 }
 
 .console-panel {
@@ -1015,6 +1090,94 @@ body { min-height: 100vh; }
   margin-bottom: 20px;
   flex-wrap: wrap;
 }
+.sensitivity-live-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(250px, 0.36fr);
+  align-items: start;
+  gap: 18px;
+}
+.sensitivity-live-layout .sliders-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-bottom: 0;
+}
+.sensitivity-ranking-preview {
+  position: sticky;
+  top: 16px;
+  padding: 16px;
+  border: 1px solid var(--border-card);
+  border-radius: 8px;
+  background: rgba(10, 14, 22, 0.7);
+}
+.sensitivity-ranking-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.sensitivity-ranking-heading h3 {
+  color: var(--text-1);
+  font-size: 13px;
+  font-weight: 600;
+}
+.sensitivity-dashboard-link {
+  color: var(--accent-teal);
+  font-size: 11px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.sensitivity-dashboard-link:hover { text-decoration: underline; }
+.sensitivity-ranking-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.sensitivity-ranking-item {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  min-height: 38px;
+  padding: 7px 8px;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.035);
+}
+.sensitivity-ranking-rank {
+  color: var(--text-3);
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+.sensitivity-ranking-name {
+  overflow: hidden;
+  color: var(--text-1);
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.sensitivity-ranking-score {
+  color: var(--accent-teal);
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+.sensitivity-ranking-note {
+  margin-top: 12px;
+  color: var(--text-3);
+  font-size: 10.5px;
+  line-height: 1.45;
+}
+@media (max-width: 1024px) {
+  .sensitivity-live-layout { grid-template-columns: minmax(0, 1fr) 250px; }
+}
+@media (max-width: 760px) {
+  .sensitivity-live-layout { grid-template-columns: 1fr; }
+  .sensitivity-ranking-preview { position: static; }
+}
+@media (max-width: 640px) {
+  .sensitivity-live-layout .sliders-grid { grid-template-columns: 1fr; }
+}
 .demo-panel-title-area {
   max-width: 680px;
 }
@@ -1414,6 +1577,42 @@ body { min-height: 100vh; }
 .table-panel {
   overflow: hidden;
 }
+.research-candidates-panel {
+  margin-top: -2px;
+}
+.research-candidates-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 18px 20px 14px;
+  border-bottom: 1px solid var(--border-card);
+}
+.research-candidates-heading .bottom-card-title {
+  margin-bottom: 4px;
+}
+.research-candidates-heading p,
+.research-candidates-note {
+  color: var(--text-3);
+  font-size: 12px;
+  line-height: 1.5;
+}
+.candidate-status {
+  color: var(--status-amber);
+  font-size: 12px;
+}
+.research-candidates-note {
+  padding: 12px 20px 16px;
+}
+.research-candidates-panel .rankings-table {
+  min-width: 720px;
+}
+.research-candidates-panel .rankings-table td:first-child {
+  font-weight: 500;
+}
+.research-candidates-panel .flag-icon {
+  margin-right: 7px;
+}
 .table-wrapper {
   overflow-x: auto;
   width: 100%;
@@ -1787,6 +1986,8 @@ body { min-height: 100vh; }
 
 @media (max-width: 1024px) {
   .bottom-grid, .modal-two-col { grid-template-columns: 1fr; }
+  .workspace-section { padding: 22px 14px 24px; }
+  .workspace-section-heading { align-items: flex-start; flex-direction: column; gap: 12px; }
   .control-bar { flex-direction: column; align-items: stretch; }
   .control-bar-left { width: 100%; }
   .btn-recalc { width: 100%; justify-content: center; }
@@ -2145,8 +2346,26 @@ body { min-height: 100vh; }
    RESPONSIVE DESIGN
    ========================================================================= */
 @media (max-width: 900px) {
-  .navbar { padding: 0 20px; }
-  .nav-links { display: none; }
+  .navbar {
+    height: auto;
+    min-height: 76px;
+    flex-wrap: wrap;
+    align-content: center;
+    row-gap: 8px;
+    padding: 9px 20px 8px;
+  }
+  .nav-brand { order: 1; }
+  .nav-right { order: 2; gap: 12px; }
+  .nav-links {
+    order: 3;
+    display: flex;
+    flex: 0 0 100%;
+    justify-content: space-between;
+    gap: 12px;
+    overflow-x: auto;
+    padding: 0 2px 4px;
+  }
+  .nav-section-link { flex: 0 0 auto; font-size: 12.5px; }
   .hero-content { padding: 40px 20px 0; }
   .floating-glass-card { display: none; }
   .workflow-row { justify-content: flex-start; gap: 18px; padding: 0 20px; }
@@ -2200,56 +2419,14 @@ body { min-height: 100vh; }
       </a>
 
       <div class="nav-links">
-        <div class="nav-dropdown-wrapper">
-          <button type="button" class="nav-dropdown-trigger" aria-expanded="false">
-            Dashboard
-            <svg viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1L5 5L9 1"/></svg>
-          </button>
-          <div class="nav-dropdown-menu">
-            <a href="#console" class="nav-dropdown-item">Overview</a>
-            <a href="#rankingsTable" class="nav-dropdown-item">Jurisdiction rankings</a>
-            <a href="#recBanner" class="nav-dropdown-item">Top recommendation</a>
-          </div>
-        </div>
-
-        <div class="nav-dropdown-wrapper">
-          <button type="button" class="nav-dropdown-trigger" aria-expanded="false">
-            Criteria
-            <svg viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1L5 5L9 1"/></svg>
-          </button>
-          <div class="nav-dropdown-menu">
-            <a href="#weightingDropdown" class="nav-dropdown-item">Weighting method</a>
-            <a href="#runwayInput" class="nav-dropdown-item">Runway budget</a>
-            <a href="#knockoutToggle" class="nav-dropdown-item">Eligibility filter</a>
-          </div>
-        </div>
-
-        <div class="nav-dropdown-wrapper">
-          <button type="button" class="nav-dropdown-trigger" aria-expanded="false">
-            Sensitivity
-            <svg viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1L5 5L9 1"/></svg>
-          </button>
-          <div class="nav-dropdown-menu">
-            <a href="#demoModeToggle" class="nav-dropdown-item">Weight sensitivity</a>
-            <a href="#recalcBtn" class="nav-dropdown-item">Recalculate ranking</a>
-          </div>
-        </div>
-
-        <div class="nav-dropdown-wrapper">
-          <button type="button" class="nav-dropdown-trigger" aria-expanded="false">
-            Audit
-            <svg viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1L5 5L9 1"/></svg>
-          </button>
-          <div class="nav-dropdown-menu">
-            <a href="#decompositionCard" class="nav-dropdown-item">Criteria breakdown</a>
-            <a href="#proofCard" class="nav-dropdown-item">Calculation proof</a>
-            <a href="#exportBtn" class="nav-dropdown-item">Export rankings</a>
-          </div>
-        </div>
+        <a href="#sensitivitySection" class="nav-dropdown-trigger nav-section-link">Sensitivity</a>
+        <a href="#dashboardSection" class="nav-dropdown-trigger nav-section-link">Dashboard</a>
+        <a href="#criteriaSection" class="nav-dropdown-trigger nav-section-link">Criteria</a>
+        <a href="#auditSection" class="nav-dropdown-trigger nav-section-link">Audit</a>
       </div>
 
       <div class="nav-right">
-        <a href="#signin" class="nav-signin" id="signinBtn">Sign in</a>
+        <a href="#signin" class="nav-signin" id="signinBtn" title="Start a local demo session">Sign in</a>
         <a href="#console" class="btn-pill-white launch-console-btn">Launch Console</a>
       </div>
     </nav>
@@ -2423,6 +2600,85 @@ body { min-height: 100vh; }
       </div>
     </div>
 
+    <section class="workspace-section sensitivity-workspace" id="sensitivitySection" aria-labelledby="sensitivitySectionTitle">
+      <header class="workspace-section-heading">
+        <div>
+          <span class="workspace-section-kicker">01 / WHAT-IF ANALYSIS</span>
+          <h2 class="workspace-section-title" id="sensitivitySectionTitle">Weight sensitivity</h2>
+          <p class="workspace-section-description">Test how stakeholder priorities change the jurisdiction order. The same model updates the dashboard, criteria breakdown, and audit proof.</p>
+        </div>
+        <button type="button" class="btn-demo-toggle" id="demoModeToggle" aria-pressed="false" title="Open weight sensitivity controls">
+          <span class="demo-toggle-switch"><span class="demo-toggle-knob"></span></span>
+          <span class="demo-toggle-text">Open sensitivity controls</span>
+          <span class="demo-toggle-badge">WEIGHTS</span>
+        </button>
+      </header>
+
+      <section class="demo-sliders-panel console-panel" id="demoSlidersPanel" aria-label="Stakeholder Weighting Sandbox" style="display: none;">
+        <div class="demo-panel-header">
+          <div class="demo-panel-title-area">
+            <div class="demo-sandbox-pill">TOPSIS WEIGHT SENSITIVITY</div>
+            <h3 class="demo-panel-title">Adjust criteria importance</h3>
+            <p class="demo-panel-desc">Set any criterion from 0% to 60%. The other seven rebalance automatically; higher benefit scores and lower cost scores are preferred.</p>
+          </div>
+          <div class="demo-panel-metrics">
+            <div class="demo-metric-pill">
+              <span>Total weight:</span>
+              <strong id="weightsSumLabel">100.0%</strong>
+            </div>
+            <div class="demo-metric-pill">
+              <span>Active Preset:</span>
+              <strong id="activePresetLabel" style="color: var(--text-1);">Baseline Consensus</strong>
+            </div>
+            <button type="button" class="btn-reset-demo" id="resetDemoBtn" title="Reset all sliders to production baseline weights">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+              <span>Reset Default Weights</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="presets-bar">
+          <span class="presets-label">Stakeholder Archetype Presets:</span>
+          <div class="presets-list" id="presetsList">
+            <button type="button" class="btn-preset active" data-preset="baseline">⚖️ Baseline Consensus</button>
+            <button type="button" class="btn-preset" data-preset="compliance">🛡️ Legal &amp; Compliance (C3+C8)</button>
+            <button type="button" class="btn-preset" data-preset="cfo">💰 Capital-Conscious CFO (C6+C7)</button>
+            <button type="button" class="btn-preset" data-preset="growth">🚀 Commercial Growth (C1+C2+C4)</button>
+            <button type="button" class="btn-preset" data-preset="treasury">🏦 Treasury &amp; Banking (C5 Rails)</button>
+          </div>
+        </div>
+
+        <div class="sensitivity-live-layout">
+          <div class="sliders-grid" id="slidersGrid"></div>
+          <aside class="sensitivity-ranking-preview" aria-live="polite" aria-labelledby="sensitivityRankingTitle">
+            <div class="sensitivity-ranking-heading">
+              <h3 id="sensitivityRankingTitle">Live ranking</h3>
+              <a class="sensitivity-dashboard-link" href="#dashboardSection">Full dashboard &rarr;</a>
+            </div>
+            <ol class="sensitivity-ranking-list" id="sensitivityRankingList"></ol>
+            <p class="sensitivity-ranking-note">Updates immediately as criterion weights change.</p>
+          </aside>
+        </div>
+
+        <div class="demo-panel-footer">
+          <div class="demo-engine-status">
+            <span class="demo-engine-dot"></span>
+            <span><strong>Live TOPSIS:</strong> Ranking and audit details update with each weight change.</span>
+          </div>
+          <span>C6 Capital Burden and C7 Presence Friction are cost criteria; lower scores are preferred.</span>
+        </div>
+      </section>
+    </section>
+
+    <section class="workspace-section dashboard-workspace" id="dashboardSection" aria-labelledby="dashboardSectionTitle">
+      <header class="workspace-section-heading">
+        <div>
+          <span class="workspace-section-kicker">02 / PORTFOLIO VIEW</span>
+          <h2 class="workspace-section-title" id="dashboardSectionTitle">Jurisdiction dashboard</h2>
+          <p class="workspace-section-description">Set the deployment runway, review eligibility, and compare the current ranking against the candidate markets.</p>
+        </div>
+      </header>
+
     <!-- Control Bar Card -->
     <section class="control-bar console-panel" aria-label="TOPSIS Optimization Controls">
       <div class="control-bar-left">
@@ -2484,13 +2740,6 @@ body { min-height: 100vh; }
       </div>
 
       <div class="control-bar-right">
-        <!-- Demo Mode Toggle Button -->
-        <button type="button" class="btn-demo-toggle" id="demoModeToggle" aria-pressed="false" title="Toggle Stakeholder Weighting Sandbox">
-          <span class="demo-toggle-switch"><span class="demo-toggle-knob"></span></span>
-          <span class="demo-toggle-text">Demo Mode</span>
-          <span class="demo-toggle-badge">SLIDERS</span>
-        </button>
-
         <!-- Solid Teal Recalculate Button with Refresh Icon -->
         <button type="button" class="btn-recalc" id="recalcBtn">
           <svg id="recalcIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -2498,60 +2747,6 @@ body { min-height: 100vh; }
           </svg>
           <span id="recalcText">Recalculate Ranking</span>
         </button>
-      </div>
-    </section>
-
-    <!-- Stakeholder Multi-Criteria Weighting Sandbox (Demo Mode Panel) -->
-    <section class="demo-sliders-panel console-panel" id="demoSlidersPanel" aria-label="Stakeholder Weighting Sandbox" style="display: none;">
-      <!-- Panel Header -->
-      <div class="demo-panel-header">
-        <div class="demo-panel-title-area">
-          <div class="demo-sandbox-pill">TOPSIS WEIGHT SENSITIVITY</div>
-          <h2 class="demo-panel-title">Adjust criteria importance</h2>
-          <p class="demo-panel-desc">Set any criterion from 0% to 60%. The other seven rebalance automatically; higher benefit scores and lower cost scores are preferred.</p>
-        </div>
-        <div class="demo-panel-metrics">
-          <div class="demo-metric-pill">
-            <span>Total weight:</span>
-            <strong id="weightsSumLabel">100.0%</strong>
-          </div>
-          <div class="demo-metric-pill">
-            <span>Active Preset:</span>
-            <strong id="activePresetLabel" style="color: var(--text-1);">Baseline Consensus</strong>
-          </div>
-          <button type="button" class="btn-reset-demo" id="resetDemoBtn" title="Reset all sliders to production baseline weights">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
-            <span>Reset Default Weights</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- Presets Selector Bar -->
-      <div class="presets-bar">
-        <span class="presets-label">Stakeholder Archetype Presets:</span>
-        <div class="presets-list" id="presetsList">
-          <button type="button" class="btn-preset active" data-preset="baseline">⚖️ Baseline Consensus</button>
-          <button type="button" class="btn-preset" data-preset="compliance">🛡️ Legal &amp; Compliance (C3+C8)</button>
-          <button type="button" class="btn-preset" data-preset="cfo">💰 Capital-Conscious CFO (C6+C7)</button>
-          <button type="button" class="btn-preset" data-preset="growth">🚀 Commercial Growth (C1+C2+C4)</button>
-          <button type="button" class="btn-preset" data-preset="treasury">🏦 Treasury &amp; Banking (C5 Rails)</button>
-        </div>
-      </div>
-
-      <!-- 8 Criteria Sliders Grid -->
-      <div class="sliders-grid" id="slidersGrid">
-        <!-- Rendered via JS -->
-      </div>
-
-      <!-- Demo Footer Status -->
-      <div class="demo-panel-footer">
-        <div class="demo-engine-status">
-          <span class="demo-engine-dot"></span>
-          <span><strong>Live TOPSIS-RAD:</strong> Ranking and audit details update with each weight change.</span>
-        </div>
-        <div>
-          <span>C6 Capital Burden and C7 Presence Friction are cost criteria; lower scores are preferred.</span>
-        </div>
       </div>
     </section>
 
@@ -2773,10 +2968,51 @@ body { min-height: 100vh; }
       </div>
     </section>
 
-    <!-- Bottom Two-Column Row -->
-    <section class="bottom-grid" id="audit-trail-section">
+    <section class="table-panel console-panel research-candidates-panel" id="researchCandidates" aria-labelledby="researchCandidatesTitle">
+      <div class="research-candidates-heading">
+        <div>
+          <h2 class="bottom-card-title" id="researchCandidatesTitle">Additional research candidates</h2>
+          <p>Markets present in the live research feed, shown separately until their full criteria and source units are validated.</p>
+        </div>
+        <span class="badge-audit">NOT RANKED</span>
+      </div>
+      <div class="table-wrapper">
+        <table class="rankings-table" aria-label="Additional unranked jurisdiction research candidates">
+          <thead>
+            <tr>
+              <th>JURISDICTION</th>
+              <th>AVAILABLE SOURCE ENTRIES</th>
+              <th>MISSING MODEL CRITERIA</th>
+              <th>SCREENING STATUS</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="flag-icon">🇺🇸</span> United States</td><td>C1, C2, C5, C8 (4/8)</td><td>C3, C4, C6, C7</td><td><span class="candidate-status">Research only · not scored</span></td></tr>
+            <tr><td><span class="flag-icon">🇦🇺</span> Australia</td><td>C1, C2, C5, C8 (4/8)</td><td>C3, C4, C6, C7</td><td><span class="candidate-status">Research only · not scored</span></td></tr>
+            <tr><td><span class="flag-icon">🇨🇭</span> Switzerland</td><td>C1, C2, C5, C8 (4/8)</td><td>C3, C4, C6, C7</td><td><span class="candidate-status">Research only · not scored</span></td></tr>
+            <tr><td><span class="flag-icon">🇭🇰</span> Hong Kong</td><td>C1, C2, C5, C8 (4/8)</td><td>C3, C4, C6, C7</td><td><span class="candidate-status">Research only · not scored</span></td></tr>
+            <tr><td><span class="flag-icon">🇨🇦</span> Canada</td><td>C1, C2, C5, C8 (4/8)</td><td>C3, C4, C6, C7</td><td><span class="candidate-status">Research only · not scored</span></td></tr>
+            <tr><td><span class="flag-icon">🇫🇷</span> France</td><td>C1, C2, C5, C8 (4/8)</td><td>C3, C4, C6, C7</td><td><span class="candidate-status">Research only · not scored</span></td></tr>
+            <tr><td><span class="flag-icon">🇩🇪</span> Germany</td><td>C2, C5, C8 (3/8)</td><td>C1, C3, C4, C6, C7</td><td><span class="candidate-status">Research only · not scored</span></td></tr>
+            <tr><td><span class="flag-icon">🇳🇱</span> Netherlands</td><td>C1, C2, C5, C8 (4/8)</td><td>C3, C4, C6, C7</td><td><span class="candidate-status">Research only · not scored</span></td></tr>
+            <tr><td><span class="flag-icon">🇰🇷</span> South Korea</td><td>C1, C2, C5, C8 (4/8)</td><td>C3, C4, C6, C7</td><td><span class="candidate-status">Research only · not scored</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="research-candidates-note">Source presence is not a viability finding. Candidate scores are withheld because core licensing, leverage, capital, and local-presence inputs are missing, and imported fact units need validation before scoring.</p>
+    </section>
 
-      <!-- Left Card: Criteria Decomposition -->
+    </section>
+
+    <section class="workspace-section criteria-workspace" id="criteriaSection" aria-labelledby="criteriaSectionTitle">
+      <header class="workspace-section-heading">
+        <div>
+          <span class="workspace-section-kicker">03 / MODEL INPUTS</span>
+          <h2 class="workspace-section-title" id="criteriaSectionTitle">Criteria breakdown</h2>
+          <p class="workspace-section-description">Inspect the selected jurisdiction’s score across all eight benefit and cost criteria.</p>
+        </div>
+      </header>
+
       <div class="bottom-card console-panel" id="decompositionCard">
         <div class="bottom-card-header">
           <h2 class="bottom-card-title">United Arab Emirates Criteria Decomposition (C1–C8 Normalized)</h2>
@@ -2850,7 +3086,17 @@ body { min-height: 100vh; }
         </div>
       </div>
 
-      <!-- Right Card: Audit Trail & Proof -->
+    </section>
+
+    <section class="workspace-section audit-workspace" id="auditSection" aria-labelledby="auditSectionTitle">
+      <header class="workspace-section-heading">
+        <div>
+          <span class="workspace-section-kicker">04 / TRACEABILITY</span>
+          <h2 class="workspace-section-title" id="auditSectionTitle">Calculation audit</h2>
+          <p class="workspace-section-description">Review the ideal vectors, separation measures, relative-closeness score, and execution evidence for the leading market.</p>
+        </div>
+      </header>
+
       <div class="bottom-card console-panel" id="proofCard">
         <div class="bottom-card-header">
           <div>
@@ -2881,7 +3127,6 @@ Execution Hash: <span class="white">sha256:7f83b1657ff1fc53b92dc18148a1d65dfc2d4
       </div>
 
     </section>
-
   </div>
 </section>
 
@@ -2940,19 +3185,20 @@ Execution Hash: <span class="white">sha256:7f83b1657ff1fc53b92dc18148a1d65dfc2d4
 <div class="modal-backdrop" id="signinModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="signinTitle">
   <div class="modal-card">
     <button type="button" class="modal-close" id="closeSigninModal" aria-label="Close modal">&times;</button>
-    <h2 class="modal-heading" id="signinTitle">Sign in</h2>
-    <p class="modal-subheading">Access the TOPSIS ranking console</p>
-    <form class="modal-form" onsubmit="event.preventDefault();">
+    <h2 class="modal-heading" id="signinTitle">Start a demo session</h2>
+    <p class="modal-subheading">This prototype has no account service. Enter an email to start a local demo session; nothing is sent or saved.</p>
+    <form class="modal-form" id="signinForm">
       <div class="modal-field">
         <label for="signinEmail">Email address</label>
         <input type="email" id="signinEmail" placeholder="analyst@example.com" autocomplete="email" required>
       </div>
-      <div class="modal-field">
-        <label for="signinPassword">Password</label>
-        <input type="password" id="signinPassword" placeholder="••••••••••••" autocomplete="current-password" required>
-      </div>
-      <button type="submit" class="btn-pill-white modal-submit-btn">Sign In</button>
+      <button type="submit" class="btn-pill-white modal-submit-btn">Start demo session</button>
     </form>
+    <div class="signin-session" id="signinSession" role="status" aria-live="polite" hidden>
+      <p id="signinSessionMessage"></p>
+      <button type="button" class="btn-pill-white modal-submit-btn" id="continueDemoBtn">Continue to dashboard</button>
+      <button type="button" class="signin-end-btn" id="endDemoSessionBtn">End demo session</button>
+    </div>
   </div>
 </div>
 
@@ -3278,11 +3524,56 @@ Execution Hash: <span class="white">sha256:7f83b1657ff1fc53b92dc18148a1d65dfc2d4
   const signinModal = document.getElementById('signinModal');
   const signinBtn = document.getElementById('signinBtn');
   const closeSigninModal = document.getElementById('closeSigninModal');
+  const signinForm = document.getElementById('signinForm');
+  const signinEmail = document.getElementById('signinEmail');
+  const signinSession = document.getElementById('signinSession');
+  const signinSessionMessage = document.getElementById('signinSessionMessage');
+  const continueDemoBtn = document.getElementById('continueDemoBtn');
+  const endDemoSessionBtn = document.getElementById('endDemoSessionBtn');
+  let localDemoSessionEmail = '';
+
+  function updateDemoSessionView() {
+    const hasSession = Boolean(localDemoSessionEmail);
+    signinForm.hidden = hasSession;
+    signinSession.hidden = !hasSession;
+    signinBtn.textContent = hasSession ? 'Demo session' : 'Sign in';
+    signinBtn.title = hasSession ? 'View local demo session' : 'Start a local demo session';
+    if (hasSession) {
+      signinSessionMessage.textContent = `Local demo session for ${localDemoSessionEmail}. No account was authenticated, and this session is not saved.`;
+    }
+  }
 
   if (signinBtn) {
     signinBtn.addEventListener('click', (e) => {
       e.preventDefault();
+      updateDemoSessionView();
       openModal(signinModal);
+    });
+  }
+
+  if (signinForm) {
+    signinForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!signinForm.reportValidity()) return;
+      localDemoSessionEmail = signinEmail.value.trim();
+      updateDemoSessionView();
+    });
+  }
+
+  if (continueDemoBtn) {
+    continueDemoBtn.addEventListener('click', () => {
+      closeModal(signinModal);
+      const dashboard = document.getElementById('rankingsTable');
+      if (dashboard) dashboard.scrollIntoView({ behavior: 'auto', block: 'start' });
+    });
+  }
+
+  if (endDemoSessionBtn) {
+    endDemoSessionBtn.addEventListener('click', () => {
+      localDemoSessionEmail = '';
+      signinForm.reset();
+      updateDemoSessionView();
+      signinEmail.focus();
     });
   }
 
@@ -3311,7 +3602,24 @@ Execution Hash: <span class="white">sha256:7f83b1657ff1fc53b92dc18148a1d65dfc2d4
     });
   });
 
-  // Handle dropdown items: scroll to console or audit section
+  // Main navigation points directly to distinct working dashboard sections.
+  document.querySelectorAll('.nav-section-link').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const targetId = link.getAttribute('href')?.slice(1);
+      if (!targetId) return;
+
+      const target = document.getElementById(targetId);
+      if (!target) return;
+
+      if (targetId === 'sensitivitySection' && demoModeToggle?.getAttribute('aria-pressed') !== 'true') {
+        demoModeToggle?.click();
+      }
+      target.scrollIntoView({ behavior: 'auto', block: 'start' });
+    });
+  });
+
+  // Handle any remaining dropdown items: scroll to their in-page targets.
   document.querySelectorAll('.nav-dropdown-item').forEach(item => {
     item.addEventListener('click', (e) => {
       dropdownWrappers.forEach(w => {
@@ -3465,41 +3773,42 @@ Execution Hash: <span class="white">sha256:7f83b1657ff1fc53b92dc18148a1d65dfc2d4
   let isKnockoutExcluded = true;
   let activePresetKey = 'baseline';
 
-  // 5. Mathematical TOPSIS-RAD Engine
-  const VPL = 1.0;
-  const DPL = 8.5;
-  const DENOM = Math.sqrt(Math.pow(VPL, 2) + Math.pow(DPL, 2)); // 8.55862
-
+  // 5. TOPSIS engine with ideals derived from the current decision matrix.
   function computeWeights(levels) {
     return levels.map(weight => weight / 100);
   }
 
   function runTopsis(weights, budget, excludeKnockout) {
     const codes = ['ARE', 'SGP', 'GBR', 'BRA', 'JPN', 'VNM'];
-    const pis = weights.map(w => (DPL / DENOM) * w);
-    const nis = weights.map(w => (VPL / DENOM) * w);
+    const columnNorms = CRITERIA_SPECS.map((_, criterionIndex) => Math.sqrt(
+      codes.reduce((sum, code) => sum + JURISDICTIONS[code].rawScores[criterionIndex] ** 2, 0)
+    ));
+    const weightedMatrix = codes.map(code => JURISDICTIONS[code].rawScores.map((value, criterionIndex) => (
+      value / (columnNorms[criterionIndex] || 1) * weights[criterionIndex]
+    )));
+    const pis = CRITERIA_SPECS.map((criterion, criterionIndex) => {
+      const values = weightedMatrix.map(row => row[criterionIndex]);
+      return criterion.type === 'cost' ? Math.min(...values) : Math.max(...values);
+    });
+    const nis = CRITERIA_SPECS.map((criterion, criterionIndex) => {
+      const values = weightedMatrix.map(row => row[criterionIndex]);
+      return criterion.type === 'cost' ? Math.max(...values) : Math.min(...values);
+    });
 
-    const scored = codes.map(code => {
+    const scored = codes.map((code, marketIndex) => {
       const data = JURISDICTIONS[code];
-      const capped = data.rawScores.map((value, index) => {
-        const directionCorrected = CRITERIA_SPECS[index].type === 'cost' ? 11 - value : value;
-        return Math.min(directionCorrected, DPL);
-      });
-      const wn = capped.map((c, j) => (c / DENOM) * weights[j]);
+      const weightedValues = weightedMatrix[marketIndex];
 
       let dPosSq = 0;
       let dNegSq = 0;
       for (let j = 0; j < 8; j++) {
-        dPosSq += Math.pow(wn[j] - pis[j], 2);
-        dNegSq += Math.pow(wn[j] - nis[j], 2);
+        dPosSq += Math.pow(weightedValues[j] - pis[j], 2);
+        dNegSq += Math.pow(weightedValues[j] - nis[j], 2);
       }
       const sPos = Math.sqrt(dPosSq);
       const sNeg = Math.sqrt(dNegSq);
       const closeness = (sPos + sNeg) > 0 ? (sNeg / (sPos + sNeg)) : 0;
-
-      // Calibrate so baseline consensus matches 0.8150 for ARE
-      const CALIBRATION = 0.86739;
-      const score = Math.min(0.9999, Math.max(0.05, closeness * CALIBRATION));
+      const score = closeness;
       const isKnockedOut = data.capital > budget;
 
       return {
@@ -3513,7 +3822,7 @@ Execution Hash: <span class="white">sha256:7f83b1657ff1fc53b92dc18148a1d65dfc2d4
         pctFormatted: (score * 100).toFixed(1),
         impactPct: ((data.capital / budget) * 100).toFixed(1),
         isKnockedOut,
-        wn,
+        wn: weightedValues,
         pis,
         nis
       };
@@ -3639,6 +3948,29 @@ Execution Hash: <span class="white">sha256:7f83b1657ff1fc53b92dc18148a1d65dfc2d4
   function updateDashboard(results) {
     const { all, top, pis, nis, weights } = results;
 
+    const sensitivityRankingList = document.getElementById('sensitivityRankingList');
+    if (sensitivityRankingList) {
+      sensitivityRankingList.replaceChildren(...all.filter(result => !result.isKnockedOut).slice(0, 3).map(result => {
+        const item = document.createElement('li');
+        item.className = 'sensitivity-ranking-item';
+
+        const rank = document.createElement('span');
+        rank.className = 'sensitivity-ranking-rank';
+        rank.textContent = `#${result.rank}`;
+
+        const name = document.createElement('span');
+        name.className = 'sensitivity-ranking-name';
+        name.textContent = result.data.name;
+
+        const score = document.createElement('span');
+        score.className = 'sensitivity-ranking-score';
+        score.textContent = result.scoreFormatted;
+
+        item.append(rank, name, score);
+        return item;
+      }));
+    }
+
     // A. Re-order and update Table Rows
     all.forEach(res => {
       const row = document.getElementById(`row-${res.code}`);
@@ -3732,7 +4064,7 @@ Execution Hash: <span class="white">sha256:7f83b1657ff1fc53b92dc18148a1d65dfc2d4
       if (listDiv) {
         listDiv.innerHTML = CRITERIA_SPECS.map((c, j) => {
           const rawScore = top.data.rawScores[j];
-          const displayScore = c.type === 'cost' ? 11 - rawScore : rawScore;
+          const displayScore = rawScore;
           const valStr = (displayScore / 10).toFixed(2);
           const pctStr = `${Math.round(displayScore * 10)}%`;
           return `
@@ -3832,7 +4164,8 @@ Execution Hash: <span class="white">${top.data.hash}</span>`;
       demoModeToggle.setAttribute('aria-pressed', isDemoModeActive ? 'true' : 'false');
 
       const label = demoModeToggle.querySelector('.demo-toggle-text');
-      if (label) label.textContent = isDemoModeActive ? 'Demo Mode Active' : 'Demo Mode';
+      if (label) label.textContent = isDemoModeActive ? 'Hide sensitivity controls' : 'Open sensitivity controls';
+      demoModeToggle.title = isDemoModeActive ? 'Hide weight sensitivity controls' : 'Open weight sensitivity controls';
 
       if (isDemoModeActive) {
         demoSlidersPanel.style.display = 'block';
@@ -3976,7 +4309,7 @@ Execution Hash: <span class="white">${top.data.hash}</span>`;
   if (inspectBtn) {
     inspectBtn.addEventListener('click', (e) => {
       e.preventDefault();
-      const auditSection = document.getElementById('audit-trail-section');
+      const auditSection = document.getElementById('auditSection');
       if (auditSection) {
         auditSection.scrollIntoView({ behavior: 'auto', block: 'start' });
       }
@@ -4007,7 +4340,7 @@ Execution Hash: <span class="white">${top.data.hash}</span>`;
     if (modalCriteriaList) {
       modalCriteriaList.innerHTML = CRITERIA_SPECS.map((c, j) => {
         const rawScore = jur.rawScores[j];
-        const displayScore = c.type === 'cost' ? 11 - rawScore : rawScore;
+        const displayScore = rawScore;
         const valStr = (displayScore / 10).toFixed(2);
         const pctStr = `${Math.round(displayScore * 10)}%`;
         return `
