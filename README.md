@@ -16,7 +16,6 @@
   <img src="https://img.shields.io/badge/Algorithm-CRITIC--M-10B981?style=flat-square&labelColor=0F172A" />
   <img src="https://img.shields.io/badge/Algorithm-SMAA-F59E0B?style=flat-square&labelColor=0F172A" />
   <img src="https://img.shields.io/badge/tested%20with-pytest-0A9EDC?style=flat-square&logo=pytest&logoColor=white" />
-  <img src="https://img.shields.io/badge/license-MIT-22C55E?style=flat-square" />
 </p>
 
 ---
@@ -248,10 +247,6 @@ Deterministic TOPSIS gives a single ranking with no uncertainty quantification. 
 Regulatory data exists in unstructured text (legislation, circulars, exchange rules). The **De Jure LLM pipeline** systematically extracts structured attributes (leverage caps, margin requirements, withholding tax treaties, short-selling rules) from raw documents, enabling regulatory criteria to be first-class inputs to the MCDM pipeline.
 
 ---
-
-## 📄 License
-
-This project is licensed under the **MIT License** — see [`LICENSE`](LICENSE) for details.
 
 ---
 
